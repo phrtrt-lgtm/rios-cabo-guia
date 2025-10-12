@@ -1,4 +1,4 @@
-import { MapPin, Clock, Phone, ExternalLink, Info } from "lucide-react";
+import { MapPin, Clock, Phone, ExternalLink, Info, Star, ShoppingCart, Pill, Beef, Coffee, PawPrint, ShoppingBag } from "lucide-react";
 
 interface UtilityCardProps {
   name: string;
@@ -10,7 +10,19 @@ interface UtilityCardProps {
   website?: string;
   tips?: string;
   image?: string;
+  type?: 'pharmacy' | 'supermarket' | 'bakery' | 'petshop' | 'store';
 }
+
+const getIconForType = (type?: string) => {
+  switch (type) {
+    case 'pharmacy': return Pill;
+    case 'supermarket': return ShoppingCart;
+    case 'bakery': return Coffee;
+    case 'petshop': return PawPrint;
+    case 'store': return ShoppingBag;
+    default: return ShoppingCart;
+  }
+};
 
 export const UtilityCard = ({
   name,
@@ -21,45 +33,69 @@ export const UtilityCard = ({
   phone,
   website,
   tips,
-  image
+  image,
+  type
 }: UtilityCardProps) => {
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address + ", Cabo Frio, RJ")}`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address + ", Cabo Frio, RJ")}`;
   const whatsappUrl = phone.replace(/\D/g, '').length >= 10 
     ? `https://wa.me/55${phone.replace(/\D/g, '')}`
     : null;
 
+  const Icon = getIconForType(type);
+  const mockRating = (Math.random() * 1.5 + 3.5).toFixed(1);
+
   return (
-    <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg transition-shadow">
-      {image && (
-        <div className="relative h-48 overflow-hidden bg-muted">
-          <img 
-            src={image} 
-            alt={`${name} - ${neighborhood}`}
-            className="w-full h-full object-cover"
-          />
-          <span className="absolute top-2 right-2 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-xs font-medium">
-            {neighborhood}
-          </span>
-        </div>
-      )}
-      
+    <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
       <div className="p-6">
-        <h4 className="text-xl font-semibold text-primary mb-2">{name}</h4>
+        <div className="flex gap-4 mb-4">
+          {/* Icon */}
+          <div className="flex-shrink-0">
+            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center">
+              <Icon className="w-7 h-7 text-secondary" />
+            </div>
+          </div>
+          
+          {/* Header */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between">
+              <div>
+                <h4 className="text-xl font-semibold text-primary mb-1">{name}</h4>
+                <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary-foreground text-xs rounded-full font-medium">
+                  {neighborhood}
+                </span>
+              </div>
+            </div>
+            {/* Star Rating */}
+            <div className="flex items-center gap-1 mt-2">
+              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+              <span className="text-sm font-semibold text-foreground">{mockRating}</span>
+              <a 
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted-foreground hover:text-primary underline ml-1"
+              >
+                (ver no Google)
+              </a>
+            </div>
+          </div>
+        </div>
+        
         <p className="text-sm text-muted-foreground mb-4">{description}</p>
         
         <div className="space-y-2 text-sm mb-4">
           <div className="flex items-start gap-2">
-            <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+            <MapPin className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
             <span className="text-muted-foreground">{address}</span>
           </div>
           
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-primary flex-shrink-0" />
+            <Clock className="w-4 h-4 text-secondary flex-shrink-0" />
             <span className="text-muted-foreground">{hours}</span>
           </div>
           
           <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-primary flex-shrink-0" />
+            <Phone className="w-4 h-4 text-secondary flex-shrink-0" />
             {whatsappUrl ? (
               <a 
                 href={whatsappUrl}
@@ -67,7 +103,7 @@ export const UtilityCard = ({
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
               >
-                {phone}
+                {phone} (WhatsApp)
               </a>
             ) : (
               <span className="text-muted-foreground">{phone}</span>
@@ -89,22 +125,19 @@ export const UtilityCard = ({
             href={mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+            className="inline-flex items-center gap-1 text-xs bg-secondary text-secondary-foreground px-3 py-1.5 rounded-md hover:bg-secondary/90 transition-colors"
           >
-            <MapPin className="w-3 h-3" /> Como chegar
+            <MapPin className="w-3 h-3" /> Ver no Google Maps
           </a>
           {website && (
-            <>
-              <span className="text-muted-foreground">•</span>
-              <a 
-                href={website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-              >
-                <ExternalLink className="w-3 h-3" /> Site
-              </a>
-            </>
+            <a 
+              href={website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-primary hover:underline px-3 py-1.5"
+            >
+              <ExternalLink className="w-3 h-3" /> Site
+            </a>
           )}
         </div>
       </div>

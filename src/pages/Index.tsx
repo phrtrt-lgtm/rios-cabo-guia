@@ -2,7 +2,7 @@ import { GuideSection } from "@/components/GuideSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { UtilityCard } from "@/components/UtilityCard";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info } from "lucide-react";
+import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
@@ -135,15 +135,20 @@ const Index = () => {
       {/* Praias */}
       <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
         <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <img 
-              src={praiaDoForteImg} 
-              alt="Vista aérea da Praia do Forte em Cabo Frio com faixa extensa de areia e águas calmas" 
-              className="w-full h-48 object-cover"
-            />
+          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
+            <div className="relative">
+              <img 
+                src={praiaDoForteImg} 
+                alt="Vista aérea da Praia do Forte em Cabo Frio com faixa extensa de areia e águas calmas" 
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Waves className="w-5 h-5 text-primary-foreground" />
+              </div>
+            </div>
             <div className="p-6">
               <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Praia do Forte
+                Praia do Forte
               </h3>
               <p className="text-muted-foreground mb-4">
                 A praia mais famosa de Cabo Frio, com extensa faixa de areia, quiosques e infraestrutura completa. 
@@ -160,15 +165,20 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <img 
-              src={ilhaDoJaponesImg} 
-              alt="Ilha do Japonês com águas cristalinas rasas e turquesa em Cabo Frio" 
-              className="w-full h-48 object-cover"
-            />
+          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
+            <div className="relative">
+              <img 
+                src={ilhaDoJaponesImg} 
+                alt="Ilha do Japonês com águas cristalinas rasas e turquesa em Cabo Frio" 
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Palmtree className="w-5 h-5 text-primary-foreground" />
+              </div>
+            </div>
             <div className="p-6">
               <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Ilha do Japonês
+                Ilha do Japonês
               </h3>
               <p className="text-muted-foreground mb-4">
                 Águas cristalinas e rasas, perfeita para relaxar. Acessível a pé na maré baixa. 
@@ -185,15 +195,20 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <img 
-              src={praiaDoP} 
-              alt="Praia do Peró e Conchas em Cabo Frio com ondas e natureza preservada" 
-              className="w-full h-48 object-cover"
-            />
+          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
+            <div className="relative">
+              <img 
+                src={praiaDoP} 
+                alt="Praia do Peró e Conchas em Cabo Frio com ondas e natureza preservada" 
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Waves className="w-5 h-5 text-primary-foreground" />
+              </div>
+            </div>
             <div className="p-6">
               <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Peró & Conchas
+                Peró & Conchas
               </h3>
               <p className="text-muted-foreground mb-4">
                 Praias mais afastadas, com ondas para surf. Conchas oferece trilhas curtas e visual deslumbrante. 
@@ -210,15 +225,20 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <img 
-              src={forteSaoMateusImg} 
-              alt="Forte São Mateus ao pôr do sol, fortificação histórica do século XVII em Cabo Frio" 
-              className="w-full h-48 object-cover"
-            />
+          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
+            <div className="relative">
+              <img 
+                src={forteSaoMateusImg} 
+                alt="Forte São Mateus ao pôr do sol, fortificação histórica do século XVII em Cabo Frio" 
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Landmark className="w-5 h-5 text-primary-foreground" />
+              </div>
+            </div>
             <div className="p-6">
               <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Forte São Mateus
+                Forte São Mateus
               </h3>
               <p className="text-muted-foreground mb-4">
                 Fortificação do século XVII com vista panorâmica da cidade. Museu e área histórica. 
@@ -235,15 +255,20 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <img 
-              src={morroDaGuiaImg} 
-              alt="Mirante do Morro da Guia com farol e vista panorâmica do oceano em Cabo Frio" 
-              className="w-full h-48 object-cover"
-            />
+          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
+            <div className="relative">
+              <img 
+                src={morroDaGuiaImg} 
+                alt="Mirante do Morro da Guia com farol e vista panorâmica do oceano em Cabo Frio" 
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Mountain className="w-5 h-5 text-primary-foreground" />
+              </div>
+            </div>
             <div className="p-6">
               <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Morro da Guia
+                Morro da Guia
               </h3>
               <p className="text-muted-foreground mb-4">
                 Mirante com farol e vista espetacular de 360° da cidade e do oceano. 
@@ -260,15 +285,20 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="bg-card rounded-lg border border-border overflow-hidden">
-            <img 
-              src={bairroPassagemImg} 
-              alt="Bairro da Passagem com casas coloniais coloridas e barcos no canal em Cabo Frio" 
-              className="w-full h-48 object-cover"
-            />
+          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
+            <div className="relative">
+              <img 
+                src={bairroPassagemImg} 
+                alt="Bairro da Passagem com casas coloniais coloridas e barcos no canal em Cabo Frio" 
+                className="w-full h-48 object-cover"
+              />
+              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Landmark className="w-5 h-5 text-primary-foreground" />
+              </div>
+            </div>
             <div className="p-6">
               <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Bairro da Passagem
+                Bairro da Passagem
               </h3>
               <p className="text-muted-foreground mb-4">
                 Bairro histórico e charmoso, com casas coloridas, canal, restaurantes à beira d'água e artesanato local. 
@@ -306,7 +336,7 @@ const Index = () => {
               phone="(22) 2648-3400"
               website="https://www.drogaraia.com.br"
               tips="Delivery disponível. Aceita principais cartões e tem programa de fidelidade."
-              image={drogaRaiaImg}
+              type="pharmacy"
             />
             <UtilityCard 
               name="Drogaria Pacheco"
@@ -317,7 +347,7 @@ const Index = () => {
               phone="(22) 2645-7100"
               website="https://www.drogariaspacheco.com.br"
               tips="Programa de descontos para idosos. Estacionamento próprio."
-              image={drogariaPachecoImg}
+              type="pharmacy"
             />
           </div>
         </div>
@@ -335,7 +365,7 @@ const Index = () => {
               phone="(22) 2647-5200"
               website="https://www.carone.com.br"
               tips="Estacionamento amplo. Delivery disponível via app próprio."
-              image={supermercadoCaroneImg}
+              type="supermarket"
             />
             <UtilityCard 
               name="Supermercado Extra"
@@ -346,7 +376,7 @@ const Index = () => {
               phone="(22) 2649-7800"
               website="https://www.paodeacucar.com"
               tips="Praça de alimentação interna. Cartão fidelidade com descontos."
-              image={supermercadoExtraImg}
+              type="supermarket"
             />
             <UtilityCard 
               name="Supermercado Princesa"
@@ -356,7 +386,7 @@ const Index = () => {
               hours="Seg-Sáb 7h-20h, Dom 7h-13h"
               phone="(22) 2643-2100"
               tips="Aceita encomendas de pães e bolos. Entrega local."
-              image={supermercadoPrincesaImg}
+              type="supermarket"
             />
             <UtilityCard 
               name="Hortifruti Green Fruit"
@@ -366,7 +396,7 @@ const Index = () => {
               hours="Seg-Sáb 6h-20h, Dom 6h-14h"
               phone="(22) 2645-9300"
               tips="Delivery rápido na região. Sucos naturais feitos na hora."
-              image={hortifrutiGreenFruitImg}
+              type="supermarket"
             />
           </div>
         </div>
@@ -384,7 +414,7 @@ const Index = () => {
               phone="(22) 2648-5700"
               website="https://www.americanas.com.br"
               tips="Aceita cartões de todas as bandeiras. App com descontos exclusivos."
-              image={lojasAmericanasImg}
+              type="store"
             />
           </div>
         </div>
@@ -401,7 +431,7 @@ const Index = () => {
               hours="Diariamente 5h30-21h"
               phone="(22) 2647-2200"
               tips="Experimente o pão francês quentinho e os sonhos recheados. Estacionamento na rua."
-              image={padariaRemmarImg}
+              type="bakery"
             />
             <UtilityCard 
               name="Padaria Dupão"
@@ -411,7 +441,7 @@ const Index = () => {
               hours="Diariamente 5h-21h30"
               phone="(22) 2645-8800"
               tips="Promoções diárias no período da tarde. Wi-Fi gratuito."
-              image={padariaDupaoImg}
+              type="bakery"
             />
           </div>
         </div>
@@ -429,7 +459,7 @@ const Index = () => {
               phone="(22) 2645-3100"
               website="https://www.redepesepatas.com.br"
               tips="Programa de fidelidade. Entrega grátis acima de R$ 100."
-              image={pesEPatasImg}
+              type="petshop"
             />
             <UtilityCard 
               name="Rações & Cia"
@@ -439,7 +469,7 @@ const Index = () => {
               hours="Seg-Sex 8h-19h, Sáb 8h-17h"
               phone="(22) 2649-4200"
               tips="Aceita todas as formas de pagamento. Estacionamento fácil."
-              image={racoesECiaImg}
+              type="petshop"
             />
           </div>
         </div>
