@@ -363,6 +363,15 @@ const Index = () => {
               website="https://www.drogaraia.com.br"
               tips="Delivery disponível. Aceita principais cartões e tem programa de fidelidade."
               type="pharmacy"
+              distanceBadge={origin && getETA('droga-raia') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('droga-raia')?.walkingMinutes || null}
+                  drivingMinutes={getETA('droga-raia')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('droga-raia')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <UtilityCard 
               name="Drogaria Pacheco"
@@ -374,6 +383,15 @@ const Index = () => {
               website="https://www.drogariaspacheco.com.br"
               tips="Programa de descontos para idosos. Estacionamento próprio."
               type="pharmacy"
+              distanceBadge={origin && getETA('drogaria-pacheco') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('drogaria-pacheco')?.walkingMinutes || null}
+                  drivingMinutes={getETA('drogaria-pacheco')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('drogaria-pacheco')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -392,6 +410,15 @@ const Index = () => {
               website="https://www.carone.com.br"
               tips="Estacionamento amplo. Delivery disponível via app próprio."
               type="supermarket"
+              distanceBadge={origin && getETA('supermercado-carone') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('supermercado-carone')?.walkingMinutes || null}
+                  drivingMinutes={getETA('supermercado-carone')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('supermercado-carone')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <UtilityCard 
               name="Supermercado Extra"
@@ -403,6 +430,15 @@ const Index = () => {
               website="https://www.paodeacucar.com"
               tips="Praça de alimentação interna. Cartão fidelidade com descontos."
               type="supermarket"
+              distanceBadge={origin && getETA('supermercado-extra') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('supermercado-extra')?.walkingMinutes || null}
+                  drivingMinutes={getETA('supermercado-extra')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('supermercado-extra')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <UtilityCard 
               name="Supermercado Princesa"
@@ -413,6 +449,15 @@ const Index = () => {
               phone="(22) 2643-2100"
               tips="Aceita encomendas de pães e bolos. Entrega local."
               type="supermarket"
+              distanceBadge={origin && getETA('supermercado-princesa') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('supermercado-princesa')?.walkingMinutes || null}
+                  drivingMinutes={getETA('supermercado-princesa')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('supermercado-princesa')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <UtilityCard 
               name="Hortifruti Green Fruit"
@@ -423,6 +468,15 @@ const Index = () => {
               phone="(22) 2645-9300"
               tips="Delivery rápido na região. Sucos naturais feitos na hora."
               type="supermarket"
+              distanceBadge={origin && getETA('hortifruti-green') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('hortifruti-green')?.walkingMinutes || null}
+                  drivingMinutes={getETA('hortifruti-green')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('hortifruti-green')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -441,6 +495,15 @@ const Index = () => {
               website="https://www.americanas.com.br"
               tips="Aceita cartões de todas as bandeiras. App com descontos exclusivos."
               type="store"
+              distanceBadge={origin && getETA('lojas-americanas') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('lojas-americanas')?.walkingMinutes || null}
+                  drivingMinutes={getETA('lojas-americanas')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('lojas-americanas')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -458,6 +521,15 @@ const Index = () => {
               phone="(22) 2647-2200"
               tips="Experimente o pão francês quentinho e os sonhos recheados. Estacionamento na rua."
               type="bakery"
+              distanceBadge={origin && getETA('padaria-remmar') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('padaria-remmar')?.walkingMinutes || null}
+                  drivingMinutes={getETA('padaria-remmar')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('padaria-remmar')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <UtilityCard 
               name="Padaria Dupão"
@@ -468,6 +540,15 @@ const Index = () => {
               phone="(22) 2645-8800"
               tips="Promoções diárias no período da tarde. Wi-Fi gratuito."
               type="bakery"
+              distanceBadge={origin && getETA('padaria-dupao') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('padaria-dupao')?.walkingMinutes || null}
+                  drivingMinutes={getETA('padaria-dupao')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('padaria-dupao')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -486,6 +567,15 @@ const Index = () => {
               website="https://www.redepesepatas.com.br"
               tips="Programa de fidelidade. Entrega grátis acima de R$ 100."
               type="petshop"
+              distanceBadge={origin && getETA('pes-e-patas') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('pes-e-patas')?.walkingMinutes || null}
+                  drivingMinutes={getETA('pes-e-patas')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('pes-e-patas')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <UtilityCard 
               name="Rações & Cia"
@@ -496,6 +586,15 @@ const Index = () => {
               phone="(22) 2649-4200"
               tips="Aceita todas as formas de pagamento. Estacionamento fácil."
               type="petshop"
+              distanceBadge={origin && getETA('racoes-e-cia') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('racoes-e-cia')?.walkingMinutes || null}
+                  drivingMinutes={getETA('racoes-e-cia')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('racoes-e-cia')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -562,6 +661,15 @@ const Index = () => {
               address="Av. Hilton Massa, 169 - Passagem"
               priceRange="$$$"
               category="Italiano"
+              distanceBadge={origin && getETA('lena-casa-italiana') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('lena-casa-italiana')?.walkingMinutes || null}
+                  drivingMinutes={getETA('lena-casa-italiana')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('lena-casa-italiana')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="Arcos do Canal"
@@ -569,6 +677,15 @@ const Index = () => {
               address="R. Constantino Menelau, 76 - Passagem"
               priceRange="$$$"
               category="Mediterrâneo"
+              distanceBadge={origin && getETA('arcos-do-canal') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('arcos-do-canal')?.walkingMinutes || null}
+                  drivingMinutes={getETA('arcos-do-canal')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('arcos-do-canal')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -584,6 +701,15 @@ const Index = () => {
               hours="Qui-Sáb 19h-23h, Dom 12h-16h"
               priceRange="$$$"
               category="Japonês"
+              distanceBadge={origin && getETA('fixi-kaiseki') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('fixi-kaiseki')?.walkingMinutes || null}
+                  drivingMinutes={getETA('fixi-kaiseki')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('fixi-kaiseki')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="Kento Cozinha Oriental"
@@ -591,6 +717,15 @@ const Index = () => {
               address="Av. Assunção, 294 - Centro"
               priceRange="$$"
               category="Japonês"
+              distanceBadge={origin && getETA('kento-cozinha-oriental') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('kento-cozinha-oriental')?.walkingMinutes || null}
+                  drivingMinutes={getETA('kento-cozinha-oriental')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('kento-cozinha-oriental')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="Casa Kanaloa"
@@ -598,6 +733,15 @@ const Index = () => {
               address="R. Constantino Menelau, 240 - Passagem"
               priceRange="$$"
               category="Tailandês"
+              distanceBadge={origin && getETA('casa-kanaloa') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('casa-kanaloa')?.walkingMinutes || null}
+                  drivingMinutes={getETA('casa-kanaloa')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('casa-kanaloa')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -612,6 +756,15 @@ const Index = () => {
               address="Av. dos Pescadores, 100 - Centro"
               priceRange="$$"
               category="Churrasco"
+              distanceBadge={origin && getETA('picanha-do-ze') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('picanha-do-ze')?.walkingMinutes || null}
+                  drivingMinutes={getETA('picanha-do-ze')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('picanha-do-ze')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="Cabo Grill"
@@ -619,6 +772,15 @@ const Index = () => {
               address="R. Raul Veiga, 542 - Centro"
               priceRange="$$"
               category="Brasileiro"
+              distanceBadge={origin && getETA('cabo-grill') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('cabo-grill')?.walkingMinutes || null}
+                  drivingMinutes={getETA('cabo-grill')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('cabo-grill')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -634,6 +796,15 @@ const Index = () => {
               hours="18h-23:45 (confirmar)"
               priceRange="$$"
               category="Hamburgueria"
+              distanceBadge={origin && getETA('paelo-hamburgueria') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('paelo-hamburgueria')?.walkingMinutes || null}
+                  drivingMinutes={getETA('paelo-hamburgueria')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('paelo-hamburgueria')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="Sem Frescura Burger"
@@ -641,6 +812,15 @@ const Index = () => {
               address="Braga"
               priceRange="$$"
               category="Hamburgueria"
+              distanceBadge={origin && getETA('sem-frescura-burger') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('sem-frescura-burger')?.walkingMinutes || null}
+                  drivingMinutes={getETA('sem-frescura-burger')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('sem-frescura-burger')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -655,6 +835,15 @@ const Index = () => {
               address="Centro / Vila Nova"
               priceRange="$"
               category="Saudável"
+              distanceBadge={origin && getETA('bem-fresh') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('bem-fresh')?.walkingMinutes || null}
+                  drivingMinutes={getETA('bem-fresh')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('bem-fresh')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -669,6 +858,15 @@ const Index = () => {
               address="Braga e Passagem (2 unidades)"
               priceRange="$"
               category="Café"
+              distanceBadge={origin && getETA('office-cafe') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('office-cafe')?.walkingMinutes || null}
+                  drivingMinutes={getETA('office-cafe')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('office-cafe')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="Espaço Café"
@@ -676,6 +874,15 @@ const Index = () => {
               address="R. Victor Igrejas, 4 - Ville Blanche"
               priceRange="$"
               category="Confeitaria"
+              distanceBadge={origin && getETA('espaco-cafe') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('espaco-cafe')?.walkingMinutes || null}
+                  drivingMinutes={getETA('espaco-cafe')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('espaco-cafe')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="O Suisso"
@@ -683,6 +890,15 @@ const Index = () => {
               address="Av. Assunção, 682 - Centro"
               priceRange="$"
               category="Confeitaria"
+              distanceBadge={origin && getETA('o-suisso') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('o-suisso')?.walkingMinutes || null}
+                  drivingMinutes={getETA('o-suisso')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('o-suisso')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
             <RestaurantCard 
               name="Brigaderia da Vovó"
@@ -691,6 +907,15 @@ const Index = () => {
               hours="Seg-Sáb 11h-19h"
               priceRange="$"
               category="Doces"
+              distanceBadge={origin && getETA('brigaderia-da-vovo') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('brigaderia-da-vovo')?.walkingMinutes || null}
+                  drivingMinutes={getETA('brigaderia-da-vovo')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('brigaderia-da-vovo')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -705,6 +930,15 @@ const Index = () => {
               address="Av. Hilton Massa, 890 - Praia do Forte + Park Lagos"
               priceRange="$"
               category="Crepes"
+              distanceBadge={origin && getETA('los-crepes') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('los-crepes')?.walkingMinutes || null}
+                  drivingMinutes={getETA('los-crepes')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('los-crepes')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
@@ -719,6 +953,15 @@ const Index = () => {
               address="Praia do Forte"
               priceRange="$$"
               category="Café Colonial"
+              distanceBadge={origin && getETA('nova-onda') ? (
+                <DistanceBadge 
+                  walkingMinutes={getETA('nova-onda')?.walkingMinutes || null}
+                  drivingMinutes={getETA('nova-onda')?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={getETA('nova-onda')?.isFallback}
+                  originAddress={origin.address}
+                />
+              ) : undefined}
             />
           </div>
         </div>
