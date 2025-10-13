@@ -62,8 +62,42 @@ export const DistanceWidget = ({
           strictBounds: false,
           componentRestrictions: { country: 'br' },
           fields: ['formatted_address', 'geometry', 'name'],
-          types: ['address', 'establishment'],
+          types: ['geocode', 'establishment'],
         });
+
+        // Adicionar estilos ao container de sugestões
+        const style = document.createElement('style');
+        style.textContent = `
+          .pac-container {
+            z-index: 9999 !important;
+            border-radius: 8px;
+            margin-top: 4px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid hsl(var(--border));
+            background-color: hsl(var(--background));
+          }
+          .pac-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            color: hsl(var(--foreground));
+            border-top: 1px solid hsl(var(--border));
+          }
+          .pac-item:first-child {
+            border-top: none;
+          }
+          .pac-item:hover {
+            background-color: hsl(var(--accent));
+          }
+          .pac-item-query {
+            color: hsl(var(--foreground));
+            font-weight: 500;
+          }
+          .pac-matched {
+            font-weight: 700;
+            color: hsl(var(--primary));
+          }
+        `;
+        document.head.appendChild(style);
 
         autocompleteRef.current.addListener('place_changed', () => {
           const place = autocompleteRef.current?.getPlace();
