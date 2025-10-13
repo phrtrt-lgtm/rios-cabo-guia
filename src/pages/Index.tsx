@@ -5,6 +5,7 @@ import { UtilityCard } from "@/components/UtilityCard";
 import { TouristCard } from "@/components/TouristCard";
 import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
+import { QuickItinerary } from "@/components/QuickItinerary";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
@@ -229,6 +230,9 @@ const Index = () => {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="gap-2">
               <Utensils className="h-4 w-4" /> Gastronomia
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('roteiro')} className="gap-2">
+              <MapPin className="h-4 w-4" /> Roteiro
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="gap-2">
               <Waves className="h-4 w-4" /> Arraial
@@ -706,6 +710,19 @@ const Index = () => {
             />
           </div>
         </div>
+      </GuideSection>
+
+      {/* Roteiro em 1 Clique */}
+      <GuideSection id="roteiro" title="Roteiro em 1 Clique" className="bg-muted/30" printBreak>
+        <p className="text-muted-foreground mb-6">
+          Selecione um bairro e gere instantaneamente um roteiro Manhã • Tarde • Noite com os melhores lugares. 
+          Veja os tempos estimados a partir do seu ponto base.
+        </p>
+        <QuickItinerary 
+          origin={origin}
+          etas={etas}
+          currentMode={currentMode}
+        />
       </GuideSection>
 
       {/* Arraial do Cabo */}
