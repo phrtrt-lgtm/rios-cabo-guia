@@ -41,8 +41,9 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-background border-b border-border py-6">
-        <div className="container mx-auto px-4 flex justify-center">
+        <div className="container mx-auto px-4 flex flex-col items-center gap-2">
           <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-16 object-contain" />
+          <p className="text-[#D2691E] text-sm tracking-wide uppercase">Guia Turístico de Cabo Frio</p>
         </div>
       </header>
 
