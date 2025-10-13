@@ -111,14 +111,9 @@ const Index = () => {
       <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
         <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative">
-              <img 
-                src={praiaDoForteImg} 
-                alt="Vista aérea da Praia do Forte em Cabo Frio com faixa extensa de areia e águas calmas" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Waves className="w-5 h-5 text-primary-foreground" />
+            <div className="relative bg-gradient-to-br from-primary/20 to-primary/5 h-32 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Waves className="w-8 h-8 text-primary-foreground" />
               </div>
             </div>
             <div className="p-6">
@@ -141,14 +136,9 @@ const Index = () => {
           </div>
 
           <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative">
-              <img 
-                src={ilhaDoJaponesImg} 
-                alt="Ilha do Japonês com águas cristalinas rasas e turquesa em Cabo Frio" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Palmtree className="w-5 h-5 text-primary-foreground" />
+            <div className="relative bg-gradient-to-br from-secondary/20 to-secondary/5 h-32 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-secondary/90 flex items-center justify-center backdrop-blur-sm">
+                <Palmtree className="w-8 h-8 text-secondary-foreground" />
               </div>
             </div>
             <div className="p-6">
@@ -171,14 +161,9 @@ const Index = () => {
           </div>
 
           <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative">
-              <img 
-                src={praiaDoP} 
-                alt="Praia do Peró e Conchas em Cabo Frio com ondas e natureza preservada" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Waves className="w-5 h-5 text-primary-foreground" />
+            <div className="relative bg-gradient-to-br from-primary/20 to-primary/5 h-32 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Waves className="w-8 h-8 text-primary-foreground" />
               </div>
             </div>
             <div className="p-6">
@@ -201,14 +186,9 @@ const Index = () => {
           </div>
 
           <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative">
-              <img 
-                src={forteSaoMateusImg} 
-                alt="Forte São Mateus ao pôr do sol, fortificação histórica do século XVII em Cabo Frio" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Landmark className="w-5 h-5 text-primary-foreground" />
+            <div className="relative bg-gradient-to-br from-accent/20 to-accent/5 h-32 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center backdrop-blur-sm">
+                <Landmark className="w-8 h-8 text-accent-foreground" />
               </div>
             </div>
             <div className="p-6">
@@ -231,14 +211,9 @@ const Index = () => {
           </div>
 
           <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative">
-              <img 
-                src={morroDaGuiaImg} 
-                alt="Mirante do Morro da Guia com farol e vista panorâmica do oceano em Cabo Frio" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Mountain className="w-5 h-5 text-primary-foreground" />
+            <div className="relative bg-gradient-to-br from-primary/20 to-primary/5 h-32 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                <Mountain className="w-8 h-8 text-primary-foreground" />
               </div>
             </div>
             <div className="p-6">
@@ -261,14 +236,9 @@ const Index = () => {
           </div>
 
           <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative">
-              <img 
-                src={bairroPassagemImg} 
-                alt="Bairro da Passagem com casas coloniais coloridas e barcos no canal em Cabo Frio" 
-                className="w-full h-48 object-cover"
-              />
-              <div className="absolute top-2 right-2 w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Landmark className="w-5 h-5 text-primary-foreground" />
+            <div className="relative bg-gradient-to-br from-secondary/20 to-secondary/5 h-32 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-secondary/90 flex items-center justify-center backdrop-blur-sm">
+                <Landmark className="w-8 h-8 text-secondary-foreground" />
               </div>
             </div>
             <div className="p-6">
