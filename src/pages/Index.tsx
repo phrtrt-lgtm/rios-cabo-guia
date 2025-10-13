@@ -6,6 +6,7 @@ import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, 
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
+import riosLogoHeader from "@/assets/rios-logo-header.png";
 
 // Beach images
 import praiaDoForteImg from "@/assets/beaches/praia-do-forte.jpg";
@@ -36,23 +37,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header / Capa */}
-      <header className="relative h-screen flex items-center justify-center bg-gradient-to-b from-primary/10 to-background">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
-        <div className="relative z-10 text-center px-4 max-w-4xl">
-          <img src={riosLogo} alt="Rios Logo" className="mx-auto mb-8 h-24 object-contain" />
-          <h1 className="text-5xl md:text-6xl font-bold text-primary mb-4">
-            Cabo Frio por Rios
-          </h1>
-          <p className="text-2xl md:text-3xl text-secondary mb-2">
-            Guia Essencial de Bairros, Praias & Sabores
-          </p>
-          <p className="text-xl text-muted-foreground">
-            Braga • Vila Nova • Algodoal • Portinho • Passagem
-          </p>
+      {/* Header */}
+      <header className="bg-background border-b border-border py-6">
+        <div className="container mx-auto px-4 flex justify-center">
+          <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-16 object-contain" />
         </div>
       </header>
 
