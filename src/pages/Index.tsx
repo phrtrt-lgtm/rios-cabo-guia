@@ -302,6 +302,18 @@ const Index = () => {
         </div>
       </GuideSection>
 
+      {/* Roteiro em 1 Clique */}
+      <GuideSection id="roteiro" title="Roteiro em 1 Clique" printBreak>
+        <p className="text-muted-foreground mb-6">
+          Selecione um bairro de Cabo Frio, Arraial do Cabo ou Búzios e gere instantaneamente um roteiro Manhã • Tarde • Noite com os melhores lugares. 
+          Veja os tempos estimados a partir do seu ponto base.
+        </p>
+        <QuickItinerary 
+          origin={origin}
+          etas={etas}
+          currentMode={currentMode}
+        />
+      </GuideSection>
 
       {/* Praias */}
       <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
@@ -710,19 +722,6 @@ const Index = () => {
             />
           </div>
         </div>
-      </GuideSection>
-
-      {/* Roteiro em 1 Clique */}
-      <GuideSection id="roteiro" title="Roteiro em 1 Clique" className="bg-muted/30" printBreak>
-        <p className="text-muted-foreground mb-6">
-          Selecione um bairro e gere instantaneamente um roteiro Manhã • Tarde • Noite com os melhores lugares. 
-          Veja os tempos estimados a partir do seu ponto base.
-        </p>
-        <QuickItinerary 
-          origin={origin}
-          etas={etas}
-          currentMode={currentMode}
-        />
       </GuideSection>
 
       {/* Arraial do Cabo */}

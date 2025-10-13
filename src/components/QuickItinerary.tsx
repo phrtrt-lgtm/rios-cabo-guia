@@ -210,12 +210,175 @@ const placesByNeighborhood: Record<string, ItineraryPlace[]> = {
   ],
 };
 
+// Roteiros para Arraial do Cabo
+const arraialItineraries: Record<string, ItineraryPlace[]> = {
+  'Arraial Clássico': [
+    {
+      id: 'prainhas-pontal-atalaia',
+      name: 'Prainhas do Pontal do Atalaia',
+      category: 'beach',
+      bairro: 'Atalaia',
+      lat: -22.9661,
+      lng: -42.0275,
+      description: 'Mirantes e faixa de areia clara com águas cristalinas.',
+      links: { maps: 'https://goo.gl/maps/prainhasponta' }
+    },
+    {
+      id: 'cafe-arraial',
+      name: 'Café Local',
+      category: 'cafe',
+      bairro: 'Centro',
+      lat: -22.9656,
+      lng: -42.0289,
+      description: 'Café regional com vista para o mar.',
+      links: {}
+    },
+    {
+      id: 'praia-forno-arraial',
+      name: 'Praia do Forno',
+      category: 'beach',
+      bairro: 'Forno',
+      lat: -22.9686,
+      lng: -42.0256,
+      description: 'Trilha curta ou barco-táxi. Mar calmo e transparente.',
+      links: { maps: 'https://goo.gl/maps/praiaforno' }
+    },
+    {
+      id: 'fixi-arraial',
+      name: 'FIXI Arraial',
+      category: 'restaurant',
+      bairro: 'Arraial',
+      lat: -22.9703,
+      lng: -42.0206,
+      description: 'Cozinha do mar com proposta autoral.',
+      links: {}
+    },
+  ],
+  'Arraial Aventura': [
+    {
+      id: 'praia-forno-trekking',
+      name: 'Trilha Praia do Forno',
+      category: 'landmark',
+      bairro: 'Forno',
+      lat: -22.9686,
+      lng: -42.0256,
+      description: 'Trilha de 15-20min com vista incrível.',
+      links: { maps: 'https://goo.gl/maps/trilhaforno' }
+    },
+    {
+      id: 'snack-anjos',
+      name: 'Lanche na Praia dos Anjos',
+      category: 'snack',
+      bairro: 'Praia dos Anjos',
+      lat: -22.9703,
+      lng: -42.0206,
+      description: 'Quiosques com frutos do mar frescos.',
+      links: {}
+    },
+    {
+      id: 'passeio-barco-arraial',
+      name: 'Passeio de Barco',
+      category: 'landmark',
+      bairro: 'Praia dos Anjos',
+      lat: -22.9703,
+      lng: -42.0206,
+      description: 'Gruta Azul + Ilha do Farol (controle Marinha).',
+      links: {}
+    },
+  ],
+};
+
+// Roteiros para Búzios
+const buziosItineraries: Record<string, ItineraryPlace[]> = {
+  'Búzios Clássico': [
+    {
+      id: 'azeda-azedinha',
+      name: 'Praia Azeda & Azedinha',
+      category: 'beach',
+      bairro: 'Ossos',
+      lat: -22.7556,
+      lng: -41.8833,
+      description: 'Praias cênicas, acesso por escadaria de 200+ degraus.',
+      links: { maps: 'https://goo.gl/maps/azeda' }
+    },
+    {
+      id: 'cafe-buzios-centro',
+      name: 'Café no Centro',
+      category: 'cafe',
+      bairro: 'Centro',
+      lat: -22.7472,
+      lng: -41.8817,
+      description: 'Cafés charmosos na região da Orla Bardot.',
+      links: {}
+    },
+    {
+      id: 'orla-bardot-walk',
+      name: 'Orla Bardot',
+      category: 'landmark',
+      bairro: 'Centro',
+      lat: -22.7472,
+      lng: -41.8817,
+      description: 'Passeio à beira-mar com estátuas e casario.',
+      links: { maps: 'https://goo.gl/maps/orlabardot' }
+    },
+    {
+      id: 'rua-pedras-jantar',
+      name: 'Rua das Pedras',
+      category: 'restaurant',
+      bairro: 'Centro',
+      lat: -22.7472,
+      lng: -41.8844,
+      description: 'Jantar em restaurantes charmosos e bares.',
+      links: { maps: 'https://goo.gl/maps/ruapedras' }
+    },
+  ],
+  'Búzios Pôr do Sol': [
+    {
+      id: 'geriba-manha',
+      name: 'Praia de Geribá',
+      category: 'beach',
+      bairro: 'Geribá',
+      lat: -22.7597,
+      lng: -41.9383,
+      description: 'Praia ampla, boa para surf e beach clubs.',
+      links: { maps: 'https://goo.gl/maps/geriba' }
+    },
+    {
+      id: 'ferradurinha-tarde',
+      name: 'Ferradurinha',
+      category: 'beach',
+      bairro: 'Ferradurinha',
+      lat: -22.7450,
+      lng: -41.9086,
+      description: 'Pequena enseada com águas calmas para SUP.',
+      links: { maps: 'https://goo.gl/maps/ferradurinha' }
+    },
+    {
+      id: 'porto-barra-sunset',
+      name: 'Porto da Barra',
+      category: 'restaurant',
+      bairro: 'Manguinhos',
+      lat: -22.7658,
+      lng: -41.9281,
+      description: 'Pôr do sol + jantar à beira-mar.',
+      links: { maps: 'https://goo.gl/maps/portobarra' }
+    },
+  ],
+};
+
 const neighborhoodLabels: Record<string, string> = {
+  // Cabo Frio
   'Braga': 'Braga',
   'Vila Nova': 'Vila Nova',
   'Algodoal': 'Algodoal',
   'Portinho': 'Portinho',
   'Passagem': 'Passagem',
+  // Arraial do Cabo
+  'Arraial Clássico': 'Arraial Clássico',
+  'Arraial Aventura': 'Arraial Aventura',
+  // Búzios
+  'Búzios Clássico': 'Búzios Clássico',
+  'Búzios Pôr do Sol': 'Búzios Pôr do Sol',
 };
 
 export const QuickItinerary = ({ origin, etas, currentMode }: QuickItineraryProps) => {
@@ -227,7 +390,19 @@ export const QuickItinerary = ({ origin, etas, currentMode }: QuickItineraryProp
   };
 
   const generateItinerary = (neighborhood: string) => {
-    const places = placesByNeighborhood[neighborhood] || [];
+    // Verificar se é roteiro de Arraial ou Búzios
+    const isArraial = neighborhood.startsWith('Arraial');
+    const isBuzios = neighborhood.startsWith('Búzios');
+    
+    let places: ItineraryPlace[] = [];
+    
+    if (isArraial) {
+      places = arraialItineraries[neighborhood] || [];
+    } else if (isBuzios) {
+      places = buziosItineraries[neighborhood] || [];
+    } else {
+      places = placesByNeighborhood[neighborhood] || [];
+    }
     
     if (places.length === 0) return [];
 
@@ -346,19 +521,60 @@ export const QuickItinerary = ({ origin, etas, currentMode }: QuickItineraryProp
     <div className="space-y-6">
       {/* Seletor de Bairro */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-foreground">Escolha seu bairro</h3>
-        <div className="flex flex-wrap gap-2">
-          {Object.entries(neighborhoodLabels).map(([key, label]) => (
-            <Button
-              key={key}
-              onClick={() => handleNeighborhoodSelect(key)}
-              variant={selectedNeighborhood === key ? 'default' : 'outline'}
-              size="sm"
-              className="transition-all"
-            >
-              {label}
-            </Button>
-          ))}
+        <h3 className="text-lg font-semibold mb-3 text-foreground">Escolha seu destino</h3>
+        
+        {/* Cabo Frio */}
+        <div className="mb-4">
+          <p className="text-sm text-muted-foreground mb-2 font-medium">Cabo Frio</p>
+          <div className="flex flex-wrap gap-2">
+            {['Braga', 'Vila Nova', 'Algodoal', 'Portinho', 'Passagem'].map((key) => (
+              <Button
+                key={key}
+                onClick={() => handleNeighborhoodSelect(key)}
+                variant={selectedNeighborhood === key ? 'default' : 'outline'}
+                size="sm"
+                className="transition-all"
+              >
+                {neighborhoodLabels[key]}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Arraial do Cabo */}
+        <div className="mb-4">
+          <p className="text-sm text-muted-foreground mb-2 font-medium">Arraial do Cabo</p>
+          <div className="flex flex-wrap gap-2">
+            {['Arraial Clássico', 'Arraial Aventura'].map((key) => (
+              <Button
+                key={key}
+                onClick={() => handleNeighborhoodSelect(key)}
+                variant={selectedNeighborhood === key ? 'default' : 'outline'}
+                size="sm"
+                className="transition-all"
+              >
+                {neighborhoodLabels[key]}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Búzios */}
+        <div className="mb-4">
+          <p className="text-sm text-muted-foreground mb-2 font-medium">Búzios</p>
+          <div className="flex flex-wrap gap-2">
+            {['Búzios Clássico', 'Búzios Pôr do Sol'].map((key) => (
+              <Button
+                key={key}
+                onClick={() => handleNeighborhoodSelect(key)}
+                variant={selectedNeighborhood === key ? 'default' : 'outline'}
+                size="sm"
+                className="transition-all"
+              >
+                {neighborhoodLabels[key]}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
