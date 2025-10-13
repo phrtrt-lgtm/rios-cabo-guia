@@ -1,9 +1,14 @@
+import { useState, useMemo } from "react";
 import { GuideSection } from "@/components/GuideSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { UtilityCard } from "@/components/UtilityCard";
 import { TouristCard } from "@/components/TouristCard";
+import { DistanceWidget } from "@/components/DistanceWidget";
+import { DistanceBadge } from "@/components/DistanceBadge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
+import { distanceService, ETAResult } from "@/services/distance.service";
+import { allPlaces, touristPlaces, utilityPlaces } from "@/data/places";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
@@ -31,11 +36,103 @@ import padariaDupaoImg from "@/assets/utilities/padaria-dupao.jpg";
 import pesEPatasImg from "@/assets/utilities/pes-e-patas.jpg";
 import racoesECiaImg from "@/assets/utilities/racoes-e-cia.jpg";
 
+// Descrições e dicas dos lugares
+const placeInfo: Record<string, { description: string; tips?: string }> = {
+  'praia-do-forte': {
+    description: 'A praia mais famosa de Cabo Frio, com extensa faixa de areia, quiosques e infraestrutura completa. Águas calmas, ideal para famílias.',
+    tips: 'Fica mais movimentada aos finais de semana. Chegue cedo para garantir estacionamento.',
+  },
+  'ilha-do-japones': {
+    description: 'Águas cristalinas e rasas, perfeita para relaxar. Acessível a pé na maré baixa. Verifique a tábua de marés antes de ir.',
+    tips: 'Melhor horário: maré baixa. Leve água e protetor solar - não há estrutura na ilha.',
+  },
+  'pero-conchas': {
+    description: 'Praias mais afastadas, com ondas para surf. Conchas oferece trilhas curtas e visual deslumbrante. Ótimas para quem busca natureza.',
+    tips: 'Praia do Peró é perfeita para surfistas. Praia das Conchas tem trilhas e piscinas naturais.',
+  },
+  'forte-sao-mateus': {
+    description: 'Fortificação do século XVII com vista panorâmica da cidade. Museu e área histórica. Visite ao entardecer para fotos incríveis.',
+    tips: 'Entrada gratuita. Funciona Ter-Dom, 9h-17h. Ótimo para fotos do pôr do sol.',
+  },
+  'morro-da-guia': {
+    description: 'Mirante com farol e vista espetacular de 360° da cidade e do oceano. Trilha curta e acessível. Imperdível ao nascer ou pôr do sol.',
+    tips: 'Trilha curta (15 min). Leve água e use calçado confortável. Vista de 360° vale cada passo.',
+  },
+  'bairro-passagem': {
+    description: 'Bairro histórico e charmoso, com casas coloridas, canal, restaurantes à beira d\'água e artesanato local. Perfeito para passeio a pé e gastronomia.',
+    tips: 'Fim de tarde é ideal. Experimente os restaurantes de frutos do mar e explore as lojinhas de artesanato.',
+  },
+};
+
 const Index = () => {
+  const [origin, setOrigin] = useState<{ lat: number; lng: number; address: string } | null>(null);
+  const [etas, setEtas] = useState<ETAResult[]>([]);
+  const [currentMode, setCurrentMode] = useState<'walking' | 'driving'>('driving');
+  const [isLoading, setIsLoading] = useState(false);
+  const [sortByTime, setSortByTime] = useState(false);
+
+  const getPlaceDescription = (placeId: string) => placeInfo[placeId]?.description || '';
+  const getPlaceTips = (placeId: string) => placeInfo[placeId]?.tips;
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const handleOriginSet = async (newOrigin: { lat: number; lng: number; address: string }) => {
+    setOrigin(newOrigin);
+    setIsLoading(true);
+    
+    try {
+      const results = await distanceService.batchCalculateETAs(newOrigin, allPlaces);
+      setEtas(results);
+    } catch (error) {
+      console.error('Erro ao calcular distâncias:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleModeChange = (mode: 'walking' | 'driving') => {
+    setCurrentMode(mode);
+  };
+
+  const handleSortByTime = () => {
+    setSortByTime(!sortByTime);
+  };
+
+  const getETA = (placeId: string) => {
+    return etas.find(eta => eta.placeId === placeId);
+  };
+
+  // Ordenar cards por tempo se ativado
+  const sortedTouristPlaces = useMemo(() => {
+    if (!sortByTime || !origin) return touristPlaces;
+    
+    return [...touristPlaces].sort((a, b) => {
+      const etaA = getETA(a.id);
+      const etaB = getETA(b.id);
+      if (!etaA || !etaB) return 0;
+      
+      const timeA = currentMode === 'walking' ? etaA.walkingMinutes : etaA.drivingMinutes;
+      const timeB = currentMode === 'walking' ? etaB.walkingMinutes : etaB.drivingMinutes;
+      return timeA - timeB;
+    });
+  }, [sortByTime, origin, etas, currentMode]);
+
+  const sortedUtilityPlaces = useMemo(() => {
+    if (!sortByTime || !origin) return utilityPlaces;
+    
+    return [...utilityPlaces].sort((a, b) => {
+      const etaA = getETA(a.id);
+      const etaB = getETA(b.id);
+      if (!etaA || !etaB) return 0;
+      
+      const timeA = currentMode === 'walking' ? etaA.walkingMinutes : etaA.drivingMinutes;
+      const timeB = currentMode === 'walking' ? etaB.walkingMinutes : etaB.drivingMinutes;
+      return timeA - timeB;
+    });
+  }, [sortByTime, origin, etas, currentMode]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,6 +166,15 @@ const Index = () => {
           </div>
         </div>
       </nav>
+
+      {/* Distance Widget */}
+      <DistanceWidget 
+        onOriginSet={handleOriginSet}
+        onModeChange={handleModeChange}
+        onSortByTime={handleSortByTime}
+        currentMode={currentMode}
+        isLoading={isLoading}
+      />
 
       {/* Boas-vindas */}
       <GuideSection id="boas-vindas" title="Boas-vindas & Como Usar Este Guia">
@@ -113,53 +219,28 @@ const Index = () => {
       {/* Praias */}
       <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
         <div className="grid md:grid-cols-2 gap-6">
-          <TouristCard 
-            name="Praia do Forte"
-            description="A praia mais famosa de Cabo Frio, com extensa faixa de areia, quiosques e infraestrutura completa. Águas calmas, ideal para famílias."
-            location="Centro, Cabo Frio"
-            tips="Fica mais movimentada aos finais de semana. Chegue cedo para garantir estacionamento."
-            type="beach"
-          />
-          
-          <TouristCard 
-            name="Ilha do Japonês"
-            description="Águas cristalinas e rasas, perfeita para relaxar. Acessível a pé na maré baixa. Verifique a tábua de marés antes de ir."
-            location="Praia do Forte, Cabo Frio"
-            tips="Melhor horário: maré baixa. Leve água e protetor solar - não há estrutura na ilha."
-            type="island"
-          />
-          
-          <TouristCard 
-            name="Peró & Conchas"
-            description="Praias mais afastadas, com ondas para surf. Conchas oferece trilhas curtas e visual deslumbrante. Ótimas para quem busca natureza."
-            location="Peró, Cabo Frio"
-            tips="Praia do Peró é perfeita para surfistas. Praia das Conchas tem trilhas e piscinas naturais."
-            type="beach"
-          />
-          
-          <TouristCard 
-            name="Forte São Mateus"
-            description="Fortificação do século XVII com vista panorâmica da cidade. Museu e área histórica. Visite ao entardecer para fotos incríveis."
-            location="Praia do Forte, Cabo Frio"
-            tips="Entrada gratuita. Funciona Ter-Dom, 9h-17h. Ótimo para fotos do pôr do sol."
-            type="landmark"
-          />
-          
-          <TouristCard 
-            name="Morro da Guia"
-            description="Mirante com farol e vista espetacular de 360° da cidade e do oceano. Trilha curta e acessível. Imperdível ao nascer ou pôr do sol."
-            location="Praia do Forte, Cabo Frio"
-            tips="Trilha curta (15 min). Leve água e use calçado confortável. Vista de 360° vale cada passo."
-            type="viewpoint"
-          />
-          
-          <TouristCard 
-            name="Bairro da Passagem"
-            description="Bairro histórico e charmoso, com casas coloridas, canal, restaurantes à beira d'água e artesanato local. Perfeito para passeio a pé e gastronomia."
-            location="Passagem, Cabo Frio"
-            tips="Fim de tarde é ideal. Experimente os restaurantes de frutos do mar e explore as lojinhas de artesanato."
-            type="landmark"
-          />
+          {sortedTouristPlaces.map((place) => {
+            const eta = getETA(place.id);
+            return (
+              <TouristCard 
+                key={place.id}
+                name={place.name}
+                description={getPlaceDescription(place.id)}
+                location={place.bairro || 'Cabo Frio'}
+                tips={getPlaceTips(place.id)}
+                type={place.category as any}
+                distanceBadge={eta && origin ? (
+                  <DistanceBadge 
+                    walkingMinutes={eta.walkingMinutes}
+                    drivingMinutes={eta.drivingMinutes}
+                    currentMode={currentMode}
+                    isFallback={eta.isFallback}
+                    originAddress={origin.address}
+                  />
+                ) : undefined}
+              />
+            );
+          })}
         </div>
       </GuideSection>
 

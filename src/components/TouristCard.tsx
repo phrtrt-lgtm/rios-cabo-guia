@@ -1,4 +1,5 @@
 import { MapPin, ExternalLink, Info, Star, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
+import { ReactNode } from "react";
 
 interface TouristCardProps {
   name: string;
@@ -6,6 +7,7 @@ interface TouristCardProps {
   location: string;
   tips?: string;
   type?: 'beach' | 'landmark' | 'viewpoint' | 'island';
+  distanceBadge?: ReactNode;
 }
 
 const getIconForType = (type?: string) => {
@@ -23,7 +25,8 @@ export const TouristCard = ({
   description,
   location,
   tips,
-  type
+  type,
+  distanceBadge
 }: TouristCardProps) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " Cabo Frio, RJ")}`;
   
@@ -43,7 +46,10 @@ export const TouristCard = ({
           
           {/* Header */}
           <div className="flex-1 min-w-0">
-            <h4 className="text-xl font-semibold text-primary mb-2">{name}</h4>
+            <div className="flex items-start justify-between gap-2 mb-2">
+              <h4 className="text-xl font-semibold text-primary">{name}</h4>
+              {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
+            </div>
             {/* Star Rating */}
             <div className="flex items-center gap-1">
               <Star className="w-4 h-4 fill-amber-400 text-amber-400" />

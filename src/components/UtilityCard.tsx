@@ -1,4 +1,5 @@
 import { MapPin, Clock, Phone, ExternalLink, Info, Star, ShoppingCart, Pill, Beef, Coffee, PawPrint, ShoppingBag } from "lucide-react";
+import { ReactNode } from "react";
 
 interface UtilityCardProps {
   name: string;
@@ -11,6 +12,7 @@ interface UtilityCardProps {
   tips?: string;
   image?: string;
   type?: 'pharmacy' | 'supermarket' | 'bakery' | 'petshop' | 'store';
+  distanceBadge?: ReactNode;
 }
 
 const getIconForType = (type?: string) => {
@@ -34,7 +36,8 @@ export const UtilityCard = ({
   website,
   tips,
   image,
-  type
+  type,
+  distanceBadge
 }: UtilityCardProps) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address + ", Cabo Frio, RJ")}`;
   const whatsappUrl = phone.replace(/\D/g, '').length >= 10 
@@ -57,13 +60,14 @@ export const UtilityCard = ({
           
           {/* Header */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between">
-              <div>
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1">
                 <h4 className="text-xl font-semibold text-primary mb-1">{name}</h4>
                 <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary-foreground text-xs rounded-full font-medium">
                   {neighborhood}
                 </span>
               </div>
+              {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
             </div>
             {/* Star Rating */}
             <div className="flex items-center gap-1 mt-2">
