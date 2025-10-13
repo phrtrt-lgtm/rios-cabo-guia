@@ -37,64 +37,73 @@ export const DistanceWidget = ({
 
       const apiKey = distanceService.getApiKey();
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=pt-BR`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=pt-BR&loading=async`;
       script.async = true;
       script.defer = true;
-      script.onload = () => initAutocomplete();
+      script.onload = () => {
+        setTimeout(() => initAutocomplete(), 100);
+      };
+      script.onerror = () => {
+        console.warn('Erro ao carregar Google Maps API. Autocomplete desabilitado.');
+      };
       document.head.appendChild(script);
     };
 
     const initAutocomplete = () => {
       if (!inputRef.current) return;
 
-      // Configurar bounds para Cabo Frio
-      const caboFrioBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(-22.9200, -42.0600), // Sudoeste
-        new google.maps.LatLng(-22.8400, -41.9600)  // Nordeste
-      );
+      try {
+        // Configurar bounds para Cabo Frio
+        const caboFrioBounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(-22.9200, -42.0600), // Sudoeste
+          new google.maps.LatLng(-22.8400, -41.9600)  // Nordeste
+        );
 
-      autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
-        bounds: caboFrioBounds,
-        strictBounds: false,
-        componentRestrictions: { country: 'br' },
-        fields: ['formatted_address', 'geometry', 'name'],
-        types: ['address', 'establishment'],
-      });
-
-      autocompleteRef.current.addListener('place_changed', () => {
-        const place = autocompleteRef.current?.getPlace();
-        
-        if (!place || !place.geometry || !place.geometry.location) {
-          toast({
-            title: 'Local inválido',
-            description: 'Selecione um endereço válido da lista.',
-            variant: 'destructive',
-          });
-          return;
-        }
-
-        const selectedAddress = place.formatted_address || place.name || '';
-        const coords = {
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-          address: selectedAddress,
-        };
-
-        setAddress(selectedAddress);
-        setCurrentOrigin(selectedAddress);
-        onOriginSet(coords);
-        
-        toast({
-          title: 'Ponto base definido',
-          description: `Calculando distâncias a partir de: ${selectedAddress}`,
+        autocompleteRef.current = new google.maps.places.Autocomplete(inputRef.current, {
+          bounds: caboFrioBounds,
+          strictBounds: false,
+          componentRestrictions: { country: 'br' },
+          fields: ['formatted_address', 'geometry', 'name'],
+          types: ['address', 'establishment'],
         });
-      });
+
+        autocompleteRef.current.addListener('place_changed', () => {
+          const place = autocompleteRef.current?.getPlace();
+          
+          if (!place || !place.geometry || !place.geometry.location) {
+            return;
+          }
+
+          const selectedAddress = place.formatted_address || place.name || '';
+          const coords = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+            address: selectedAddress,
+          };
+
+          setAddress(selectedAddress);
+          setCurrentOrigin(selectedAddress);
+          onOriginSet(coords);
+          
+          toast({
+            title: 'Ponto base definido',
+            description: `Calculando distâncias a partir de: ${selectedAddress}`,
+          });
+        });
+      } catch (error) {
+        console.warn('Erro ao inicializar autocomplete:', error);
+        toast({
+          title: 'Autocomplete indisponível',
+          description: 'Digite o endereço manualmente e clique em "Definir base".',
+          variant: 'destructive',
+        });
+      }
     };
 
     loadGoogleMapsScript();
 
     return () => {
-      if (autocompleteRef.current) {
+      if (autocompleteRef.current && typeof google !== 'undefined') {
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
