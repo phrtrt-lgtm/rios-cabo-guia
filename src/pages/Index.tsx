@@ -559,7 +559,6 @@ const Index = () => {
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 mt-12">
         <div className="container mx-auto px-4 text-center">
-          <img src={riosLogo} alt="Rios Logo" className="mx-auto mb-4 h-12 object-contain opacity-80" />
           <p className="text-sm opacity-80">
             © 2025 Rios • Cabo Frio, RJ • Feito com carinho para nossos hóspedes
           </p>
