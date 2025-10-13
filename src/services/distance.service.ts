@@ -24,7 +24,7 @@ const WALKING_SPEED_KMH = 4.8;
 const URBAN_DRIVING_SPEED_KMH = 22;
 
 export class DistanceService {
-  private apiKey: string = 'AIzaSyBu3Tcx41ryWPg31LqoPrr81rc747wYVhU';
+  private apiKey: string = 'AIzaSyDRhbVnnpsfSSIn8MS_7BCcRbcg8jz-3Cs';
   private cachePrefix = 'rios_eta_';
 
   getApiKey(): string {
