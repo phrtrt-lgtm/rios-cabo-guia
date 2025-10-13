@@ -5,8 +5,9 @@ import { UtilityCard } from "@/components/UtilityCard";
 import { TouristCard } from "@/components/TouristCard";
 import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
+import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation } from "lucide-react";
+import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
 import { allPlaces, touristPlaces, utilityPlaces, arraialPlaces, buziosPlaces } from "@/data/places";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
@@ -140,6 +141,7 @@ const Index = () => {
   const [currentMode, setCurrentMode] = useState<'walking' | 'driving'>('driving');
   const [isLoading, setIsLoading] = useState(false);
   const [sortByTime, setSortByTime] = useState(false);
+  const [itineraryBuilderOpen, setItineraryBuilderOpen] = useState(false);
 
   const getPlaceDescription = (placeId: string) => placeInfo[placeId]?.description || '';
   const getPlaceTips = (placeId: string) => placeInfo[placeId]?.tips;
@@ -297,6 +299,22 @@ const Index = () => {
           </div>
         </div>
       </GuideSection>
+
+      {/* Floating Itinerary Builder Button */}
+      <Button
+        onClick={() => setItineraryBuilderOpen(true)}
+        className="fixed bottom-8 right-8 rounded-full shadow-lg h-14 px-6 gap-2 z-50 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+        size="lg"
+      >
+        <Plus className="h-5 w-5" />
+        Montar meu roteiro
+      </Button>
+
+      {/* Itinerary Builder Modal */}
+      <ItineraryBuilder
+        open={itineraryBuilderOpen}
+        onOpenChange={setItineraryBuilderOpen}
+      />
 
       {/* Praias */}
       <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
