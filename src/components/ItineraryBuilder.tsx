@@ -110,27 +110,24 @@ const DraggablePlaceItem = ({ place, suggestedDuration }: { place: any; suggeste
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
-      className="grid grid-cols-12 gap-4 p-3 hover:bg-muted/30 transition-colors cursor-move active:cursor-grabbing touch-none"
+      className="grid grid-cols-12 gap-4 p-3 hover:bg-accent/10 transition-colors border-b border-border last:border-0"
     >
-      <div className="col-span-4 font-medium text-foreground flex items-center gap-2">
-        <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+      <div 
+        {...attributes} 
+        {...listeners}
+        className="col-span-5 font-medium text-foreground flex items-center gap-2 cursor-grab active:cursor-grabbing touch-none"
+      >
+        <GripVertical className="h-4 w-4 text-accent flex-shrink-0" />
         <span className="truncate">{place.name}</span>
       </div>
-      <div className="col-span-3 text-sm text-muted-foreground truncate">{place.category || 'N/A'}</div>
-      <div className="col-span-2 text-sm text-muted-foreground truncate">
-        {place.category || 'Geral'}
-      </div>
+      <div className="col-span-3 text-sm text-muted-foreground truncate">{place.category || 'Geral'}</div>
       <div className="col-span-2 text-sm">
         <Badge variant="secondary" className="text-xs">
           {suggestedDuration} min
         </Badge>
       </div>
-      <div className="col-span-1">
-        <Button variant="ghost" size="sm">
-          <MapPin className="h-4 w-4" />
-        </Button>
+      <div className="col-span-2 text-sm text-muted-foreground flex items-center gap-2">
+        <span className="text-xs">Arraste →</span>
       </div>
     </div>
   );
@@ -470,15 +467,14 @@ export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) 
         </div>
         
         <div className="border border-border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 grid grid-cols-12 gap-4 p-3 text-sm font-medium text-muted-foreground">
-            <div className="col-span-4">Nome</div>
-            <div className="col-span-3">Bairro/Cidade</div>
-            <div className="col-span-2">Categoria</div>
-            <div className="col-span-2">Duração sug.</div>
-            <div className="col-span-1">Ações</div>
+          <div className="bg-muted/50 grid grid-cols-12 gap-4 p-3 text-sm font-medium text-muted-foreground border-b border-border">
+            <div className="col-span-5">Nome do Local</div>
+            <div className="col-span-3">Categoria</div>
+            <div className="col-span-2">Duração</div>
+            <div className="col-span-2">Ação</div>
           </div>
           
-          <div className="divide-y divide-border max-h-[400px] overflow-y-auto">
+          <div className="max-h-[400px] overflow-y-auto">
             {filtered.map((place) => {
               const suggestedDuration = getSuggestedDuration(place.category || '');
               
