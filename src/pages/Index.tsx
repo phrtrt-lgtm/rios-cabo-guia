@@ -106,19 +106,6 @@ const Index = () => {
         </div>
       </GuideSection>
 
-      {/* Mapa */}
-      <GuideSection id="mapa" title="Mapa de Contexto" className="bg-muted/30">
-        <div className="text-center">
-          <img 
-            src={mapImage} 
-            alt="Mapa ilustrado de Cabo Frio com bairros Braga, Vila Nova, Algodoal, Portinho e Passagem" 
-            className="mx-auto rounded-lg shadow-lg max-w-full h-auto"
-          />
-          <p className="mt-4 text-sm text-muted-foreground">
-            Mapa esquemático dos bairros principais e pontos de interesse
-          </p>
-        </div>
-      </GuideSection>
 
       {/* Praias */}
       <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
