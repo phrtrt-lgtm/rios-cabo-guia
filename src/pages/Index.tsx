@@ -1,6 +1,7 @@
 import { GuideSection } from "@/components/GuideSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { UtilityCard } from "@/components/UtilityCard";
+import { TouristCard } from "@/components/TouristCard";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
@@ -109,156 +110,54 @@ const Index = () => {
 
       {/* Praias */}
       <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
-        <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative bg-gradient-to-br from-primary/20 to-primary/5 h-32 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Waves className="w-8 h-8 text-primary-foreground" />
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                Praia do Forte
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                A praia mais famosa de Cabo Frio, com extensa faixa de areia, quiosques e infraestrutura completa. 
-                Águas calmas, ideal para famílias.
-              </p>
-              <a 
-                href="https://www.google.com/maps/search/Praia+do+Forte+Cabo+Frio" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                <ExternalLink className="h-4 w-4" /> Como chegar
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative bg-gradient-to-br from-secondary/20 to-secondary/5 h-32 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-secondary/90 flex items-center justify-center backdrop-blur-sm">
-                <Palmtree className="w-8 h-8 text-secondary-foreground" />
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                Ilha do Japonês
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Águas cristalinas e rasas, perfeita para relaxar. Acessível a pé na maré baixa. 
-                Verifique a tábua de marés antes de ir.
-              </p>
-              <a 
-                href="https://www.google.com/maps/search/Ilha+do+Japonês+Cabo+Frio" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                <ExternalLink className="h-4 w-4" /> Como chegar
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative bg-gradient-to-br from-primary/20 to-primary/5 h-32 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Waves className="w-8 h-8 text-primary-foreground" />
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                Peró & Conchas
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Praias mais afastadas, com ondas para surf. Conchas oferece trilhas curtas e visual deslumbrante. 
-                Ótimas para quem busca natureza.
-              </p>
-              <a 
-                href="https://www.google.com/maps/search/Praia+do+Peró+Cabo+Frio" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                <ExternalLink className="h-4 w-4" /> Como chegar
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative bg-gradient-to-br from-accent/20 to-accent/5 h-32 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-accent/90 flex items-center justify-center backdrop-blur-sm">
-                <Landmark className="w-8 h-8 text-accent-foreground" />
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                Forte São Mateus
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Fortificação do século XVII com vista panorâmica da cidade. Museu e área histórica. 
-                Visite ao entardecer para fotos incríveis.
-              </p>
-              <a 
-                href="https://www.google.com/maps/search/Forte+São+Mateus+Cabo+Frio" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                <ExternalLink className="h-4 w-4" /> Como chegar
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative bg-gradient-to-br from-primary/20 to-primary/5 h-32 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
-                <Mountain className="w-8 h-8 text-primary-foreground" />
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                Morro da Guia
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Mirante com farol e vista espetacular de 360° da cidade e do oceano. 
-                Trilha curta e acessível. Imperdível ao nascer ou pôr do sol.
-              </p>
-              <a 
-                href="https://www.google.com/maps/search/Morro+da+Guia+Cabo+Frio" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                <ExternalLink className="h-4 w-4" /> Como chegar
-              </a>
-            </div>
-          </div>
-
-          <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-            <div className="relative bg-gradient-to-br from-secondary/20 to-secondary/5 h-32 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-secondary/90 flex items-center justify-center backdrop-blur-sm">
-                <Landmark className="w-8 h-8 text-secondary-foreground" />
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-primary mb-3 flex items-center gap-2">
-                Bairro da Passagem
-              </h3>
-              <p className="text-muted-foreground mb-4">
-                Bairro histórico e charmoso, com casas coloridas, canal, restaurantes à beira d'água e artesanato local. 
-                Perfeito para passeio a pé e gastronomia.
-              </p>
-              <a 
-                href="https://www.google.com/maps/search/Bairro+da+Passagem+Cabo+Frio" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary hover:underline"
-              >
-                <ExternalLink className="h-4 w-4" /> Como chegar
-              </a>
-            </div>
-          </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          <TouristCard 
+            name="Praia do Forte"
+            description="A praia mais famosa de Cabo Frio, com extensa faixa de areia, quiosques e infraestrutura completa. Águas calmas, ideal para famílias."
+            location="Centro, Cabo Frio"
+            tips="Fica mais movimentada aos finais de semana. Chegue cedo para garantir estacionamento."
+            type="beach"
+          />
+          
+          <TouristCard 
+            name="Ilha do Japonês"
+            description="Águas cristalinas e rasas, perfeita para relaxar. Acessível a pé na maré baixa. Verifique a tábua de marés antes de ir."
+            location="Praia do Forte, Cabo Frio"
+            tips="Melhor horário: maré baixa. Leve água e protetor solar - não há estrutura na ilha."
+            type="island"
+          />
+          
+          <TouristCard 
+            name="Peró & Conchas"
+            description="Praias mais afastadas, com ondas para surf. Conchas oferece trilhas curtas e visual deslumbrante. Ótimas para quem busca natureza."
+            location="Peró, Cabo Frio"
+            tips="Praia do Peró é perfeita para surfistas. Praia das Conchas tem trilhas e piscinas naturais."
+            type="beach"
+          />
+          
+          <TouristCard 
+            name="Forte São Mateus"
+            description="Fortificação do século XVII com vista panorâmica da cidade. Museu e área histórica. Visite ao entardecer para fotos incríveis."
+            location="Praia do Forte, Cabo Frio"
+            tips="Entrada gratuita. Funciona Ter-Dom, 9h-17h. Ótimo para fotos do pôr do sol."
+            type="landmark"
+          />
+          
+          <TouristCard 
+            name="Morro da Guia"
+            description="Mirante com farol e vista espetacular de 360° da cidade e do oceano. Trilha curta e acessível. Imperdível ao nascer ou pôr do sol."
+            location="Praia do Forte, Cabo Frio"
+            tips="Trilha curta (15 min). Leve água e use calçado confortável. Vista de 360° vale cada passo."
+            type="viewpoint"
+          />
+          
+          <TouristCard 
+            name="Bairro da Passagem"
+            description="Bairro histórico e charmoso, com casas coloridas, canal, restaurantes à beira d'água e artesanato local. Perfeito para passeio a pé e gastronomia."
+            location="Passagem, Cabo Frio"
+            tips="Fim de tarde é ideal. Experimente os restaurantes de frutos do mar e explore as lojinhas de artesanato."
+            type="landmark"
+          />
         </div>
       </GuideSection>
 
