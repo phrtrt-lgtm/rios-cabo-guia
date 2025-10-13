@@ -542,29 +542,17 @@ const Index = () => {
         </div>
       </GuideSection>
 
-      {/* Sobre a Rios */}
-      <GuideSection id="sobre" title="Sobre a Rios" printBreak>
-        <div className="bg-card p-8 rounded-lg border border-border text-center max-w-3xl mx-auto">
-          <img src={riosLogo} alt="Rios Logo" className="mx-auto mb-6 h-16 object-contain" />
+      {/* Contato */}
+      <GuideSection id="sobre" title="Atendimento" printBreak>
+        <div className="bg-card p-8 rounded-lg border border-border text-center max-w-2xl mx-auto">
           <p className="text-lg text-muted-foreground mb-6">
-            A Rios é liderada pelo casal Paulo & Thaís. Ela assina o home staging e a decoração; 
-            ele cuida de fotografia e gestão ponta-a-ponta. Operamos em Cabo Frio e Região dos Lagos.
+            Dúvidas ou sugestões? Entre em contato com nossa equipe.
           </p>
-          <p className="text-muted-foreground mb-6">
-            Cuidamos de imóveis e pessoas, e adoramos indicar bons lugares :)
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button asChild variant="default">
-              <a href="https://wa.me/5522999999999" target="_blank" rel="noopener noreferrer">
-                <Phone className="mr-2 h-4 w-4" /> WhatsApp
-              </a>
-            </Button>
-            <Button asChild variant="outline">
-              <a href="https://www.airbnb.com.br" target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-4 w-4" /> Airbnb
-              </a>
-            </Button>
-          </div>
+          <Button asChild variant="default" size="lg">
+            <a href="https://wa.me/5522999999999" target="_blank" rel="noopener noreferrer">
+              <Phone className="mr-2 h-5 w-5" /> Falar no WhatsApp
+            </a>
+          </Button>
         </div>
       </GuideSection>
 
