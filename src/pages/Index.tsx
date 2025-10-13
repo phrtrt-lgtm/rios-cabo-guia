@@ -6,7 +6,7 @@ import { TouristCard } from "@/components/TouristCard";
 import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
+import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
 import { allPlaces, touristPlaces, utilityPlaces } from "@/data/places";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
@@ -186,6 +186,13 @@ const Index = () => {
           </p>
           
           <div className="grid md:grid-cols-2 gap-4 not-prose">
+            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+              <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
+                <Navigation className="h-5 w-5" /> Calcular distâncias
+              </h3>
+              <p className="text-sm">Digite um endereço ou use "Minha localização" para ver o tempo estimado a pé e de carro até cada lugar.</p>
+            </div>
+
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
               <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
                 <Clock className="h-5 w-5" /> Melhor horário
