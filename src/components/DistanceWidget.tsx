@@ -248,7 +248,7 @@ export const DistanceWidget = ({
                 size="sm"
               >
                 <Navigation className="h-4 w-4 mr-2" />
-                Usar GPS
+                Usar minha localização
               </Button>
             </div>
 
