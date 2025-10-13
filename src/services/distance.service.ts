@@ -24,18 +24,10 @@ const WALKING_SPEED_KMH = 4.8;
 const URBAN_DRIVING_SPEED_KMH = 22;
 
 export class DistanceService {
-  private apiKey: string | null = null;
+  private apiKey: string = 'AIzaSyBu3Tcx41ryWPg31LqoPrr81rc747wYVhU';
   private cachePrefix = 'rios_eta_';
 
-  setApiKey(key: string) {
-    this.apiKey = key;
-    localStorage.setItem('google_maps_api_key', key);
-  }
-
-  getApiKey(): string | null {
-    if (!this.apiKey) {
-      this.apiKey = localStorage.getItem('google_maps_api_key');
-    }
+  getApiKey(): string {
     return this.apiKey;
   }
 
@@ -123,9 +115,6 @@ export class DistanceService {
   // Geocodificação
   async geocodeAddress(address: string): Promise<{ lat: number; lng: number } | null> {
     const apiKey = this.getApiKey();
-    if (!apiKey) {
-      throw new Error('Chave da API do Google Maps não configurada');
-    }
 
     try {
       const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(

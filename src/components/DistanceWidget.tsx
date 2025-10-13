@@ -1,16 +1,9 @@
-import { useState, useEffect } from 'react';
-import { MapPin, Navigation, Car, Footprints, ArrowUpDown, X, Settings } from 'lucide-react';
+import { useState } from 'react';
+import { MapPin, Navigation, Car, Footprints, ArrowUpDown, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { distanceService } from '@/services/distance.service';
 import { useToast } from '@/hooks/use-toast';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 
 interface DistanceWidgetProps {
   onOriginSet: (origin: { lat: number; lng: number; address: string }) => void;
@@ -29,16 +22,7 @@ export const DistanceWidget = ({
 }: DistanceWidgetProps) => {
   const [address, setAddress] = useState('');
   const [currentOrigin, setCurrentOrigin] = useState<string | null>(null);
-  const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-  const [tempApiKey, setTempApiKey] = useState('');
   const { toast } = useToast();
-
-  useEffect(() => {
-    const savedKey = distanceService.getApiKey();
-    if (savedKey) {
-      setTempApiKey(savedKey);
-    }
-  }, []);
 
   const handleSetOrigin = async () => {
     if (!address.trim()) {
@@ -47,12 +31,6 @@ export const DistanceWidget = ({
         description: 'Digite um endereço para definir o ponto base.',
         variant: 'destructive',
       });
-      return;
-    }
-
-    const apiKey = distanceService.getApiKey();
-    if (!apiKey) {
-      setShowApiKeyDialog(true);
       return;
     }
 
@@ -82,12 +60,6 @@ export const DistanceWidget = ({
   };
 
   const handleUseMyLocation = () => {
-    const apiKey = distanceService.getApiKey();
-    if (!apiKey) {
-      setShowApiKeyDialog(true);
-      return;
-    }
-
     if (!navigator.geolocation) {
       toast({
         title: 'GPS não disponível',
@@ -130,17 +102,6 @@ export const DistanceWidget = ({
     setAddress('');
   };
 
-  const handleSaveApiKey = () => {
-    if (tempApiKey.trim()) {
-      distanceService.setApiKey(tempApiKey.trim());
-      setShowApiKeyDialog(false);
-      toast({
-        title: 'Chave salva',
-        description: 'Agora você pode calcular distâncias.',
-      });
-    }
-  };
-
   return (
     <>
       <div className="sticky top-[73px] z-40 bg-background/95 backdrop-blur border-b border-border shadow-sm">
@@ -175,14 +136,6 @@ export const DistanceWidget = ({
               >
                 <Navigation className="h-4 w-4 mr-2" />
                 Usar GPS
-              </Button>
-              <Button
-                onClick={() => setShowApiKeyDialog(true)}
-                variant="ghost"
-                size="sm"
-                title="Configurar chave da API"
-              >
-                <Settings className="h-4 w-4" />
               </Button>
             </div>
 
@@ -243,38 +196,6 @@ export const DistanceWidget = ({
           </div>
         </div>
       </div>
-
-      {/* Dialog para chave da API */}
-      <Dialog open={showApiKeyDialog} onOpenChange={setShowApiKeyDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Configurar Google Maps API</DialogTitle>
-            <DialogDescription>
-              Para calcular distâncias, você precisa de uma chave da API do Google Maps.
-              Obtenha gratuitamente em:{' '}
-              <a
-                href="https://console.cloud.google.com/google/maps-apis/credentials"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary underline"
-              >
-                Google Cloud Console
-              </a>
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 pt-4">
-            <Input
-              placeholder="Cole sua chave da API aqui"
-              value={tempApiKey}
-              onChange={(e) => setTempApiKey(e.target.value)}
-              type="password"
-            />
-            <Button onClick={handleSaveApiKey} className="w-full">
-              Salvar chave
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
