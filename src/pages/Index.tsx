@@ -314,6 +314,9 @@ const Index = () => {
       <ItineraryBuilder
         open={itineraryBuilderOpen}
         onOpenChange={setItineraryBuilderOpen}
+        currentOrigin={origin}
+        currentEtas={etas}
+        currentMode={currentMode}
       />
 
       {/* Praias */}
