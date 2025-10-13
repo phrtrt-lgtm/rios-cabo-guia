@@ -10,6 +10,8 @@ import {
   useSensors,
   DragStartEvent,
   DragEndEvent,
+  useDraggable,
+  useDroppable,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -89,7 +91,52 @@ const getSuggestedDuration = (category: string): number => {
   return SUGGESTED_DURATIONS['default'];
 };
 
-// Sortable Item Component
+// Draggable Place Item Component
+const DraggablePlaceItem = ({ place, suggestedDuration }: { place: any; suggestedDuration: number }) => {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: `place-${place.name}`,
+    data: {
+      type: 'place',
+      place,
+    },
+  });
+
+  const style = {
+    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="grid grid-cols-12 gap-4 p-3 hover:bg-muted/30 transition-colors cursor-move active:cursor-grabbing touch-none"
+    >
+      <div className="col-span-4 font-medium text-foreground flex items-center gap-2">
+        <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+        <span className="truncate">{place.name}</span>
+      </div>
+      <div className="col-span-3 text-sm text-muted-foreground truncate">{place.category || 'N/A'}</div>
+      <div className="col-span-2 text-sm text-muted-foreground truncate">
+        {place.category || 'Geral'}
+      </div>
+      <div className="col-span-2 text-sm">
+        <Badge variant="secondary" className="text-xs">
+          {suggestedDuration} min
+        </Badge>
+      </div>
+      <div className="col-span-1">
+        <Button variant="ghost" size="sm">
+          <MapPin className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+// Sortable Item Component (for items already in the itinerary)
 const SortableItineraryItem = ({ item, onRemove }: { item: ItineraryItem; onRemove: () => void }) => {
   const {
     attributes,
@@ -131,6 +178,78 @@ const SortableItineraryItem = ({ item, onRemove }: { item: ItineraryItem; onRemo
   );
 };
 
+// Droppable Time Block Component
+const DroppableTimeBlock = ({
+  id,
+  day,
+  block,
+  items,
+  maxItems,
+  onRemove,
+}: {
+  id: string;
+  day: number;
+  block: typeof TIME_BLOCKS[0];
+  items: ItineraryItem[];
+  maxItems: number;
+  onRemove: (itemId: string) => void;
+}) => {
+  const { setNodeRef, isOver } = useDroppable({
+    id,
+    data: {
+      type: 'timeblock',
+      day,
+      blockId: block.id,
+    },
+  });
+
+  const isNearLimit = items.length >= maxItems - 1;
+  const isAtLimit = items.length >= maxItems;
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`border-2 border-dashed rounded-lg p-3 min-h-[200px] transition-all ${
+        isAtLimit
+          ? 'border-destructive/50 bg-destructive/5'
+          : isNearLimit
+          ? 'border-accent/50 bg-accent/5'
+          : isOver
+          ? 'border-accent bg-accent/10 scale-105'
+          : 'border-border hover:border-accent/50 bg-background'
+      }`}
+    >
+      <div className="text-center mb-3">
+        <div className="font-semibold text-sm text-primary">{block.label}</div>
+        <div className="text-xs text-muted-foreground">{block.time}</div>
+        {isAtLimit && (
+          <Badge variant="destructive" className="text-xs mt-1">
+            Limite atingido
+          </Badge>
+        )}
+      </div>
+
+      <SortableContext items={items.map(item => item.id)} strategy={verticalListSortingStrategy}>
+        <div className="space-y-2 min-h-[120px]">
+          {items.length === 0 ? (
+            <div className="text-xs text-muted-foreground text-center py-8">
+              {isOver ? '✓ Solte aqui' : 'Arraste lugares aqui'}
+            </div>
+          ) : (
+            items.map((item) => (
+              <SortableItineraryItem
+                key={item.id}
+                item={item}
+                onRemove={() => onRemove(item.id)}
+              />
+            ))
+          )}
+        </div>
+      </SortableContext>
+    </div>
+  );
+};
+
 export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) => {
   const { toast } = useToast();
   const [currentTab, setCurrentTab] = useState('places');
@@ -152,7 +271,7 @@ export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // 8px movement required before drag starts (better for mobile)
+        distance: 5, // 5px movement required
       },
     }),
     useSensor(KeyboardSensor, {
@@ -222,56 +341,51 @@ export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) 
     const { active } = event;
     setActiveId(active.id as string);
     
-    // Check if dragging from places table
-    const allAvailablePlaces = [...touristPlaces, ...utilityPlaces, ...restaurantPlaces, ...arraialPlaces, ...buziosPlaces];
-    const place = allAvailablePlaces.find(p => p.name === active.id);
-    if (place) {
-      setDraggedPlace(place);
+    // Check if dragging a place from the table
+    if (active.data.current?.type === 'place') {
+      setDraggedPlace(active.data.current.place);
     }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
+    setActiveId(null);
+    
     if (!over) {
-      setActiveId(null);
       setDraggedPlace(null);
       return;
     }
 
-    // Parse the droppable ID: format is "day-{dayNumber}-{blockId}"
-    const overIdStr = String(over.id);
-    const match = overIdStr.match(/^day-(\d+)-(.+)$/);
-    
-    if (match && draggedPlace) {
-      const [, dayStr, blockId] = match;
-      const dayNumber = parseInt(dayStr);
+    // Handle dropping a place into a time block
+    if (active.data.current?.type === 'place' && over.data.current?.type === 'timeblock') {
+      const place = active.data.current.place;
+      const { day, blockId } = over.data.current;
       
       // Get current day itinerary
-      const dayItinerary = itinerary.get(dayNumber) || {};
+      const dayItinerary = itinerary.get(day) || {};
       const blockItems = dayItinerary[blockId] || [];
       
       // Check limit
       if (blockItems.length >= maxItemsPerBlock) {
         toast({
           title: 'Limite atingido',
-          description: `Este bloco já tem ${maxItemsPerBlock} ${maxItemsPerBlock === 1 ? 'item' : 'itens'}. Remova um item ou aumente o limite.`,
+          description: `Este bloco já tem ${maxItemsPerBlock} ${maxItemsPerBlock === 1 ? 'item' : 'itens'}.`,
           variant: 'destructive',
         });
-        setActiveId(null);
         setDraggedPlace(null);
         return;
       }
       
       // Create new item
       const newItem: ItineraryItem = {
-        id: `${draggedPlace.name}-${Date.now()}`,
-        placeId: draggedPlace.name,
-        name: draggedPlace.name,
-        category: draggedPlace.category || 'Geral',
-        lat: draggedPlace.lat,
-        lng: draggedPlace.lng,
-        suggestedDuration: getSuggestedDuration(draggedPlace.category || ''),
+        id: `${place.name}-${Date.now()}`,
+        placeId: place.name,
+        name: place.name,
+        category: place.category || 'Geral',
+        lat: place.lat,
+        lng: place.lng,
+        suggestedDuration: getSuggestedDuration(place.category || ''),
       };
       
       // Add to block
@@ -281,25 +395,25 @@ export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) 
       };
       
       const newItinerary = new Map(itinerary);
-      newItinerary.set(dayNumber, updatedDayItinerary);
+      newItinerary.set(day, updatedDayItinerary);
       setItinerary(newItinerary);
       
       toast({
         title: 'Local adicionado!',
-        description: `${draggedPlace.name} adicionado ao roteiro.`,
+        description: `${place.name} adicionado ao roteiro.`,
       });
+      
+      setDraggedPlace(null);
+      return;
     }
     
-    // Handle reordering within a block
-    if (!draggedPlace && active.id !== over.id) {
-      const activeIdStr = String(active.id);
-      const overIdStr = String(over.id);
-      
-      // Find which day/block contains the active item
+    // Handle reordering within a block (sortable items)
+    if (active.id !== over.id) {
+      // Find which day/block contains the items
       for (const [dayNumber, dayItinerary] of itinerary.entries()) {
         for (const [blockId, items] of Object.entries(dayItinerary)) {
-          const activeIndex = items.findIndex(item => item.id === activeIdStr);
-          const overIndex = items.findIndex(item => item.id === overIdStr);
+          const activeIndex = items.findIndex(item => item.id === active.id);
+          const overIndex = items.findIndex(item => item.id === over.id);
           
           if (activeIndex !== -1 && overIndex !== -1) {
             const reorderedItems = arrayMove(items, activeIndex, overIndex);
@@ -317,7 +431,6 @@ export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) 
       }
     }
     
-    setActiveId(null);
     setDraggedPlace(null);
   };
 
@@ -370,40 +483,11 @@ export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) 
               const suggestedDuration = getSuggestedDuration(place.category || '');
               
               return (
-                <div
+                <DraggablePlaceItem
                   key={place.name}
-                  id={place.name}
-                  className="grid grid-cols-12 gap-4 p-3 hover:bg-muted/30 transition-colors cursor-move active:opacity-50 touch-none"
-                  draggable
-                  onDragStart={(e) => {
-                    e.dataTransfer.effectAllowed = 'copy';
-                    setDraggedPlace(place);
-                    setActiveId(place.name);
-                  }}
-                  onDragEnd={() => {
-                    setActiveId(null);
-                    setDraggedPlace(null);
-                  }}
-                >
-                  <div className="col-span-4 font-medium text-foreground flex items-center gap-2">
-                    <GripVertical className="h-4 w-4 text-muted-foreground" />
-                    {place.name}
-                  </div>
-                  <div className="col-span-3 text-sm text-muted-foreground">{place.category || 'N/A'}</div>
-                  <div className="col-span-2 text-sm text-muted-foreground">
-                    {place.category || 'Geral'}
-                  </div>
-                  <div className="col-span-2 text-sm">
-                    <Badge variant="secondary" className="text-xs">
-                      {suggestedDuration} min
-                    </Badge>
-                  </div>
-                  <div className="col-span-1">
-                    <Button variant="ghost" size="sm">
-                      <MapPin className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
+                  place={place}
+                  suggestedDuration={suggestedDuration}
+                />
               );
             })}
           </div>
@@ -447,90 +531,17 @@ export const ItineraryBuilder = ({ open, onOpenChange }: ItineraryBuilderProps) 
                 <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-3">
                   {TIME_BLOCKS.map((block) => {
                     const blockItems = dayItinerary[block.id] || [];
-                    const isNearLimit = blockItems.length >= maxItemsPerBlock - 1;
-                    const isAtLimit = blockItems.length >= maxItemsPerBlock;
                     
                     return (
-                      <div
+                      <DroppableTimeBlock
                         key={block.id}
                         id={`day-${day}-${block.id}`}
-                        className={`border-2 border-dashed rounded-lg p-3 min-h-[200px] transition-colors ${
-                          isAtLimit
-                            ? 'border-destructive/50 bg-destructive/5'
-                            : isNearLimit
-                            ? 'border-accent/50 bg-accent/5'
-                            : 'border-border hover:border-accent/50 bg-background'
-                        }`}
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                          e.dataTransfer.dropEffect = 'copy';
-                        }}
-                        onDrop={(e) => {
-                          e.preventDefault();
-                          if (!draggedPlace) return;
-                          
-                          if (blockItems.length >= maxItemsPerBlock) {
-                            toast({
-                              title: 'Limite atingido',
-                              description: `Este bloco já tem ${maxItemsPerBlock} itens.`,
-                              variant: 'destructive',
-                            });
-                            return;
-                          }
-                          
-                          const newItem: ItineraryItem = {
-                            id: `${draggedPlace.name}-${Date.now()}`,
-                            placeId: draggedPlace.name,
-                            name: draggedPlace.name,
-                            category: draggedPlace.category || 'Geral',
-                            lat: draggedPlace.lat,
-                            lng: draggedPlace.lng,
-                            suggestedDuration: getSuggestedDuration(draggedPlace.category || ''),
-                          };
-                          
-                          const updatedDayItinerary = {
-                            ...dayItinerary,
-                            [block.id]: [...blockItems, newItem],
-                          };
-                          
-                          const newItinerary = new Map(itinerary);
-                          newItinerary.set(day, updatedDayItinerary);
-                          setItinerary(newItinerary);
-                          
-                          toast({
-                            title: 'Local adicionado!',
-                            description: `${draggedPlace.name} adicionado ao ${block.label}.`,
-                          });
-                        }}
-                      >
-                        <div className="text-center mb-3">
-                          <div className="font-semibold text-sm text-primary">{block.label}</div>
-                          <div className="text-xs text-muted-foreground">{block.time}</div>
-                          {isAtLimit && (
-                            <Badge variant="destructive" className="text-xs mt-1">
-                              Limite atingido
-                            </Badge>
-                          )}
-                        </div>
-                        
-                        <SortableContext items={blockItems.map(item => item.id)} strategy={verticalListSortingStrategy}>
-                          <div className="space-y-2 min-h-[120px]">
-                            {blockItems.length === 0 ? (
-                              <div className="text-xs text-muted-foreground text-center py-8">
-                                Arraste lugares aqui
-                              </div>
-                            ) : (
-                              blockItems.map((item) => (
-                                <SortableItineraryItem
-                                  key={item.id}
-                                  item={item}
-                                  onRemove={() => removeItem(day, block.id, item.id)}
-                                />
-                              ))
-                            )}
-                          </div>
-                        </SortableContext>
-                      </div>
+                        day={day}
+                        block={block}
+                        items={blockItems}
+                        maxItems={maxItemsPerBlock}
+                        onRemove={(itemId) => removeItem(day, block.id, itemId)}
+                      />
                     );
                   })}
                 </div>
