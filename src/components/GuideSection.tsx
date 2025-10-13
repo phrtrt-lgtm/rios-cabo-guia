@@ -14,7 +14,7 @@ export const GuideSection = ({ id, title, children, className, printBreak }: Gui
     <section 
       id={id} 
       className={cn(
-        "py-12 md:py-16 scroll-mt-20",
+        "pt-12 md:pt-16 pb-6 md:pb-8 scroll-mt-20",
         printBreak && "page-break",
         className
       )}
