@@ -8,7 +8,7 @@ import { DistanceBadge } from "@/components/DistanceBadge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
-import { allPlaces, touristPlaces, utilityPlaces } from "@/data/places";
+import { allPlaces, touristPlaces, utilityPlaces, arraialPlaces, buziosPlaces } from "@/data/places";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
@@ -61,6 +61,76 @@ const placeInfo: Record<string, { description: string; tips?: string }> = {
   'bairro-passagem': {
     description: 'Bairro histórico e charmoso, com casas coloridas, canal, restaurantes à beira d\'água e artesanato local. Perfeito para passeio a pé e gastronomia.',
     tips: 'Fim de tarde é ideal. Experimente os restaurantes de frutos do mar e explore as lojinhas de artesanato.',
+  },
+  // Arraial do Cabo
+  'prainhas-pontal-atalaia': {
+    description: 'Mirantes e faixa de areia clara com águas cristalinas. A escadaria famosa leva a prainhas de beleza única.',
+    tips: 'Chegue cedo para evitar multidões. Use calçado confortável para a escadaria. Leve água e protetor solar.',
+  },
+  'praia-do-forno': {
+    description: 'Mar geralmente calmo, águas transparentes. Acesso por trilha curta (15-20 min) ou barco-táxi.',
+    tips: 'Trilha leve mas leve água. Barco-táxi opera da Praia dos Anjos (R$ 10-15). Snorkel recomendado.',
+  },
+  'praia-do-farol': {
+    description: 'Considerada uma das praias mais bonitas do Brasil. Acesso controlado pela Marinha, apenas por passeio de barco autorizado.',
+    tips: 'Reserve passeio com antecedência. Permanência limitada (30-40 min). Proibido levar comida e bebida.',
+  },
+  'praia-grande-arraial': {
+    description: 'Faixa longa de areia clara, ótima para caminhadas. Pôr do sol clássico, geralmente com mais vento.',
+    tips: 'Melhor para fim de tarde. Boa estrutura de quiosques. Menos lotada que outras praias.',
+  },
+  'prainha-arraial': {
+    description: 'Bom acesso urbano, mar calmo em dias favoráveis. Pequena e charmosa, ótima para famílias.',
+    tips: 'Chegue cedo aos finais de semana. Próxima ao centro, fácil acesso a restaurantes.',
+  },
+  'praia-dos-anjos': {
+    description: 'Marina e ponto de saída para passeios de barco e mergulho. Muitos restaurantes de frutos do mar.',
+    tips: 'Contrate passeios aqui. Experimente os restaurantes locais. Estacionamento pode ser difícil.',
+  },
+  'gruta-azul-arraial': {
+    description: 'Gruta submersa com águas azul-turquesa intenso. Acessível apenas por passeio de barco.',
+    tips: 'Incluída na maioria dos passeios de barco. Mergulho opcional dentro da gruta.',
+  },
+  // Búzios
+  'praia-geribá': {
+    description: 'Praia ampla, boa para surf e ambiente jovem. Próxima ao Porto da Barra. Muitos beach clubs.',
+    tips: 'Ótima estrutura de quiosques e beach clubs. Mais agitada aos finais de semana. Boa para esportes.',
+  },
+  'praia-ferradurinha': {
+    description: 'Pequena enseada com águas calmas, perfeita para SUP e caiaque. Visual de cartão-postal.',
+    tips: 'Ideal para crianças pelo mar calmo. Aluguel de equipamentos disponível. Chegue cedo.',
+  },
+  'praia-ferradura': {
+    description: 'Enseada maior com mar mais calmo e estrutura. Boa opção para famílias.',
+    tips: 'Menos agitada que Geribá. Boa estrutura de beach clubs. Estacionamento disponível.',
+  },
+  'praia-joao-fernandes': {
+    description: 'Estrutura completa de praia com belas vistas. Águas claras, boa para snorkel.',
+    tips: 'Reserve cadeiras e guarda-sol com antecedência. Restaurantes na praia. Táxi aquático disponível.',
+  },
+  'praia-azeda': {
+    description: 'Praias cênicas e pequenas, acesso por escadaria. Águas cristalinas e calmas.',
+    tips: 'Escadaria tem 200+ degraus. Leve apenas o essencial. Azedinha é menor e mais tranquila.',
+  },
+  'praia-tartaruga': {
+    description: 'Ótima para pôr do sol, mar calmo. Boa estrutura de quiosques.',
+    tips: 'Reserve lugar para o pôr do sol. Fica bem próxima ao centro. Fácil acesso.',
+  },
+  'praia-brava': {
+    description: 'Vibe mais selvagem e natural. Atenção a correntes e vento. Boa para surf.',
+    tips: 'Mar pode ser agitado - cuidado ao entrar. Menos estrutura. Para quem busca tranquilidade.',
+  },
+  'orla-bardot': {
+    description: 'Passeio à beira-mar com estátuas e casario charmoso. Conecta com a Rua das Pedras.',
+    tips: 'Ótimo para fotos. Melhor no fim da tarde. Muitos restaurantes e lojinhas.',
+  },
+  'porto-da-barra': {
+    description: 'Complexo à beira-mar com vários restaurantes. Famoso pelo pôr do sol em Manguinhos.',
+    tips: 'Chegue 1h antes do pôr do sol para garantir mesa. Reserve com antecedência aos finais de semana.',
+  },
+  'rua-das-pedras': {
+    description: 'Eixo gastronômico e de compras. Bares, restaurantes e lojas. Noite movimentada.',
+    tips: 'Fica lotada à noite. Reserve restaurantes. Ótima para passear e jantar.',
   },
 };
 
@@ -159,6 +229,12 @@ const Index = () => {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="gap-2">
               <Utensils className="h-4 w-4" /> Gastronomia
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="gap-2">
+              <Waves className="h-4 w-4" /> Arraial
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="gap-2">
+              <Palmtree className="h-4 w-4" /> Búzios
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="gap-2">
               <Info className="h-4 w-4" /> Sobre
@@ -628,6 +704,264 @@ const Index = () => {
               priceRange="$$"
               category="Café Colonial"
             />
+          </div>
+        </div>
+      </GuideSection>
+
+      {/* Arraial do Cabo */}
+      <GuideSection id="arraial" title="Arraial do Cabo" className="bg-muted/30" printBreak>
+        <p className="text-lg text-primary mb-4 font-semibold">
+          Águas claras, trilhas e mirantes — o Caribe brasileiro na nossa vizinhança
+        </p>
+        <p className="text-muted-foreground mb-8">
+          A apenas 30 minutos de Cabo Frio, Arraial do Cabo é famoso por suas águas cristalinas 
+          e praias paradisíacas. Confira os principais pontos turísticos.
+        </p>
+
+        {/* Praias & Pontos - Arraial */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
+            <Waves className="h-6 w-6" /> Praias & Pontos Turísticos
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {arraialPlaces.map((place) => {
+              const eta = getETA(place.id);
+              return (
+                <TouristCard 
+                  key={place.id}
+                  name={place.name}
+                  description={getPlaceDescription(place.id)}
+                  location={place.bairro || 'Arraial do Cabo'}
+                  tips={getPlaceTips(place.id)}
+                  type={place.category as any}
+                  distanceBadge={eta && origin ? (
+                    <DistanceBadge 
+                      walkingMinutes={eta.walkingMinutes}
+                      drivingMinutes={eta.drivingMinutes}
+                      currentMode={currentMode}
+                      isFallback={eta.isFallback}
+                      originAddress={origin.address}
+                    />
+                  ) : undefined}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Gastronomia Arraial */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
+            <Utensils className="h-6 w-6" /> Destaque Gastronômico
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <RestaurantCard 
+              name="FIXI (Arraial do Cabo)"
+              description="Cozinha do mar com proposta autoral. Peixes frescos, frutos do mar e ingredientes sazonais em pratos criativos."
+              address="Arraial do Cabo"
+              priceRange="$$$"
+              category="Frutos do Mar"
+              hours="Consultar horários"
+            />
+            <div className="bg-accent/10 p-6 rounded-lg border border-accent/20 flex items-center">
+              <p className="text-sm text-muted-foreground">
+                <strong className="text-accent">Nota:</strong> Existe também o Fixi Kaiseki na Passagem (Cabo Frio) — 
+                veja mais na seção de Gastronomia de Cabo Frio acima.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Roteiros Arraial */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
+            <MapPin className="h-6 w-6" /> Roteiros em 1 Clique
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card p-6 rounded-lg border border-border">
+              <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <Mountain className="h-5 w-5" /> Clássico Visual
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">☀️</span>
+                  <span><strong>Manhã:</strong> Mirante Pontal do Atalaia</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🏖️</span>
+                  <span><strong>Tarde:</strong> Prainhas do Atalaia</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🌅</span>
+                  <span><strong>Fim de tarde:</strong> Pôr do sol na Praia Grande</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🍽️</span>
+                  <span><strong>Noite:</strong> Jantar no centro</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-card p-6 rounded-lg border border-border">
+              <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <Waves className="h-5 w-5" /> Mar & Trilha
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🥾</span>
+                  <span><strong>Manhã:</strong> Trilha para Praia do Forno</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🤿</span>
+                  <span><strong>Meio-dia:</strong> Snorkel na Praia do Forno</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">⛵</span>
+                  <span><strong>Tarde:</strong> Passeio de barco (Gruta Azul + Ilha do Farol)</span>
+                </li>
+              </ul>
+              <div className="mt-4 p-3 bg-amber-500/10 rounded border border-amber-500/20">
+                <p className="text-xs text-amber-700 dark:text-amber-400">
+                  ⚠️ Praia do Farol tem controle da Marinha — permanência limitada a 30-40 min
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </GuideSection>
+
+      {/* Búzios */}
+      <GuideSection id="buzios" title="Búzios" printBreak>
+        <p className="text-lg text-primary mb-4 font-semibold">
+          Mais de 20 praias, noites animadas e pôr do sol inesquecível
+        </p>
+        <p className="text-muted-foreground mb-8">
+          A cerca de 40km de Cabo Frio, Búzios é o destino sofisticado da Região dos Lagos, 
+          com praias paradisíacas, gastronomia internacional e vida noturna vibrante.
+        </p>
+
+        {/* Praias & Pontos - Búzios */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
+            <Palmtree className="h-6 w-6" /> Praias & Pontos Turísticos
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {buziosPlaces.map((place) => {
+              const eta = getETA(place.id);
+              return (
+                <TouristCard 
+                  key={place.id}
+                  name={place.name}
+                  description={getPlaceDescription(place.id)}
+                  location={place.bairro || 'Búzios'}
+                  tips={getPlaceTips(place.id)}
+                  type={place.category as any}
+                  distanceBadge={eta && origin ? (
+                    <DistanceBadge 
+                      walkingMinutes={eta.walkingMinutes}
+                      drivingMinutes={eta.drivingMinutes}
+                      currentMode={currentMode}
+                      isFallback={eta.isFallback}
+                      originAddress={origin.address}
+                    />
+                  ) : undefined}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Gastronomia Búzios */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
+            <Utensils className="h-6 w-6" /> Centros Gastronômicos
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card p-6 rounded-lg border border-border">
+              <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <MapPin className="h-5 w-5" /> Porto da Barra
+              </h4>
+              <p className="text-muted-foreground mb-4">
+                Complexo à beira-mar em Manguinhos com vários restaurantes. Famoso pelo pôr do sol com vista para a Praia de Geribá.
+              </p>
+              <div className="space-y-2 text-sm">
+                <p className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-primary" />
+                  <span>Chegue 1h antes do pôr do sol</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-primary" />
+                  <span>Reserve com antecedência aos finais de semana</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-card p-6 rounded-lg border border-border">
+              <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <MapPin className="h-5 w-5" /> Rua das Pedras
+              </h4>
+              <p className="text-muted-foreground mb-4">
+                Principal eixo gastronômico de Búzios. Restaurantes, bares e lojas em rua de pedras charmosa. Noite movimentada e animada.
+              </p>
+              <div className="space-y-2 text-sm">
+                <p className="flex items-center gap-2">
+                  <span className="text-primary">🍽️</span>
+                  <span>3 perfis: rápido/econômico ($$), família ($$), autoral ($$$)</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="text-primary">🌙</span>
+                  <span>Fica lotada à noite — reserve mesa</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Roteiros Búzios */}
+        <div className="mb-8">
+          <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
+            <MapPin className="h-6 w-6" /> Roteiros em 1 Clique
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card p-6 rounded-lg border border-border">
+              <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <Mountain className="h-5 w-5" /> Clássico de Cartões-Postais
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">☀️</span>
+                  <span><strong>Manhã:</strong> Praia Azeda & Azedinha (escadaria)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🚶</span>
+                  <span><strong>Tarde:</strong> Passeio pela Orla Bardot</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🌙</span>
+                  <span><strong>Noite:</strong> Jantar na Rua das Pedras</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-card p-6 rounded-lg border border-border">
+              <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
+                <Waves className="h-5 w-5" /> Pôr do Sol em Manguinhos
+              </h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🏖️</span>
+                  <span><strong>Manhã/Meio-dia:</strong> Geribá ou Ferradurinha</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🌅</span>
+                  <span><strong>Fim de tarde:</strong> Pôr do sol no Porto da Barra</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary mt-1">🍽️</span>
+                  <span><strong>Noite:</strong> Jantar no Porto da Barra</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </GuideSection>

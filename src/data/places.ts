@@ -172,9 +172,155 @@ export const restaurantPlaces: PlaceCoords[] = [
   },
 ];
 
+// Arraial do Cabo
+export const arraialPlaces: PlaceCoords[] = [
+  {
+    id: 'prainhas-pontal-atalaia',
+    name: 'Prainhas do Pontal do Atalaia',
+    category: 'beach',
+    lat: -22.9661,
+    lng: -42.0275,
+    bairro: 'Atalaia',
+  },
+  {
+    id: 'praia-do-forno',
+    name: 'Praia do Forno',
+    category: 'beach',
+    lat: -22.9686,
+    lng: -42.0256,
+    bairro: 'Forno',
+  },
+  {
+    id: 'praia-do-farol',
+    name: 'Praia do Farol',
+    category: 'beach',
+    lat: -22.9886,
+    lng: -42.0064,
+    bairro: 'Ilha do Farol',
+  },
+  {
+    id: 'praia-grande-arraial',
+    name: 'Praia Grande',
+    category: 'beach',
+    lat: -22.9656,
+    lng: -42.0289,
+    bairro: 'Centro',
+  },
+  {
+    id: 'prainha-arraial',
+    name: 'Prainha',
+    category: 'beach',
+    lat: -22.9675,
+    lng: -42.0231,
+    bairro: 'Centro',
+  },
+  {
+    id: 'praia-dos-anjos',
+    name: 'Praia dos Anjos',
+    category: 'beach',
+    lat: -22.9703,
+    lng: -42.0206,
+    bairro: 'Praia dos Anjos',
+  },
+  {
+    id: 'gruta-azul-arraial',
+    name: 'Gruta Azul',
+    category: 'landmark',
+    lat: -22.9800,
+    lng: -42.0100,
+    bairro: 'Ilha do Farol',
+  },
+];
+
+// Búzios
+export const buziosPlaces: PlaceCoords[] = [
+  {
+    id: 'praia-geribá',
+    name: 'Geribá',
+    category: 'beach',
+    lat: -22.7597,
+    lng: -41.9383,
+    bairro: 'Geribá',
+  },
+  {
+    id: 'praia-ferradurinha',
+    name: 'Ferradurinha',
+    category: 'beach',
+    lat: -22.7450,
+    lng: -41.9086,
+    bairro: 'Ferradurinha',
+  },
+  {
+    id: 'praia-ferradura',
+    name: 'Ferradura',
+    category: 'beach',
+    lat: -22.7419,
+    lng: -41.9122,
+    bairro: 'Ferradura',
+  },
+  {
+    id: 'praia-joao-fernandes',
+    name: 'João Fernandes',
+    category: 'beach',
+    lat: -22.7528,
+    lng: -41.8886,
+    bairro: 'João Fernandes',
+  },
+  {
+    id: 'praia-azeda',
+    name: 'Azeda & Azedinha',
+    category: 'beach',
+    lat: -22.7556,
+    lng: -41.8833,
+    bairro: 'Ossos',
+  },
+  {
+    id: 'praia-tartaruga',
+    name: 'Tartaruga',
+    category: 'beach',
+    lat: -22.7583,
+    lng: -41.8814,
+    bairro: 'Centro',
+  },
+  {
+    id: 'praia-brava',
+    name: 'Brava',
+    category: 'beach',
+    lat: -22.7686,
+    lng: -41.9464,
+    bairro: 'Geribá',
+  },
+  {
+    id: 'orla-bardot',
+    name: 'Orla Bardot',
+    category: 'landmark',
+    lat: -22.7472,
+    lng: -41.8817,
+    bairro: 'Centro',
+  },
+  {
+    id: 'porto-da-barra',
+    name: 'Porto da Barra',
+    category: 'restaurant',
+    lat: -22.7658,
+    lng: -41.9281,
+    bairro: 'Manguinhos',
+  },
+  {
+    id: 'rua-das-pedras',
+    name: 'Rua das Pedras',
+    category: 'landmark',
+    lat: -22.7472,
+    lng: -41.8844,
+    bairro: 'Centro',
+  },
+];
+
 // Todas as localidades
 export const allPlaces: PlaceCoords[] = [
   ...touristPlaces,
   ...utilityPlaces,
   ...restaurantPlaces,
+  ...arraialPlaces,
+  ...buziosPlaces,
 ];
