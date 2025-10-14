@@ -666,15 +666,15 @@ export const ItineraryBuilder = ({
             Fechar
           </Button>
           <div className="flex-1" />
-          <Button variant="outline" disabled>
+          <Button variant="outline" onClick={() => toast.info('Geração de PDF em breve!')}>
             <FileDown className="w-4 h-4 mr-2" />
             PDF
           </Button>
-          <Button variant="outline" disabled>
+          <Button variant="outline" onClick={() => toast.info('Compartilhamento em breve!')}>
             <Share2 className="w-4 h-4 mr-2" />
             Compartilhar
           </Button>
-          <Button variant="outline" disabled>
+          <Button variant="outline" onClick={() => toast.info('Integração com Maps em breve!')}>
             <Navigation className="w-4 h-4 mr-2" />
             Maps
           </Button>
