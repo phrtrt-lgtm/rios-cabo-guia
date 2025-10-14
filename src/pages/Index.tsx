@@ -264,6 +264,13 @@ const Index = () => {
           </p>
           
           <div className="grid md:grid-cols-2 gap-4 not-prose">
+            <div className="bg-secondary/10 p-4 rounded-lg border border-secondary/30">
+              <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
+                <Plus className="h-5 w-5" /> Montar meu roteiro
+              </h3>
+              <p className="text-sm">Clique no botão flutuante no canto inferior direito para criar seu roteiro personalizado. Selecione lugares, organize por blocos do dia e veja os tempos de deslocamento.</p>
+            </div>
+
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
               <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
                 <Navigation className="h-5 w-5" /> Calcular distâncias
