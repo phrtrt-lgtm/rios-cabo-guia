@@ -1,345 +1,305 @@
-import { useState } from 'react';
-import { MapPin, Car, Footprints, Calendar, X, Download, Share2, Navigation as NavigationIcon, Grid3x3, List, GripVertical, Trash2, AlertCircle } from 'lucide-react';
-import {
-  DndContext,
-  DragOverlay,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragStartEvent,
-  DragEndEvent,
-  useDraggable,
-  useDroppable,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { touristPlaces, utilityPlaces, restaurantPlaces, arraialPlaces, buziosPlaces } from '@/data/places';
-import { distanceService } from '@/services/distance.service';
-import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent } from '@/components/ui/card';
+import { 
+  MapPin, Clock, Trash2, ChevronUp, ChevronDown, ExternalLink, 
+  Share2, FileDown, Navigation, Search, X, Calendar, Locate, Car, Footprints
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { touristPlaces, restaurantPlaces, arraialPlaces, buziosPlaces, allPlaces } from '@/data/places';
+import { distanceService, PlaceCoords } from '@/services/distance.service';
 
 interface ItineraryBuilderProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   currentOrigin?: { lat: number; lng: number; address: string } | null;
-  currentEtas?: any[];
+  currentEtas?: { [key: string]: { walking: number; driving: number; isFallback?: boolean } };
   currentMode?: 'walking' | 'driving';
 }
 
 interface ItineraryItem {
-  id: string;
   placeId: string;
-  name: string;
+  placeName: string;
   category: string;
+  bairro: string;
   lat: number;
   lng: number;
-  suggestedDuration: number;
+  duration: number;
+  eta?: number;
+  isFallback?: boolean;
 }
 
 interface DayItinerary {
-  [blockId: string]: ItineraryItem[];
+  cafe: ItineraryItem[];
+  manha: ItineraryItem[];
+  almoco: ItineraryItem[];
+  tarde: ItineraryItem[];
+  fimDeTarde: ItineraryItem[];
+  noite: ItineraryItem[];
+  jantar: ItineraryItem[];
 }
 
-const TIME_BLOCKS = [
-  { id: 'breakfast', label: 'Café', time: '07-09', duration: 120 },
-  { id: 'morning', label: 'Manhã', time: '09-12', duration: 180 },
-  { id: 'lunch', label: 'Almoço', time: '12-14', duration: 120 },
-  { id: 'afternoon', label: 'Tarde', time: '14-17', duration: 180 },
-  { id: 'late-afternoon', label: 'Fim de tarde', time: '17-19', duration: 120 },
-  { id: 'evening', label: 'Noite', time: '19-21', duration: 120 },
-  { id: 'dinner', label: 'Jantar', time: '21-23', duration: 120 },
-];
+type TimeBlock = 'cafe' | 'manha' | 'almoco' | 'tarde' | 'fimDeTarde' | 'noite' | 'jantar';
 
-const SUGGESTED_DURATIONS: Record<string, number> = {
-  'cafe': 50,
-  'beach': 150,
-  'landmark': 45,
-  'restaurant': 90,
-  'boat-tour': 210,
-  'trail': 120,
-  'default': 60,
+const TIME_BLOCKS = {
+  cafe: { label: 'Café', start: '07:00', end: '09:00', maxMinutes: 120 },
+  manha: { label: 'Manhã', start: '09:00', end: '12:00', maxMinutes: 180 },
+  almoco: { label: 'Almoço', start: '12:00', end: '14:00', maxMinutes: 120 },
+  tarde: { label: 'Tarde', start: '14:00', end: '17:00', maxMinutes: 180 },
+  fimDeTarde: { label: 'Fim de tarde', start: '17:00', end: '19:00', maxMinutes: 120 },
+  noite: { label: 'Noite', start: '19:00', end: '21:00', maxMinutes: 120 },
+  jantar: { label: 'Jantar', start: '21:00', end: '23:00', maxMinutes: 120 },
+} as const;
+
+const DEFAULT_DURATIONS: { [key: string]: number } = {
+  beach: 150,
+  island: 120,
+  viewpoint: 60,
+  landmark: 45,
+  restaurant: 90,
+  pharmacy: 15,
+  supermarket: 30,
+  store: 30,
+  bakery: 20,
+  petshop: 20,
 };
 
-const getSuggestedDuration = (category: string): number => {
-  const lowerCategory = category.toLowerCase();
-  if (lowerCategory.includes('café') || lowerCategory.includes('cafe')) return 50;
-  if (lowerCategory.includes('praia') || lowerCategory.includes('beach')) return 150;
-  if (lowerCategory.includes('restaurante') || lowerCategory.includes('jantar') || lowerCategory.includes('almoço')) return 90;
-  if (lowerCategory.includes('barco') || lowerCategory.includes('passeio')) return 210;
-  if (lowerCategory.includes('trilha') || lowerCategory.includes('caminhada')) return 120;
-  return SUGGESTED_DURATIONS['default'];
-};
-
-// Draggable Place Item Component
-const DraggablePlaceItem = ({ 
-  place, 
-  suggestedDuration,
-  eta 
-}: { 
-  place: any; 
-  suggestedDuration: number;
-  eta?: number | null;
-}) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: `place-${place.name}`,
-    data: {
-      type: 'place',
-      place,
-    },
-  });
-
-  const style = {
-    transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
-    opacity: isDragging ? 0.5 : 1,
-    cursor: 'grab',
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="flex items-center justify-between p-4 hover:bg-accent/10 transition-all border-b border-border last:border-0 active:cursor-grabbing touch-none select-none"
-    >
-      <div className="flex items-center gap-3 flex-1 min-w-0">
-        <GripVertical className="h-5 w-5 text-accent flex-shrink-0" />
-        <div className="flex-1 min-w-0">
-          <div className="font-medium text-foreground truncate">{place.name}</div>
-          <div className="text-xs text-muted-foreground mt-0.5">
-            Duração sugerida: {suggestedDuration} min
-          </div>
-        </div>
-      </div>
-      
-      <div className="flex items-center gap-3 flex-shrink-0">
-        {eta !== null && eta !== undefined ? (
-          <Badge variant="secondary" className="text-xs font-medium">
-            {eta} min
-          </Badge>
-        ) : (
-          <span className="text-xs text-muted-foreground">-</span>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// Sortable Item Component (for items already in the itinerary)
-const SortableItineraryItem = ({ item, onRemove }: { item: ItineraryItem; onRemove: () => void }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: item.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className="bg-card border border-border rounded-md p-2 flex items-center gap-2 group hover:border-accent transition-colors"
-    >
-      <div {...attributes} {...listeners} className="cursor-move touch-none">
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm text-foreground truncate">{item.name}</div>
-        <div className="text-xs text-muted-foreground">{item.suggestedDuration} min</div>
-      </div>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onRemove}
-        className="opacity-0 group-hover:opacity-100 transition-opacity"
-      >
-        <Trash2 className="h-3 w-3 text-destructive" />
-      </Button>
-    </div>
-  );
-};
-
-// Droppable Time Block Component
-const DroppableTimeBlock = ({
-  id,
-  day,
-  block,
-  items,
-  maxItems,
-  onRemove,
-}: {
-  id: string;
-  day: number;
-  block: typeof TIME_BLOCKS[0];
-  items: ItineraryItem[];
-  maxItems: number;
-  onRemove: (itemId: string) => void;
-}) => {
-  const { setNodeRef, isOver } = useDroppable({
-    id,
-    data: {
-      type: 'timeblock',
-      day,
-      blockId: block.id,
-    },
-  });
-
-  const isNearLimit = items.length >= maxItems - 1;
-  const isAtLimit = items.length >= maxItems;
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={`border-2 border-dashed rounded-lg p-3 min-h-[200px] transition-all ${
-        isAtLimit
-          ? 'border-destructive/50 bg-destructive/5'
-          : isNearLimit
-          ? 'border-accent/50 bg-accent/5'
-          : isOver
-          ? 'border-accent bg-accent/10 scale-105'
-          : 'border-border hover:border-accent/50 bg-background'
-      }`}
-    >
-      <div className="text-center mb-3">
-        <div className="font-semibold text-sm text-primary">{block.label}</div>
-        <div className="text-xs text-muted-foreground">{block.time}</div>
-        {isAtLimit && (
-          <Badge variant="destructive" className="text-xs mt-1">
-            Limite atingido
-          </Badge>
-        )}
-      </div>
-
-      <SortableContext items={items.map(item => item.id)} strategy={verticalListSortingStrategy}>
-        <div className="space-y-2 min-h-[120px]">
-          {items.length === 0 ? (
-            <div className="text-xs text-muted-foreground text-center py-8">
-              {isOver ? '✓ Solte aqui' : 'Arraste lugares aqui'}
-            </div>
-          ) : (
-            items.map((item) => (
-              <SortableItineraryItem
-                key={item.id}
-                item={item}
-                onRemove={() => onRemove(item.id)}
-              />
-            ))
-          )}
-        </div>
-      </SortableContext>
-    </div>
-  );
+const getCidade = (place: PlaceCoords): string => {
+  if (arraialPlaces.some(p => p.id === place.id)) return 'Arraial do Cabo';
+  if (buziosPlaces.some(p => p.id === place.id)) return 'Búzios';
+  return 'Cabo Frio';
 };
 
 export const ItineraryBuilder = ({ 
   open, 
   onOpenChange,
   currentOrigin,
-  currentEtas = [],
-  currentMode: initialMode = 'driving',
+  currentEtas = {},
+  currentMode = 'driving',
 }: ItineraryBuilderProps) => {
-  const { toast } = useToast();
-  const [currentTab, setCurrentTab] = useState('itinerary'); // Start on itinerary tab
-  const [numberOfDays, setNumberOfDays] = useState('3');
+  const [numDays, setNumDays] = useState(1);
+  const [currentDay, setCurrentDay] = useState(1);
+  const [currentTab, setCurrentTab] = useState<'itinerary' | 'places'>('itinerary');
+  const [itineraries, setItineraries] = useState<DayItinerary[]>([]);
   const [origin, setOrigin] = useState(currentOrigin?.address || '');
   const [originCoords, setOriginCoords] = useState<{ lat: number; lng: number } | null>(
     currentOrigin ? { lat: currentOrigin.lat, lng: currentOrigin.lng } : null
   );
-  const [mode, setMode] = useState<'walking' | 'driving'>(initialMode);
+  const [mode, setMode] = useState<'walking' | 'driving'>(currentMode);
+  const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
+  const [targetDay, setTargetDay] = useState(1);
+  const [targetBlock, setTargetBlock] = useState<TimeBlock>('manha');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTable, setActiveTable] = useState('cabo-beaches');
-  const [maxItemsPerBlock, setMaxItemsPerBlock] = useState(2);
-  
-  // Itinerary state: Map<dayNumber, DayItinerary>
-  const [itinerary, setItinerary] = useState<Map<number, DayItinerary>>(new Map());
-  
-  // Drag state
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [draggedPlace, setDraggedPlace] = useState<any>(null);
-  
-  // Helper to get ETA for a place
-  const getPlaceEta = (placeName: string) => {
-    const etaData = currentEtas.find((e: any) => e.place?.name === placeName);
-    if (!etaData) return null;
-    return mode === 'walking' ? etaData.walkingMinutes : etaData.drivingMinutes;
+  const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios'>('cabo-frio');
+
+  // Inicializar itinerários
+  useEffect(() => {
+    const emptyDay: DayItinerary = {
+      cafe: [],
+      manha: [],
+      almoco: [],
+      tarde: [],
+      fimDeTarde: [],
+      noite: [],
+      jantar: [],
+    };
+    const newItineraries = Array(numDays).fill(null).map(() => 
+      JSON.parse(JSON.stringify(emptyDay))
+    );
+    setItineraries(newItineraries);
+  }, [numDays]);
+
+  // Atualizar origem e modo
+  useEffect(() => {
+    if (currentOrigin) {
+      setOriginCoords({ lat: currentOrigin.lat, lng: currentOrigin.lng });
+      setOrigin(currentOrigin.address);
+    }
+    setMode(currentMode);
+  }, [currentOrigin, currentMode]);
+
+  // Calcular ETA entre dois pontos
+  const calculateETA = async (from: { lat: number; lng: number }, to: { lat: number; lng: number }): Promise<number> => {
+    try {
+      const results = await distanceService.batchCalculateETAs(from, [{
+        id: 'temp',
+        name: 'temp',
+        category: 'temp',
+        lat: to.lat,
+        lng: to.lng,
+      }]);
+      
+      return mode === 'walking' ? results[0]?.walkingMinutes || 0 : results[0]?.drivingMinutes || 0;
+    } catch {
+      return 0;
+    }
   };
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 5, // 5px movement required
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const handleSetOrigin = async () => {
-    if (!origin.trim()) {
-      toast({
-        title: 'Digite um endereço',
-        description: 'Por favor, insira uma localização para definir como origem.',
-        variant: 'destructive',
-      });
+  // Adicionar lugares selecionados
+  const handleAddSelected = async () => {
+    if (selectedPlaces.size === 0) {
+      toast.error('Selecione ao menos um lugar');
       return;
     }
 
-    try {
-      const coords = await distanceService.geocodeAddress(origin);
-      setOriginCoords(coords);
-      toast({
-        title: 'Origem definida!',
-        description: `Base definida em: ${origin}`,
-      });
-    } catch (error) {
-      toast({
-        title: 'Erro ao definir origem',
-        description: 'Não foi possível geocodificar o endereço. Tente novamente.',
-        variant: 'destructive',
-      });
+    const placesToAdd = allPlaces.filter(p => selectedPlaces.has(p.id));
+    const newItineraries = [...itineraries];
+    const dayItinerary = newItineraries[targetDay - 1];
+    const block = dayItinerary[targetBlock];
+
+    for (const place of placesToAdd) {
+      let eta = 0;
+      let prevPoint = originCoords;
+      
+      if (block.length > 0) {
+        const lastItem = block[block.length - 1];
+        prevPoint = { lat: lastItem.lat, lng: lastItem.lng };
+      }
+
+      if (prevPoint) {
+        eta = await calculateETA(prevPoint, { lat: place.lat, lng: place.lng });
+      }
+
+      const newItem: ItineraryItem = {
+        placeId: place.id,
+        placeName: place.name,
+        category: place.category,
+        bairro: place.bairro || getCidade(place),
+        lat: place.lat,
+        lng: place.lng,
+        duration: DEFAULT_DURATIONS[place.category] || 60,
+        eta,
+        isFallback: currentEtas[place.id]?.isFallback,
+      };
+
+      block.push(newItem);
     }
+
+    setItineraries(newItineraries);
+    setSelectedPlaces(new Set());
+    
+    toast.success(`${placesToAdd.length} lugar(es) adicionado(s) ao ${TIME_BLOCKS[targetBlock].label}`);
   };
 
+  // Adicionar lugar individual
+  const handleAddPlace = async (place: PlaceCoords) => {
+    const newItineraries = [...itineraries];
+    const dayItinerary = newItineraries[targetDay - 1];
+    const block = dayItinerary[targetBlock];
+
+    let eta = 0;
+    let prevPoint = originCoords;
+    
+    if (block.length > 0) {
+      const lastItem = block[block.length - 1];
+      prevPoint = { lat: lastItem.lat, lng: lastItem.lng };
+    }
+
+    if (prevPoint) {
+      eta = await calculateETA(prevPoint, { lat: place.lat, lng: place.lng });
+    }
+
+    const newItem: ItineraryItem = {
+      placeId: place.id,
+      placeName: place.name,
+      category: place.category,
+      bairro: place.bairro || getCidade(place),
+      lat: place.lat,
+      lng: place.lng,
+      duration: DEFAULT_DURATIONS[place.category] || 60,
+      eta,
+      isFallback: currentEtas[place.id]?.isFallback,
+    };
+
+    block.push(newItem);
+    setItineraries(newItineraries);
+    
+    toast.success(`${place.name} adicionado ao ${TIME_BLOCKS[targetBlock].label}`);
+  };
+
+  // Remover item
+  const handleRemoveItem = (dayIndex: number, blockKey: TimeBlock, itemIndex: number) => {
+    const newItineraries = [...itineraries];
+    newItineraries[dayIndex][blockKey].splice(itemIndex, 1);
+    setItineraries(newItineraries);
+    toast.success('Item removido');
+  };
+
+  // Mover item para cima
+  const handleMoveUp = async (dayIndex: number, blockKey: TimeBlock, itemIndex: number) => {
+    if (itemIndex === 0) return;
+    
+    const newItineraries = [...itineraries];
+    const block = newItineraries[dayIndex][blockKey];
+    
+    [block[itemIndex], block[itemIndex - 1]] = [block[itemIndex - 1], block[itemIndex]];
+    
+    setItineraries(newItineraries);
+    await recalculateBlockETAs(dayIndex, blockKey);
+  };
+
+  // Mover item para baixo
+  const handleMoveDown = async (dayIndex: number, blockKey: TimeBlock, itemIndex: number) => {
+    const block = itineraries[dayIndex][blockKey];
+    if (itemIndex === block.length - 1) return;
+    
+    const newItineraries = [...itineraries];
+    const newBlock = newItineraries[dayIndex][blockKey];
+    
+    [newBlock[itemIndex], newBlock[itemIndex + 1]] = [newBlock[itemIndex + 1], newBlock[itemIndex]];
+    
+    setItineraries(newItineraries);
+    await recalculateBlockETAs(dayIndex, blockKey);
+  };
+
+  // Recalcular ETAs de um bloco
+  const recalculateBlockETAs = async (dayIndex: number, blockKey: TimeBlock) => {
+    const newItineraries = [...itineraries];
+    const block = newItineraries[dayIndex][blockKey];
+    if (block.length === 0 || !originCoords) return;
+
+    for (let i = 0; i < block.length; i++) {
+      const prevPoint = i === 0 ? originCoords : { lat: block[i - 1].lat, lng: block[i - 1].lng };
+      const eta = await calculateETA(prevPoint, { lat: block[i].lat, lng: block[i].lng });
+      block[i].eta = eta;
+    }
+
+    setItineraries(newItineraries);
+  };
+
+  // Atualizar duração
+  const handleUpdateDuration = (dayIndex: number, blockKey: TimeBlock, itemIndex: number, newDuration: number) => {
+    const newItineraries = [...itineraries];
+    newItineraries[dayIndex][blockKey][itemIndex].duration = newDuration;
+    setItineraries(newItineraries);
+  };
+
+  // Calcular tempo total do bloco
+  const calculateBlockTime = (block: ItineraryItem[]): number => {
+    return block.reduce((total, item) => total + (item.eta || 0) + item.duration, 0);
+  };
+
+  // Filtrar lugares
+  const filterPlaces = (places: PlaceCoords[]) => {
+    if (!searchQuery) return places;
+    const query = searchQuery.toLowerCase();
+    return places.filter(p => 
+      p.name.toLowerCase().includes(query) || 
+      p.bairro?.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query)
+    );
+  };
+
+  // Usar localização atual
   const handleUseMyLocation = () => {
     if (!navigator.geolocation) {
-      toast({
-        title: 'Geolocalização não suportada',
-        description: 'Seu navegador não suporta geolocalização.',
-        variant: 'destructive',
-      });
+      toast.error('Geolocalização não suportada');
       return;
     }
 
@@ -349,403 +309,377 @@ export const ItineraryBuilder = ({
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         });
-        setOrigin('Minha localização atual');
-        toast({
-          title: 'Localização obtida!',
-          description: 'Usando sua localização atual como base.',
-        });
+        setOrigin('Minha localização');
+        toast.success('Localização obtida!');
       },
-      (error) => {
-        toast({
-          title: 'Erro ao obter localização',
-          description: 'Não foi possível acessar sua localização. Verifique as permissões.',
-          variant: 'destructive',
-        });
+      () => {
+        toast.error('Erro ao obter localização');
       }
     );
   };
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    setActiveId(active.id as string);
-    
-    // Check if dragging a place from the table
-    if (active.data.current?.type === 'place') {
-      setDraggedPlace(active.data.current.place);
-    }
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    
-    setActiveId(null);
-    
-    if (!over) {
-      setDraggedPlace(null);
-      return;
-    }
-
-    // Handle dropping a place into a time block
-    if (active.data.current?.type === 'place' && over.data.current?.type === 'timeblock') {
-      const place = active.data.current.place;
-      const { day, blockId } = over.data.current;
-      
-      // Get current day itinerary
-      const dayItinerary = itinerary.get(day) || {};
-      const blockItems = dayItinerary[blockId] || [];
-      
-      // Check limit
-      if (blockItems.length >= maxItemsPerBlock) {
-        toast({
-          title: 'Limite atingido',
-          description: `Este bloco já tem ${maxItemsPerBlock} ${maxItemsPerBlock === 1 ? 'item' : 'itens'}.`,
-          variant: 'destructive',
-        });
-        setDraggedPlace(null);
-        return;
-      }
-      
-      // Create new item
-      const newItem: ItineraryItem = {
-        id: `${place.name}-${Date.now()}`,
-        placeId: place.name,
-        name: place.name,
-        category: place.category || 'Geral',
-        lat: place.lat,
-        lng: place.lng,
-        suggestedDuration: getSuggestedDuration(place.category || ''),
-      };
-      
-      // Add to block
-      const updatedDayItinerary = {
-        ...dayItinerary,
-        [blockId]: [...blockItems, newItem],
-      };
-      
-      const newItinerary = new Map(itinerary);
-      newItinerary.set(day, updatedDayItinerary);
-      setItinerary(newItinerary);
-      
-      toast({
-        title: 'Local adicionado!',
-        description: `${place.name} adicionado ao roteiro.`,
-      });
-      
-      setDraggedPlace(null);
-      return;
-    }
-    
-    // Handle reordering within a block (sortable items)
-    if (active.id !== over.id) {
-      // Find which day/block contains the items
-      for (const [dayNumber, dayItinerary] of itinerary.entries()) {
-        for (const [blockId, items] of Object.entries(dayItinerary)) {
-          const activeIndex = items.findIndex(item => item.id === active.id);
-          const overIndex = items.findIndex(item => item.id === over.id);
-          
-          if (activeIndex !== -1 && overIndex !== -1) {
-            const reorderedItems = arrayMove(items, activeIndex, overIndex);
-            const updatedDayItinerary = {
-              ...dayItinerary,
-              [blockId]: reorderedItems,
-            };
-            
-            const newItinerary = new Map(itinerary);
-            newItinerary.set(dayNumber, updatedDayItinerary);
-            setItinerary(newItinerary);
-            break;
-          }
-        }
-      }
-    }
-    
-    setDraggedPlace(null);
-  };
-
-  const removeItem = (dayNumber: number, blockId: string, itemId: string) => {
-    const dayItinerary = itinerary.get(dayNumber);
-    if (!dayItinerary) return;
-    
-    const blockItems = dayItinerary[blockId] || [];
-    const updatedItems = blockItems.filter(item => item.id !== itemId);
-    
-    const updatedDayItinerary = {
-      ...dayItinerary,
-      [blockId]: updatedItems,
-    };
-    
-    const newItinerary = new Map(itinerary);
-    newItinerary.set(dayNumber, updatedDayItinerary);
-    setItinerary(newItinerary);
-  };
-
-  const filterPlaces = (places: typeof touristPlaces) => {
-    if (!searchQuery.trim()) return places;
-    return places.filter((place) =>
-      place.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      place.category?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  };
-
-  const renderPlacesTable = (places: typeof touristPlaces, title: string) => {
+  // Renderizar tabela de seleção
+  const renderPlacesTable = (places: PlaceCoords[]) => {
     const filtered = filterPlaces(places);
-
+    
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-primary">{title}</h3>
-          <span className="text-sm text-muted-foreground">{filtered.length} locais</span>
+        <div className="flex gap-4 items-center flex-wrap">
+          <div className="flex-1 min-w-[200px] relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por nome, bairro..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={targetDay.toString()} onValueChange={(v) => setTargetDay(Number(v))}>
+            <SelectTrigger className="w-32">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from({ length: numDays }, (_, i) => (
+                <SelectItem key={i + 1} value={(i + 1).toString()}>Dia {i + 1}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={targetBlock} onValueChange={(v) => setTargetBlock(v as TimeBlock)}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(TIME_BLOCKS).map(([key, { label }]) => (
+                <SelectItem key={key} value={key}>{label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button onClick={handleAddSelected} disabled={selectedPlaces.size === 0}>
+            Adicionar {selectedPlaces.size > 0 && `(${selectedPlaces.size})`}
+          </Button>
         </div>
-        
-        <div className="border border-border rounded-lg overflow-hidden">
-          <div className="bg-muted/50 grid grid-cols-12 gap-4 p-3 text-sm font-medium text-muted-foreground border-b border-border">
-            <div className="col-span-5">Nome do Local</div>
-            <div className="col-span-3">Categoria</div>
-            <div className="col-span-2">Duração</div>
-            <div className="col-span-2">Ação</div>
-          </div>
-          
-          <div className="max-h-[400px] overflow-y-auto">
-            {filtered.map((place) => {
-              const suggestedDuration = getSuggestedDuration(place.category || '');
-              const eta = getPlaceEta(place.name);
-              
-              return (
-                <DraggablePlaceItem
-                  key={place.name}
-                  place={place}
-                  suggestedDuration={suggestedDuration}
-                  eta={eta}
-                />
-              );
-            })}
-          </div>
+
+        <div className="border rounded-lg overflow-auto max-h-[500px]">
+          <table className="w-full">
+            <thead className="bg-muted/50 sticky top-0">
+              <tr>
+                <th className="p-3 text-left w-12">
+                  <Checkbox
+                    checked={filtered.length > 0 && filtered.every(p => selectedPlaces.has(p.id))}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSelectedPlaces(new Set([...selectedPlaces, ...filtered.map(p => p.id)]));
+                      } else {
+                        const newSet = new Set(selectedPlaces);
+                        filtered.forEach(p => newSet.delete(p.id));
+                        setSelectedPlaces(newSet);
+                      }
+                    }}
+                  />
+                </th>
+                <th className="p-3 text-left">Nome</th>
+                <th className="p-3 text-left">Local</th>
+                <th className="p-3 text-left">Categoria</th>
+                <th className="p-3 text-left">ETA</th>
+                <th className="p-3 text-left">Duração</th>
+                <th className="p-3 text-left w-32">Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((place) => {
+                const eta = currentEtas[place.id]?.[mode] || 0;
+                const defaultDuration = DEFAULT_DURATIONS[place.category] || 60;
+                
+                return (
+                  <tr key={place.id} className="border-t hover:bg-muted/30">
+                    <td className="p-3">
+                      <Checkbox
+                        checked={selectedPlaces.has(place.id)}
+                        onCheckedChange={(checked) => {
+                          const newSet = new Set(selectedPlaces);
+                          if (checked) {
+                            newSet.add(place.id);
+                          } else {
+                            newSet.delete(place.id);
+                          }
+                          setSelectedPlaces(newSet);
+                        }}
+                      />
+                    </td>
+                    <td className="p-3 font-medium">{place.name}</td>
+                    <td className="p-3 text-sm text-muted-foreground">{place.bairro || getCidade(place)}</td>
+                    <td className="p-3">
+                      <Badge variant="outline" className="text-xs">{place.category}</Badge>
+                    </td>
+                    <td className="p-3 text-sm">
+                      {eta > 0 ? (
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {currentEtas[place.id]?.isFallback && '~'}{eta} min
+                        </span>
+                      ) : '-'}
+                    </td>
+                    <td className="p-3 text-sm">{defaultDuration} min</td>
+                    <td className="p-3">
+                      <Button size="sm" variant="ghost" onClick={() => handleAddPlace(place)}>
+                        Adicionar
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     );
   };
 
-  const renderDayGrid = () => {
-    const days = Array.from({ length: parseInt(numberOfDays) }, (_, i) => i + 1);
-
+  // Renderizar roteiro do dia
+  const renderItinerary = () => {
+    if (!itineraries[currentDay - 1]) return null;
+    
+    const dayItinerary = itineraries[currentDay - 1];
+    
     return (
       <div className="space-y-6">
-        <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
-          <Calendar className="h-5 w-5 text-primary" />
-          <p className="text-sm text-muted-foreground">
-            Arraste lugares das tabelas para os blocos de tempo abaixo. Você pode adicionar até {maxItemsPerBlock} {maxItemsPerBlock === 1 ? 'item' : 'itens'} por bloco.
-          </p>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setMaxItemsPerBlock(maxItemsPerBlock === 2 ? 3 : 2)}
-          >
-            Limite: {maxItemsPerBlock} {maxItemsPerBlock === 1 ? 'item' : 'itens'}
-          </Button>
-        </div>
+        {Object.entries(TIME_BLOCKS).map(([blockKey, { label, start, end, maxMinutes }]) => {
+          const block = dayItinerary[blockKey as TimeBlock];
+          const totalTime = calculateBlockTime(block);
+          const isOvertime = totalTime > maxMinutes;
+          
+          return (
+            <Card key={blockKey} className={isOvertime ? 'border-destructive' : ''}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold">{label}</h3>
+                    <Badge variant="outline" className="text-xs">
+                      {start} - {end}
+                    </Badge>
+                  </div>
+                  <div className={`flex items-center gap-2 ${isOvertime ? 'text-destructive' : ''}`}>
+                    <Clock className="w-4 h-4" />
+                    <span className="text-sm font-medium">
+                      {totalTime} / {maxMinutes} min
+                    </span>
+                    {isOvertime && (
+                      <Badge variant="destructive" className="text-xs">
+                        Ajustar tempo
+                      </Badge>
+                    )}
+                  </div>
+                </div>
 
-        <div className="space-y-8">
-          {days.map((day) => {
-            const dayItinerary = itinerary.get(day) || {};
-            
-            return (
-              <div key={day} className="border border-border rounded-lg overflow-hidden">
-                <div className="bg-primary text-primary-foreground p-4 flex items-center justify-between">
-                  <h3 className="font-semibold text-lg">Dia {day}</h3>
-                  <Button variant="ghost" size="sm" className="text-primary-foreground hover:bg-primary-foreground/20">
-                    Copiar dia
-                  </Button>
-                </div>
-                
-                <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-3">
-                  {TIME_BLOCKS.map((block) => {
-                    const blockItems = dayItinerary[block.id] || [];
-                    
-                    return (
-                      <DroppableTimeBlock
-                        key={block.id}
-                        id={`day-${day}-${block.id}`}
-                        day={day}
-                        block={block}
-                        items={blockItems}
-                        maxItems={maxItemsPerBlock}
-                        onRemove={(itemId) => removeItem(day, block.id, itemId)}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                {block.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground text-sm">
+                    Nenhum lugar adicionado neste bloco
+                  </div>
+                ) : (
+                  <div className="space-y-2">
+                    {block.map((item, index) => (
+                      <div key={index} className="border rounded-lg p-3 bg-background">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <MapPin className="w-4 h-4 text-primary" />
+                              <h4 className="font-medium">{item.placeName}</h4>
+                              <Badge variant="secondary" className="text-xs">{item.category}</Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{item.bairro}</p>
+                            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Navigation className="w-3 h-3" />
+                                {item.isFallback && '~'}{item.eta || 0} min
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                <Select
+                                  value={item.duration.toString()}
+                                  onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
+                                >
+                                  <SelectTrigger className="h-6 w-20 text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="30">30 min</SelectItem>
+                                    <SelectItem value="45">45 min</SelectItem>
+                                    <SelectItem value="60">60 min</SelectItem>
+                                    <SelectItem value="90">90 min</SelectItem>
+                                    <SelectItem value="120">120 min</SelectItem>
+                                    <SelectItem value="180">180 min</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex flex-col gap-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
+                              disabled={index === 0}
+                            >
+                              <ChevronUp className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
+                              disabled={index === block.length - 1}
+                            >
+                              <ChevronDown className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
+                            >
+                              <Trash2 className="w-4 h-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     );
   };
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-[95vw] h-[95vh] p-0 gap-0">
-          {/* Header */}
-          <DialogHeader className="p-6 pb-4 border-b border-border">
-            <DialogTitle className="text-2xl font-bold text-primary">
-              Construtor de Roteiro Rios
-            </DialogTitle>
-            <p className="text-muted-foreground text-sm">
-              Arraste lugares para os seus dias e crie seu roteiro personalizado
-            </p>
-          </DialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogHeader>
+          <DialogTitle className="flex items-center justify-between">
+            <span>Construtor de Roteiro Rios</span>
+            <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)}>
+              <X className="w-5 h-5" />
+            </Button>
+          </DialogTitle>
+        </DialogHeader>
 
-          {/* Controls Bar */}
-          <div className="px-6 py-4 border-b border-border bg-muted/30 flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2 flex-1 min-w-[250px]">
-              <MapPin className="h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Digite sua origem (hotel, pousada...)"
-                value={origin}
-                onChange={(e) => setOrigin(e.target.value)}
-                className="flex-1"
-              />
-              <Button size="sm" onClick={handleSetOrigin} variant="secondary">
-                Definir
-              </Button>
-              <Button size="sm" onClick={handleUseMyLocation} variant="outline" className="hidden sm:flex">
-                Localização
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Button
-                variant={mode === 'walking' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setMode('walking')}
-                className="gap-2"
-              >
-                <Footprints className="h-4 w-4" />
-                <span className="hidden sm:inline">A pé</span>
-              </Button>
-              <Button
-                variant={mode === 'driving' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setMode('driving')}
-                className="gap-2"
-              >
-                <Car className="h-4 w-4" />
-                <span className="hidden sm:inline">Carro</span>
-              </Button>
-            </div>
-
-            <Select value={numberOfDays} onValueChange={setNumberOfDays}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Dias" />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-                  <SelectItem key={n} value={n.toString()}>
-                    {n} {n === 1 ? 'dia' : 'dias'}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {/* Barra superior */}
+        <div className="flex gap-4 items-center flex-wrap border-b pb-4">
+          <div className="flex-1 min-w-[200px] flex gap-2">
+            <Input
+              placeholder="Digite o endereço da origem..."
+              value={origin}
+              onChange={(e) => setOrigin(e.target.value)}
+              className="flex-1"
+            />
+            <Button variant="outline" size="icon" onClick={handleUseMyLocation}>
+              <Locate className="w-4 h-4" />
+            </Button>
+          </div>
+          
+          <div className="flex gap-2">
+            <Button
+              variant={mode === 'walking' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setMode('walking')}
+            >
+              <Footprints className="w-4 h-4 mr-1" />
+              A pé
+            </Button>
+            <Button
+              variant={mode === 'driving' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setMode('driving')}
+            >
+              <Car className="w-4 h-4 mr-1" />
+              Carro
+            </Button>
           </div>
 
-          {/* Main Content */}
-          <div className="flex-1 overflow-hidden">
-            <Tabs value={currentTab} onValueChange={setCurrentTab} className="h-full flex flex-col">
-              <TabsList className="w-full justify-start rounded-none border-b border-border px-6 bg-background">
-                <TabsTrigger value="places" className="gap-2">
-                  <List className="h-4 w-4" />
-                  Selecionar lugares
-                </TabsTrigger>
-                <TabsTrigger value="itinerary" className="gap-2">
-                  <Grid3x3 className="h-4 w-4" />
-                  Meu roteiro
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="places" className="flex-1 overflow-y-auto p-6 m-0">
-                <div className="space-y-6">
-                  <Input
-                    placeholder="Buscar lugares..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="max-w-md"
-                  />
-
-                  <Tabs value={activeTable} onValueChange={setActiveTable}>
-                    <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
-                      <TabsTrigger value="cabo-beaches">Cabo Frio</TabsTrigger>
-                      <TabsTrigger value="cabo-food">Restaurantes</TabsTrigger>
-                      <TabsTrigger value="arraial">Arraial</TabsTrigger>
-                      <TabsTrigger value="buzios">Búzios</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="cabo-beaches">
-                      {renderPlacesTable([...touristPlaces, ...utilityPlaces], 'Praias & Pontos - Cabo Frio')}
-                    </TabsContent>
-
-                    <TabsContent value="cabo-food">
-                      {renderPlacesTable(restaurantPlaces, 'Restaurantes & Cafés - Cabo Frio')}
-                    </TabsContent>
-
-                    <TabsContent value="arraial">
-                      {renderPlacesTable(arraialPlaces, 'Arraial do Cabo')}
-                    </TabsContent>
-
-                    <TabsContent value="buzios">
-                      {renderPlacesTable(buziosPlaces, 'Búzios')}
-                    </TabsContent>
-                  </Tabs>
-              </div>
-            </TabsContent>
-          </Tabs>
+          <Select value={numDays.toString()} onValueChange={(v) => setNumDays(Number(v))}>
+            <SelectTrigger className="w-48">
+              <SelectValue placeholder="Quantos dias?" />
+            </SelectTrigger>
+            <SelectContent>
+              {Array.from({ length: 10 }, (_, i) => (
+                <SelectItem key={i + 1} value={(i + 1).toString()}>
+                  {i + 1} {i === 0 ? 'dia' : 'dias'}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
-          {/* Footer */}
-          <div className="p-6 border-t border-border bg-muted/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-muted-foreground">
-              {originCoords ? (
-                <span className="text-accent font-medium">✓ Origem definida</span>
-              ) : (
-                <span>Defina sua origem para ver tempos estimados</span>
-              )}
+        {/* Tabs principais */}
+        <Tabs value={currentTab} onValueChange={(v) => setCurrentTab(v as any)} className="flex-1 overflow-hidden flex flex-col">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="places">Selecionar lugares</TabsTrigger>
+            <TabsTrigger value="itinerary">Meu roteiro</TabsTrigger>
+          </TabsList>
+
+          {/* Aba Selecionar lugares */}
+          <TabsContent value="places" className="flex-1 overflow-auto">
+            <Tabs value={placeTab} onValueChange={(v) => setPlaceTab(v as any)}>
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="cabo-frio">Praias & Pontos</TabsTrigger>
+                <TabsTrigger value="restaurants">Restaurantes</TabsTrigger>
+                <TabsTrigger value="arraial">Arraial</TabsTrigger>
+                <TabsTrigger value="buzios">Búzios</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="cabo-frio" className="mt-4">
+                {renderPlacesTable(touristPlaces)}
+              </TabsContent>
+              <TabsContent value="restaurants" className="mt-4">
+                {renderPlacesTable(restaurantPlaces)}
+              </TabsContent>
+              <TabsContent value="arraial" className="mt-4">
+                {renderPlacesTable(arraialPlaces)}
+              </TabsContent>
+              <TabsContent value="buzios" className="mt-4">
+                {renderPlacesTable(buziosPlaces)}
+              </TabsContent>
+            </Tabs>
+          </TabsContent>
+
+          {/* Aba Meu roteiro */}
+          <TabsContent value="itinerary" className="flex-1 overflow-auto">
+            <div className="mb-4">
+              <Tabs value={currentDay.toString()} onValueChange={(v) => setCurrentDay(Number(v))}>
+                <TabsList>
+                  {Array.from({ length: numDays }, (_, i) => (
+                    <TabsTrigger key={i + 1} value={(i + 1).toString()}>
+                      Dia {i + 1}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </Tabs>
             </div>
-            
-            <div className="flex items-center gap-2 flex-wrap">
-              <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
-                <X className="h-4 w-4 mr-2" />
-                Fechar
-              </Button>
-              <Button variant="outline" size="sm" disabled>
-                <Download className="h-4 w-4 mr-2" />
-                PDF
-              </Button>
-              <Button variant="outline" size="sm" disabled>
-                <Share2 className="h-4 w-4 mr-2" />
-                Compartilhar
-              </Button>
-              <Button variant="secondary" size="sm" disabled>
-                <NavigationIcon className="h-4 w-4 mr-2" />
-                Maps
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-      
-      <DragOverlay>
-        {activeId && draggedPlace ? (
-          <div className="bg-card border-2 border-accent rounded-md p-3 shadow-lg">
-            <div className="font-medium text-sm">{draggedPlace.name}</div>
-            <div className="text-xs text-muted-foreground">{draggedPlace.category}</div>
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+            {renderItinerary()}
+          </TabsContent>
+        </Tabs>
+
+        {/* Rodapé */}
+        <div className="flex gap-2 border-t pt-4">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Fechar
+          </Button>
+          <div className="flex-1" />
+          <Button variant="outline" disabled>
+            <FileDown className="w-4 h-4 mr-2" />
+            PDF
+          </Button>
+          <Button variant="outline" disabled>
+            <Share2 className="w-4 h-4 mr-2" />
+            Compartilhar
+          </Button>
+          <Button variant="outline" disabled>
+            <Navigation className="w-4 h-4 mr-2" />
+            Maps
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

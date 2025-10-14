@@ -315,7 +315,14 @@ const Index = () => {
         open={itineraryBuilderOpen}
         onOpenChange={setItineraryBuilderOpen}
         currentOrigin={origin}
-        currentEtas={etas}
+        currentEtas={etas.reduce((acc, eta) => {
+          acc[eta.placeId] = {
+            walking: eta.walkingMinutes,
+            driving: eta.drivingMinutes,
+            isFallback: eta.isFallback
+          };
+          return acc;
+        }, {} as { [key: string]: { walking: number; driving: number; isFallback?: boolean } })}
         currentMode={currentMode}
       />
 
