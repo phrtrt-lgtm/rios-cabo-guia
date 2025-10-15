@@ -7,11 +7,15 @@ import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
 import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download } from "lucide-react";
+import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
 import { allPlaces, touristPlaces, utilityPlaces, arraialPlaces, buziosPlaces } from "@/data/places";
 import { trails } from "@/data/trails";
 import { TrailCard } from "@/components/TrailCard";
+import { photospots } from "@/data/photospots";
+import { PhotoSpotCard } from "@/components/PhotoSpotCard";
+import { runningRoutes, extensionRoutes } from "@/data/routes";
+import { RouteCard } from "@/components/RouteCard";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
@@ -242,6 +246,12 @@ const Index = () => {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="gap-2">
               <Mountain className="h-4 w-4" /> Trilhas
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="gap-2">
+              <Camera className="h-4 w-4" /> Foto-spots
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="gap-2">
+              <Route className="h-4 w-4" /> Rotas
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="gap-2">
               <Info className="h-4 w-4" /> Sobre
@@ -1402,7 +1412,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Botão PDF */}
+      {/* Botão PDF */}
         <div className="flex justify-center mt-8">
           <Button
             variant="secondary"
@@ -1415,6 +1425,253 @@ const Index = () => {
           >
             <Download className="h-5 w-5" />
             Baixar PDF das Trilhas
+          </Button>
+        </div>
+      </GuideSection>
+
+      {/* Foto-spots */}
+      <GuideSection id="fotospots" title="Foto-spots & Horário da Luz" printBreak>
+        <p className="text-lg text-muted-foreground mb-8">
+          Capture os melhores momentos da Região dos Lagos. Descubra pontos fotogênicos, 
+          janelas de luz ideais e dicas de composição para fotos incríveis.
+        </p>
+
+        {/* Filtros de foto-spots */}
+        <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="h-5 w-5 text-secondary" />
+            <h3 className="font-semibold text-secondary">Filtrar foto-spots</h3>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
+              <option value="">Todas as cidades</option>
+              <option value="Cabo Frio">Cabo Frio</option>
+              <option value="Arraial do Cabo">Arraial do Cabo</option>
+              <option value="Armação dos Búzios">Búzios</option>
+            </select>
+            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
+              <option value="">Todas as janelas</option>
+              <option value="golden-sunrise">Golden Hour — Amanhecer</option>
+              <option value="golden-sunset">Golden Hour — Entardecer</option>
+              <option value="blue-hour">Blue Hour</option>
+              <option value="golden-morning">Golden Hour — Manhã</option>
+            </select>
+            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
+              <option value="">Todos os tipos</option>
+              <option value="costão">Costão</option>
+              <option value="igreja">Igreja</option>
+              <option value="canal">Canal</option>
+              <option value="praia">Praia</option>
+              <option value="orla">Orla</option>
+              <option value="mirante">Mirante</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Cabo Frio */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Camera className="h-6 w-6" />
+            Cabo Frio
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {photospots
+              .filter(spot => spot.city === 'Cabo Frio')
+              .map(spot => {
+                const eta = getETA(spot.id);
+                return (
+                  <PhotoSpotCard
+                    key={spot.id}
+                    name={spot.name}
+                    city={spot.city}
+                    bairro={spot.bairro}
+                    bestWindow={spot.bestWindow}
+                    angle={spot.angle}
+                    lens={spot.lens}
+                    tip={spot.tip}
+                    mapsUrl={spot.mapsUrl}
+                    walkingMinutes={eta?.walkingMinutes || null}
+                    drivingMinutes={eta?.drivingMinutes || null}
+                    currentMode={currentMode}
+                    isFallback={eta?.isFallback}
+                    originAddress={origin?.address}
+                  />
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Arraial do Cabo */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Waves className="h-6 w-6" />
+            Arraial do Cabo
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {photospots
+              .filter(spot => spot.city === 'Arraial do Cabo')
+              .map(spot => {
+                const eta = getETA(spot.id);
+                return (
+                  <PhotoSpotCard
+                    key={spot.id}
+                    name={spot.name}
+                    city={spot.city}
+                    bairro={spot.bairro}
+                    bestWindow={spot.bestWindow}
+                    angle={spot.angle}
+                    lens={spot.lens}
+                    tip={spot.tip}
+                    mapsUrl={spot.mapsUrl}
+                    walkingMinutes={eta?.walkingMinutes || null}
+                    drivingMinutes={eta?.drivingMinutes || null}
+                    currentMode={currentMode}
+                    isFallback={eta?.isFallback}
+                    originAddress={origin?.address}
+                  />
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Búzios */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Palmtree className="h-6 w-6" />
+            Armação dos Búzios
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {photospots
+              .filter(spot => spot.city === 'Armação dos Búzios')
+              .map(spot => {
+                const eta = getETA(spot.id);
+                return (
+                  <PhotoSpotCard
+                    key={spot.id}
+                    name={spot.name}
+                    city={spot.city}
+                    bairro={spot.bairro}
+                    bestWindow={spot.bestWindow}
+                    angle={spot.angle}
+                    lens={spot.lens}
+                    tip={spot.tip}
+                    mapsUrl={spot.mapsUrl}
+                    walkingMinutes={eta?.walkingMinutes || null}
+                    drivingMinutes={eta?.drivingMinutes || null}
+                    currentMode={currentMode}
+                    isFallback={eta?.isFallback}
+                    originAddress={origin?.address}
+                  />
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Botão PDF */}
+        <div className="flex justify-center mt-8">
+          <Button
+            variant="secondary"
+            size="lg"
+            className="gap-2"
+            onClick={() => {
+              // TODO: Implementar geração de PDF
+              console.log('Gerar PDF dos foto-spots');
+            }}
+          >
+            <Download className="h-5 w-5" />
+            Mapa de Foto-spots Rios (PDF)
+          </Button>
+        </div>
+      </GuideSection>
+
+      {/* Rotas para correr/pedalar */}
+      <GuideSection id="rotas" title="Rotas para Correr/Pedalar" printBreak>
+        <p className="text-lg text-muted-foreground mb-8">
+          Circuitos seguros para corrida e ciclismo em Cabo Frio, com extensões para Arraial e Búzios. 
+          Explore a orla, lagoas e paisagens da região de forma ativa e saudável.
+        </p>
+
+        {/* Cabo Frio - Rotas principais */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Route className="h-6 w-6" />
+            Cabo Frio — Rotas Principais
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {runningRoutes.map(route => {
+              const eta = getETA(route.id);
+              return (
+                <RouteCard
+                  key={route.id}
+                  name={route.name}
+                  city={route.city}
+                  distance_km={route.distance_km}
+                  gain_m={route.gain_m}
+                  surface={route.surface}
+                  description={route.description}
+                  startName={route.start.name}
+                  startMapsUrl={route.start.mapsUrl}
+                  hydrationPoints={route.hydrationPoints}
+                  recommendedTime={route.recommendedTime}
+                  warnings={route.warnings}
+                  walkingMinutes={eta?.walkingMinutes || null}
+                  drivingMinutes={eta?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={eta?.isFallback}
+                  originAddress={origin?.address}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Extensões - Arraial e Búzios */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Navigation className="h-6 w-6" />
+            Extensões — Arraial do Cabo & Búzios
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {extensionRoutes.map(route => {
+              const eta = getETA(route.id);
+              return (
+                <RouteCard
+                  key={route.id}
+                  name={route.name}
+                  city={route.city}
+                  distance_km={route.distance_km}
+                  gain_m={route.gain_m}
+                  surface={route.surface}
+                  description={route.description}
+                  startName={route.start.name}
+                  startMapsUrl={route.start.mapsUrl}
+                  hydrationPoints={route.hydrationPoints}
+                  recommendedTime={route.recommendedTime}
+                  warnings={route.warnings}
+                  walkingMinutes={eta?.walkingMinutes || null}
+                  drivingMinutes={eta?.drivingMinutes || null}
+                  currentMode={currentMode}
+                  isFallback={eta?.isFallback}
+                  originAddress={origin?.address}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Botão PDF */}
+        <div className="flex justify-center mt-8">
+          <Button
+            variant="secondary"
+            size="lg"
+            className="gap-2"
+            onClick={() => {
+              // TODO: Implementar geração de PDF
+              console.log('Gerar PDF das rotas');
+            }}
+          >
+            <Download className="h-5 w-5" />
+            Baixar Guia de Rotas (PDF)
           </Button>
         </div>
       </GuideSection>

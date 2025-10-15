@@ -14,6 +14,8 @@ import {
 import { toast } from 'sonner';
 import { touristPlaces, restaurantPlaces, arraialPlaces, buziosPlaces, allPlaces } from '@/data/places';
 import { trails } from '@/data/trails';
+import { photospots } from '@/data/photospots';
+import { runningRoutes, extensionRoutes } from '@/data/routes';
 import { distanceService, PlaceCoords } from '@/services/distance.service';
 
 interface ItineraryBuilderProps {
@@ -70,6 +72,8 @@ const DEFAULT_DURATIONS: { [key: string]: number } = {
   bakery: 20,
   petshop: 20,
   trail: 120,
+  photospot: 30,
+  route: 90,
 };
 
 const getCidade = (place: PlaceCoords): string => {
@@ -98,7 +102,7 @@ export const ItineraryBuilder = ({
   const [targetDay, setTargetDay] = useState(1);
   const [targetBlock, setTargetBlock] = useState<TimeBlock>('manha');
   const [searchQuery, setSearchQuery] = useState('');
-  const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas'>('cabo-frio');
+  const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas' | 'fotospots' | 'rotas'>('cabo-frio');
 
   // Inicializar itinerários
   useEffect(() => {
@@ -623,12 +627,14 @@ export const ItineraryBuilder = ({
           {/* Aba Selecionar lugares */}
           <TabsContent value="places" className="flex-1 overflow-auto">
             <Tabs value={placeTab} onValueChange={(v) => setPlaceTab(v as any)}>
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="cabo-frio">Praias & Pontos</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-7">
+                <TabsTrigger value="cabo-frio">Praias</TabsTrigger>
                 <TabsTrigger value="restaurants">Restaurantes</TabsTrigger>
                 <TabsTrigger value="arraial">Arraial</TabsTrigger>
                 <TabsTrigger value="buzios">Búzios</TabsTrigger>
                 <TabsTrigger value="trilhas">Trilhas</TabsTrigger>
+                <TabsTrigger value="fotospots">Foto-spots</TabsTrigger>
+                <TabsTrigger value="rotas">Rotas</TabsTrigger>
               </TabsList>
 
               <TabsContent value="cabo-frio" className="mt-4">
@@ -651,6 +657,26 @@ export const ItineraryBuilder = ({
                   bairro: t.bairro || t.cidade,
                   lat: t.lat,
                   lng: t.lng,
+                })))}
+              </TabsContent>
+              <TabsContent value="fotospots" className="mt-4">
+                {renderPlacesTable(photospots.map(p => ({
+                  id: p.id,
+                  name: p.name,
+                  category: 'photospot',
+                  bairro: p.bairro || p.city,
+                  lat: p.lat,
+                  lng: p.lng,
+                })))}
+              </TabsContent>
+              <TabsContent value="rotas" className="mt-4">
+                {renderPlacesTable([...runningRoutes, ...extensionRoutes].map(r => ({
+                  id: r.id,
+                  name: r.name,
+                  category: 'route',
+                  bairro: r.city,
+                  lat: r.start.lat,
+                  lng: r.start.lng,
                 })))}
               </TabsContent>
             </Tabs>
