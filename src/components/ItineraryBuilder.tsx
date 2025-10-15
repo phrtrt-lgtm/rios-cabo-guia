@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { touristPlaces, restaurantPlaces, arraialPlaces, buziosPlaces, allPlaces } from '@/data/places';
+import { trails } from '@/data/trails';
 import { distanceService, PlaceCoords } from '@/services/distance.service';
 
 interface ItineraryBuilderProps {
@@ -68,6 +69,7 @@ const DEFAULT_DURATIONS: { [key: string]: number } = {
   store: 30,
   bakery: 20,
   petshop: 20,
+  trail: 120,
 };
 
 const getCidade = (place: PlaceCoords): string => {
@@ -96,7 +98,7 @@ export const ItineraryBuilder = ({
   const [targetDay, setTargetDay] = useState(1);
   const [targetBlock, setTargetBlock] = useState<TimeBlock>('manha');
   const [searchQuery, setSearchQuery] = useState('');
-  const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios'>('cabo-frio');
+  const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas'>('cabo-frio');
 
   // Inicializar itinerários
   useEffect(() => {
@@ -621,11 +623,12 @@ export const ItineraryBuilder = ({
           {/* Aba Selecionar lugares */}
           <TabsContent value="places" className="flex-1 overflow-auto">
             <Tabs value={placeTab} onValueChange={(v) => setPlaceTab(v as any)}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-5">
                 <TabsTrigger value="cabo-frio">Praias & Pontos</TabsTrigger>
                 <TabsTrigger value="restaurants">Restaurantes</TabsTrigger>
                 <TabsTrigger value="arraial">Arraial</TabsTrigger>
                 <TabsTrigger value="buzios">Búzios</TabsTrigger>
+                <TabsTrigger value="trilhas">Trilhas</TabsTrigger>
               </TabsList>
 
               <TabsContent value="cabo-frio" className="mt-4">
@@ -639,6 +642,16 @@ export const ItineraryBuilder = ({
               </TabsContent>
               <TabsContent value="buzios" className="mt-4">
                 {renderPlacesTable(buziosPlaces)}
+              </TabsContent>
+              <TabsContent value="trilhas" className="mt-4">
+                {renderPlacesTable(trails.map(t => ({
+                  id: t.id,
+                  name: t.name,
+                  category: 'trail',
+                  bairro: t.bairro || t.cidade,
+                  lat: t.lat,
+                  lng: t.lng,
+                })))}
               </TabsContent>
             </Tabs>
           </TabsContent>

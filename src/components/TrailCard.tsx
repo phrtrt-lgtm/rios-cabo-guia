@@ -1,4 +1,4 @@
-import { MapPin, Clock, Mountain, Sun, AlertTriangle, ExternalLink, Plus } from 'lucide-react';
+import { MapPin, Clock, Mountain, Sun, AlertTriangle, ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,6 @@ interface TrailCardProps {
   currentMode: 'walking' | 'driving';
   isFallback?: boolean;
   originAddress?: string;
-  onAddToItinerary?: (trail: Trail) => void;
 }
 
 const difficultyColors = {
@@ -28,7 +27,6 @@ export const TrailCard = ({
   currentMode,
   isFallback = false,
   originAddress,
-  onAddToItinerary,
 }: TrailCardProps) => {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -103,11 +101,11 @@ export const TrailCard = ({
           )}
         </div>
 
-        <div className="flex gap-2 pt-2">
+        <div className="pt-2">
           <Button
             variant="outline"
             size="sm"
-            className="flex-1"
+            className="w-full"
             asChild
           >
             <a
@@ -121,18 +119,6 @@ export const TrailCard = ({
               <ExternalLink className="h-3 w-3" />
             </a>
           </Button>
-          
-          {onAddToItinerary && (
-            <Button
-              variant="secondary"
-              size="sm"
-              className="gap-2"
-              onClick={() => onAddToItinerary(trail)}
-            >
-              <Plus className="h-4 w-4" />
-              Adicionar ao roteiro
-            </Button>
-          )}
         </div>
       </CardContent>
     </Card>

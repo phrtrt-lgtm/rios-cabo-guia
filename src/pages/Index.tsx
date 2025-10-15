@@ -1344,10 +1344,6 @@ const Index = () => {
                     currentMode={currentMode}
                     isFallback={eta?.isFallback}
                     originAddress={origin?.address}
-                    onAddToItinerary={(trail) => {
-                      // TODO: Integrar com o construtor de roteiro
-                      console.log('Adicionar trilha ao roteiro:', trail);
-                    }}
                   />
                 );
               })}
@@ -1374,9 +1370,6 @@ const Index = () => {
                     currentMode={currentMode}
                     isFallback={eta?.isFallback}
                     originAddress={origin?.address}
-                    onAddToItinerary={(trail) => {
-                      console.log('Adicionar trilha ao roteiro:', trail);
-                    }}
                   />
                 );
               })}
@@ -1403,9 +1396,6 @@ const Index = () => {
                     currentMode={currentMode}
                     isFallback={eta?.isFallback}
                     originAddress={origin?.address}
-                    onAddToItinerary={(trail) => {
-                      console.log('Adicionar trilha ao roteiro:', trail);
-                    }}
                   />
                 );
               })}
