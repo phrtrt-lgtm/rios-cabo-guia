@@ -7,9 +7,11 @@ import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
 import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus } from "lucide-react";
+import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
 import { allPlaces, touristPlaces, utilityPlaces, arraialPlaces, buziosPlaces } from "@/data/places";
+import { trails } from "@/data/trails";
+import { TrailCard } from "@/components/TrailCard";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
@@ -237,6 +239,9 @@ const Index = () => {
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="gap-2">
               <Palmtree className="h-4 w-4" /> Búzios
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="gap-2">
+              <Mountain className="h-4 w-4" /> Trilhas
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="gap-2">
               <Info className="h-4 w-4" /> Sobre
@@ -1240,6 +1245,187 @@ const Index = () => {
               </ul>
             </div>
           </div>
+        </div>
+      </GuideSection>
+
+      {/* Trilhas */}
+      <GuideSection id="trilhas" title="Trilhas da Região dos Lagos" printBreak>
+        <p className="text-lg text-muted-foreground mb-8">
+          Descubra as melhores trilhas de Cabo Frio, Arraial do Cabo e Búzios. 
+          Mirantes, dunas, costões e praias selvagens esperam por você.
+        </p>
+
+        {/* Filtros de trilhas */}
+        <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
+          <div className="flex items-center gap-2 mb-4">
+            <Filter className="h-5 w-5 text-secondary" />
+            <h3 className="font-semibold text-secondary">Filtrar trilhas</h3>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
+              <option value="">Todas as cidades</option>
+              <option value="Cabo Frio">Cabo Frio</option>
+              <option value="Arraial do Cabo">Arraial do Cabo</option>
+              <option value="Armação dos Búzios">Búzios</option>
+            </select>
+            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
+              <option value="">Todos os níveis</option>
+              <option value="Fácil">Fácil</option>
+              <option value="Fácil-Moderado">Fácil-Moderado</option>
+              <option value="Moderado">Moderado</option>
+            </select>
+            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
+              <option value="">Todas as durações</option>
+              <option value="curta">&lt;1h</option>
+              <option value="média">1-2h</option>
+              <option value="longa">2-4h</option>
+            </select>
+            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
+              <option value="">Todas as vistas</option>
+              <option value="Mirante">Mirante</option>
+              <option value="Costão">Costão</option>
+              <option value="Piscinas">Piscinas</option>
+              <option value="Dunas">Dunas</option>
+              <option value="Praia">Praia</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Card informativo sobre Praia do Farol */}
+        <div className="mb-8 p-6 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+          <div className="flex items-start gap-3">
+            <Info className="h-5 w-5 text-amber-600 dark:text-amber-500 mt-1 shrink-0" />
+            <div>
+              <h3 className="font-semibold text-amber-900 dark:text-amber-400 mb-2">
+                Praia do Farol (Ilha do Farol) - Acesso apenas por barco
+              </h3>
+              <p className="text-sm text-amber-800 dark:text-amber-300 mb-3">
+                A famosa Praia do Farol não possui acesso terrestre. A visita é controlada pela Marinha 
+                e feita exclusivamente por passeios de barco autorizados que saem da Marina dos Anjos.
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-amber-500/50 hover:bg-amber-500/10"
+              >
+                <a
+                  href="https://www.google.com/maps?q=Marina+dos+Anjos+Arraial+do+Cab o"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="gap-2"
+                >
+                  <MapPin className="h-4 w-4" />
+                  Ver ponto de embarque
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Cabo Frio */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Mountain className="h-6 w-6" />
+            Cabo Frio
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {trails
+              .filter(trail => trail.cidade === 'Cabo Frio')
+              .map(trail => {
+                const eta = getETA(trail.id);
+                return (
+                  <TrailCard
+                    key={trail.id}
+                    trail={trail}
+                    walkingMinutes={eta?.walkingMinutes || null}
+                    drivingMinutes={eta?.drivingMinutes || null}
+                    currentMode={currentMode}
+                    isFallback={eta?.isFallback}
+                    originAddress={origin?.address}
+                    onAddToItinerary={(trail) => {
+                      // TODO: Integrar com o construtor de roteiro
+                      console.log('Adicionar trilha ao roteiro:', trail);
+                    }}
+                  />
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Arraial do Cabo */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Waves className="h-6 w-6" />
+            Arraial do Cabo
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {trails
+              .filter(trail => trail.cidade === 'Arraial do Cabo')
+              .map(trail => {
+                const eta = getETA(trail.id);
+                return (
+                  <TrailCard
+                    key={trail.id}
+                    trail={trail}
+                    walkingMinutes={eta?.walkingMinutes || null}
+                    drivingMinutes={eta?.drivingMinutes || null}
+                    currentMode={currentMode}
+                    isFallback={eta?.isFallback}
+                    originAddress={origin?.address}
+                    onAddToItinerary={(trail) => {
+                      console.log('Adicionar trilha ao roteiro:', trail);
+                    }}
+                  />
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Búzios */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
+            <Palmtree className="h-6 w-6" />
+            Armação dos Búzios
+          </h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {trails
+              .filter(trail => trail.cidade === 'Armação dos Búzios')
+              .map(trail => {
+                const eta = getETA(trail.id);
+                return (
+                  <TrailCard
+                    key={trail.id}
+                    trail={trail}
+                    walkingMinutes={eta?.walkingMinutes || null}
+                    drivingMinutes={eta?.drivingMinutes || null}
+                    currentMode={currentMode}
+                    isFallback={eta?.isFallback}
+                    originAddress={origin?.address}
+                    onAddToItinerary={(trail) => {
+                      console.log('Adicionar trilha ao roteiro:', trail);
+                    }}
+                  />
+                );
+              })}
+          </div>
+        </div>
+
+        {/* Botão PDF */}
+        <div className="flex justify-center mt-8">
+          <Button
+            variant="secondary"
+            size="lg"
+            className="gap-2"
+            onClick={() => {
+              // TODO: Implementar geração de PDF
+              console.log('Gerar PDF das trilhas');
+            }}
+          >
+            <Download className="h-5 w-5" />
+            Baixar PDF das Trilhas
+          </Button>
         </div>
       </GuideSection>
 
