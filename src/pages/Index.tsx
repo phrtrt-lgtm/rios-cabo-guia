@@ -1,4 +1,4 @@
-import { useState, useMemo, lazy, Suspense } from "react";
+import { useState, useMemo } from "react";
 import { GuideSection } from "@/components/GuideSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { UtilityCard } from "@/components/UtilityCard";
@@ -15,7 +15,7 @@ import { trails } from "@/data/trails";
 import { TrailCard } from "@/components/TrailCard";
 import { photospots } from "@/data/photospots";
 import { PhotoSpotCard } from "@/components/PhotoSpotCard";
-const PhotoSpotsMap = lazy(() => import("@/components/PhotoSpotsMap").then(module => ({ default: module.PhotoSpotsMap })));
+import { PhotoSpotsMap } from "@/components/PhotoSpotsMap";
 import { runningRoutes, extensionRoutes } from "@/data/routes";
 import { RouteCard } from "@/components/RouteCard";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
@@ -1502,13 +1502,7 @@ const Index = () => {
         {/* Mapa */}
         {showPhotoSpotsMap && (
           <div className="mb-8 no-print">
-            <Suspense fallback={
-              <div className="w-full h-[280px] md:h-[360px] bg-muted rounded-lg flex items-center justify-center">
-                <p className="text-muted-foreground">Carregando mapa...</p>
-              </div>
-            }>
-              <PhotoSpotsMap spots={photospots} />
-            </Suspense>
+            <PhotoSpotsMap spots={photospots} />
           </div>
         )}
 
