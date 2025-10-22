@@ -23,12 +23,17 @@ export function RiosIntro() {
             </p>
           </div>
 
-          {/* Button with Logo */}
-          <div className="mt-8 flex justify-center">
+          {/* Logo and Button */}
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <img 
+              src={riosLogoButton} 
+              alt="Rios Logo" 
+              className="h-8 w-auto"
+            />
             <Button
               asChild
               size="lg"
-              className="gap-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
+              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
             >
               <a 
                 href="https://www.airbnb.com.br/users/profile/1465782997269992090" 
@@ -36,11 +41,6 @@ export function RiosIntro() {
                 rel="noopener noreferrer"
                 className="flex items-center"
               >
-                <img 
-                  src={riosLogoButton} 
-                  alt="Rios Logo" 
-                  className="h-6 w-auto"
-                />
                 <span className="font-semibold">Ver nossos imóveis para alugar</span>
                 <ExternalLink className="h-4 w-4" />
               </a>
