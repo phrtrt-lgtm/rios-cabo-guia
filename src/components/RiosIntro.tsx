@@ -1,4 +1,7 @@
 import riosLogoIntro from "@/assets/rios-logo-intro.png";
+import riosLogoButton from "@/assets/rios-logo-button.png";
+import { Button } from "@/components/ui/button";
+import { ExternalLink } from "lucide-react";
 
 export function RiosIntro() {
   return (
@@ -18,6 +21,30 @@ export function RiosIntro() {
             <p className="font-medium text-[#1e5a7d]">
               Nossa promessa é simples: menos atrito, mais memórias. Se este guia te ajudar a curtir mais Cabo Frio, Arraial e Búzios, a missão está cumprida. Boa viagem! 🌊
             </p>
+          </div>
+
+          {/* Button with Logo */}
+          <div className="mt-8 flex justify-center">
+            <Button
+              asChild
+              size="lg"
+              className="gap-3 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
+            >
+              <a 
+                href="https://www.airbnb.com.br/users/profile/1465782997269992090" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center"
+              >
+                <img 
+                  src={riosLogoButton} 
+                  alt="Rios Logo" 
+                  className="h-6 w-auto"
+                />
+                <span className="font-semibold">Ver nossos imóveis para alugar</span>
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </Button>
           </div>
         </div>
       </div>
