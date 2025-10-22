@@ -1,4 +1,4 @@
-import { MapPin, ExternalLink, Info, Star, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
+import { MapPin, ExternalLink, Info, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
 import { ReactNode } from "react";
 
 interface TouristCardProps {
@@ -31,7 +31,6 @@ export const TouristCard = ({
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " Cabo Frio, RJ")}`;
   
   const Icon = getIconForType(type);
-  const mockRating = (Math.random() * 0.5 + 4.2).toFixed(1);
 
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
@@ -49,19 +48,6 @@ export const TouristCard = ({
             <div className="flex items-start justify-between gap-2 mb-2">
               <h4 className="text-xl font-semibold text-primary">{name}</h4>
               {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
-            </div>
-            {/* Star Rating */}
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              <span className="text-sm font-semibold text-foreground">{mockRating}</span>
-              <a 
-                href={mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-primary underline ml-1"
-              >
-                (ver no Google)
-              </a>
             </div>
           </div>
         </div>

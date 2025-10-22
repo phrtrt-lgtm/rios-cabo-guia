@@ -1,4 +1,4 @@
-import { MapPin, Clock, Phone, ExternalLink, Info, Star, ShoppingCart, Pill, Beef, Coffee, PawPrint, ShoppingBag } from "lucide-react";
+import { MapPin, Clock, Phone, ExternalLink, Info, ShoppingCart, Pill, Beef, Coffee, PawPrint, ShoppingBag } from "lucide-react";
 import { ReactNode } from "react";
 
 interface UtilityCardProps {
@@ -45,7 +45,6 @@ export const UtilityCard = ({
     : null;
 
   const Icon = getIconForType(type);
-  const mockRating = (Math.random() * 1.5 + 3.5).toFixed(1);
 
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
@@ -68,19 +67,6 @@ export const UtilityCard = ({
                 </span>
               </div>
               {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
-            </div>
-            {/* Star Rating */}
-            <div className="flex items-center gap-1 mt-2">
-              <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-              <span className="text-sm font-semibold text-foreground">{mockRating}</span>
-              <a 
-                href={mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-primary underline ml-1"
-              >
-                (ver no Google)
-              </a>
             </div>
           </div>
         </div>

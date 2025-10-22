@@ -1,4 +1,4 @@
-import { MapPin, Clock, DollarSign, ExternalLink, Star, Utensils } from "lucide-react";
+import { MapPin, Clock, DollarSign, ExternalLink, Utensils } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ReactNode } from "react";
 
@@ -25,9 +25,6 @@ export const RestaurantCard = ({
 }: RestaurantCardProps) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address + ", Cabo Frio, RJ")}`;
   
-  // Mock rating - in a real app this would come from Google Places API
-  const mockRating = (Math.random() * 1.5 + 3.5).toFixed(1);
-  
   return (
     <Card className="mb-4 hover:shadow-lg transition-all hover:border-primary/50">
       <CardContent className="p-6">
@@ -51,19 +48,6 @@ export const RestaurantCard = ({
                   <span className="inline-block px-3 py-1 bg-accent/20 text-accent-foreground text-xs rounded-full">
                     {category}
                   </span>
-                  {/* Star Rating */}
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    <span className="text-sm font-semibold text-foreground">{mockRating}</span>
-                    <a 
-                      href={mapsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs text-muted-foreground hover:text-primary underline ml-1"
-                    >
-                      (ver no Google)
-                    </a>
-                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-1 text-secondary font-semibold ml-2">
