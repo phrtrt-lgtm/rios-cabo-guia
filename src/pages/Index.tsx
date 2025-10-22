@@ -282,6 +282,29 @@ const Index = () => {
             Portinho e Passagem.
           </p>
           
+          <div className="mb-4 not-prose">
+            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 p-6 rounded-lg border-2 border-primary/30">
+              <h3 className="font-bold text-xl text-primary mb-3 text-center">📍 O que você encontra neste guia</h3>
+              <p className="text-sm text-foreground/80 text-center mb-2">
+                Além de praias, restaurantes e utilidades, preparamos seções especiais para você explorar a região:
+              </p>
+              <ul className="text-sm space-y-1 max-w-2xl mx-auto">
+                <li className="flex items-center gap-2">
+                  <span className="text-primary">🥾</span>
+                  <span><strong>Trilhas:</strong> Percursos com níveis de dificuldade, tempo estimado e dicas práticas</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-primary">📸</span>
+                  <span><strong>Foto-spots:</strong> Melhores locais e horários para fotos incríveis da região</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-primary">🏃‍♂️</span>
+                  <span><strong>Rotas para corrida e ciclismo:</strong> Circuitos mapeados com distâncias, altimetria e pontos de hidratação</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
           <div className="grid md:grid-cols-2 gap-4 not-prose">
             <div className="bg-secondary/10 p-4 rounded-lg border border-secondary/30">
               <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
