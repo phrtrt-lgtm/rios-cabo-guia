@@ -124,6 +124,40 @@ All colors MUST be HSL.
       text-decoration: none;
       color: inherit;
     }
+
+    /* Quando estiver imprimindo fotospots, esconder tudo exceto header, mapa e fotospots */
+    body.printing-photospots > div > *:not(header):not([id="fotospots"]) {
+      display: none !important;
+    }
+
+    body.printing-photospots nav,
+    body.printing-photospots footer,
+    body.printing-photospots [id="boas-vindas"],
+    body.printing-photospots [id="praias"],
+    body.printing-photospots [id="utilidades"],
+    body.printing-photospots [id="gastronomia"],
+    body.printing-photospots [id="arraial"],
+    body.printing-photospots [id="buzios"],
+    body.printing-photospots [id="trilhas"],
+    body.printing-photospots [id="rotas"],
+    body.printing-photospots [id="sobre"] {
+      display: none !important;
+    }
+
+    /* Mostrar apenas header e seção de fotospots */
+    body.printing-photospots header {
+      display: block !important;
+    }
+
+    body.printing-photospots [id="fotospots"] {
+      display: block !important;
+    }
+
+    /* Esconder botões e controles na impressão */
+    body.printing-photospots button,
+    body.printing-photospots .no-print {
+      display: none !important;
+    }
   }
 }
 

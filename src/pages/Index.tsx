@@ -183,13 +183,10 @@ const Index = () => {
   };
 
   const handleExportPhotoSpotsPDF = () => {
-    // Marca a seção para impressão
-    const section = document.getElementById('fotospots');
-    if (section) {
-      section.classList.add('printing-section');
-      window.print();
-      section.classList.remove('printing-section');
-    }
+    // Adiciona classe especial para controlar o que será impresso
+    document.body.classList.add('printing-photospots');
+    window.print();
+    document.body.classList.remove('printing-photospots');
   };
 
   const getETA = (placeId: string) => {
