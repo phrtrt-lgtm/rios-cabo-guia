@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -6,13 +6,15 @@ import { PhotoSpot } from '@/data/photospots';
 import { Button } from './ui/button';
 import { Navigation, Plus } from 'lucide-react';
 
-// Fix para ícones do Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-});
+// Fix para ícones do Leaflet - executar apenas uma vez
+if (typeof window !== 'undefined') {
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  });
+}
 
 interface PhotoSpotsMapProps {
   spots: PhotoSpot[];
@@ -34,20 +36,13 @@ function FitBounds({ spots }: { spots: PhotoSpot[] }) {
 }
 
 export function PhotoSpotsMap({ spots, onAddToItinerary }: PhotoSpotsMapProps) {
-  const mapRef = useRef<L.Map | null>(null);
-  const [isReady, setIsReady] = useState(false);
-
   // Centro inicial (aproximadamente no meio da região)
   const center: [number, number] = [-22.88, -42.02];
 
-  useEffect(() => {
-    setIsReady(true);
-  }, []);
-
-  if (!isReady) {
+  if (spots.length === 0) {
     return (
-      <div className="w-full h-[360px] md:h-[420px] bg-muted rounded-lg flex items-center justify-center">
-        <p className="text-muted-foreground">Carregando mapa...</p>
+      <div className="w-full h-[280px] md:h-[360px] bg-muted rounded-lg flex items-center justify-center">
+        <p className="text-muted-foreground">Nenhum ponto disponível</p>
       </div>
     );
   }
@@ -58,7 +53,6 @@ export function PhotoSpotsMap({ spots, onAddToItinerary }: PhotoSpotsMapProps) {
         center={center}
         zoom={11}
         className="w-full h-full"
-        ref={mapRef}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
