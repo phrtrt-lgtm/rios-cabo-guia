@@ -10,7 +10,7 @@ export function RiosIntro() {
             <img 
               src={riosLogoIntro} 
               alt="Logo RIOS — Operação e Gestão de Hospedagens" 
-              className="h-9 md:h-10 object-contain mb-4"
+              className="h-16 md:h-20 object-contain mb-4"
             />
             <h2 className="text-2xl md:text-3xl font-bold text-[#1e5a7d] leading-tight">
               Rios — feita por quem mora e cuida
