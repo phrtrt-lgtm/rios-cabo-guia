@@ -309,7 +309,7 @@ const Index = () => {
             <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 p-6 rounded-lg border-2 border-primary/30">
               <h3 className="font-bold text-xl text-primary mb-3 text-center">📍 O que você encontra neste guia</h3>
               <p className="text-sm text-foreground/80 text-center mb-2">
-                Além de praias, restaurantes e utilidades, preparamos seções especiais para você explorar a região:
+                Além de <strong>praias, restaurantes, utilidades, Arraial do Cabo e Búzios</strong>, preparamos seções especiais para você explorar a região:
               </p>
               <ul className="text-sm space-y-1 max-w-2xl mx-auto">
                 <li className="flex items-center gap-2">
