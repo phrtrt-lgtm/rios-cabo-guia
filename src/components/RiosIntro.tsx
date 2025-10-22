@@ -24,7 +24,7 @@ export function RiosIntro() {
           </div>
 
           {/* Logo and Button */}
-          <div className="mt-8 flex flex-col items-center gap-2">
+          <div className="mt-4 flex flex-col items-center gap-2">
             <img 
               src={riosLogoButton} 
               alt="Rios Logo" 
