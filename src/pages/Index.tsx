@@ -183,10 +183,22 @@ const Index = () => {
   };
 
   const handleExportPhotoSpotsPDF = () => {
-    // Adiciona classe especial para controlar o que será impresso
-    document.body.classList.add('printing-photospots');
-    window.print();
-    document.body.classList.remove('printing-photospots');
+    // Se o mapa não estiver visível, mostrar temporariamente
+    const mapWasHidden = !showPhotoSpotsMap;
+    if (mapWasHidden) {
+      setShowPhotoSpotsMap(true);
+      // Aguardar o mapa renderizar antes de imprimir
+      setTimeout(() => {
+        document.body.classList.add('printing-photospots');
+        window.print();
+        document.body.classList.remove('printing-photospots');
+        setShowPhotoSpotsMap(false);
+      }, 500);
+    } else {
+      document.body.classList.add('printing-photospots');
+      window.print();
+      document.body.classList.remove('printing-photospots');
+    }
   };
 
   const getETA = (placeId: string) => {
@@ -271,13 +283,15 @@ const Index = () => {
       </nav>
 
       {/* Distance Widget */}
-      <DistanceWidget 
-        onOriginSet={handleOriginSet}
-        onModeChange={handleModeChange}
-        onSortByTime={handleSortByTime}
-        currentMode={currentMode}
-        isLoading={isLoading}
-      />
+      <div className="no-print">
+        <DistanceWidget 
+          onOriginSet={handleOriginSet}
+          onModeChange={handleModeChange}
+          onSortByTime={handleSortByTime}
+          currentMode={currentMode}
+          isLoading={isLoading}
+        />
+      </div>
 
       {/* Rios Introduction */}
       <RiosIntro />
@@ -361,7 +375,7 @@ const Index = () => {
       {/* Floating Itinerary Builder Button */}
       <Button
         onClick={() => setItineraryBuilderOpen(true)}
-        className="fixed bottom-8 right-8 rounded-full shadow-lg h-14 px-6 gap-2 z-50 bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+        className="fixed bottom-8 right-8 rounded-full shadow-lg h-14 px-6 gap-2 z-50 bg-secondary hover:bg-secondary/90 text-secondary-foreground no-print"
         size="lg"
       >
         <Plus className="h-5 w-5" />
@@ -1474,7 +1488,7 @@ const Index = () => {
           </p>
           
           {/* Botões do mapa e PDF */}
-          <div className="flex flex-wrap gap-3 justify-center">
+          <div className="flex flex-wrap gap-3 justify-center no-print">
             <Button
               variant={showPhotoSpotsMap ? "default" : "outline"}
               size="lg"
@@ -1498,13 +1512,13 @@ const Index = () => {
 
         {/* Mapa */}
         {showPhotoSpotsMap && (
-          <div className="mb-8 no-print">
+          <div className="mb-8">
             <PhotoSpotsMap spots={photospots} />
           </div>
         )}
 
         {/* Filtros de foto-spots */}
-        <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
+        <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20 no-print">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="h-5 w-5 text-secondary" />
             <h3 className="font-semibold text-secondary">Filtrar foto-spots</h3>

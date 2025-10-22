@@ -125,38 +125,30 @@ All colors MUST be HSL.
       color: inherit;
     }
 
-    /* Quando estiver imprimindo fotospots, esconder tudo exceto header, mapa e fotospots */
-    body.printing-photospots > div > *:not(header):not([id="fotospots"]) {
-      display: none !important;
-    }
-
+    /* Quando estiver imprimindo fotospots - esconder seções específicas */
     body.printing-photospots nav,
     body.printing-photospots footer,
-    body.printing-photospots [id="boas-vindas"],
-    body.printing-photospots [id="praias"],
-    body.printing-photospots [id="utilidades"],
-    body.printing-photospots [id="gastronomia"],
-    body.printing-photospots [id="arraial"],
-    body.printing-photospots [id="buzios"],
-    body.printing-photospots [id="trilhas"],
-    body.printing-photospots [id="rotas"],
-    body.printing-photospots [id="sobre"] {
+    body.printing-photospots button,
+    body.printing-photospots #boas-vindas,
+    body.printing-photospots #praias,
+    body.printing-photospots #utilidades,
+    body.printing-photospots #gastronomia,
+    body.printing-photospots #arraial,
+    body.printing-photospots #buzios,
+    body.printing-photospots #trilhas,
+    body.printing-photospots #rotas,
+    body.printing-photospots #sobre {
       display: none !important;
     }
 
-    /* Mostrar apenas header e seção de fotospots */
+    /* Manter o header visível */
     body.printing-photospots header {
       display: block !important;
     }
 
-    body.printing-photospots [id="fotospots"] {
-      display: block !important;
-    }
-
-    /* Esconder botões e controles na impressão */
-    body.printing-photospots button,
-    body.printing-photospots .no-print {
-      display: none !important;
+    /* Otimizar layout dos cards na impressão */
+    body.printing-photospots #fotospots {
+      margin-top: 2rem;
     }
   }
 }
