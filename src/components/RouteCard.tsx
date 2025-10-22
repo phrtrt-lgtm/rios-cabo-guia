@@ -123,7 +123,7 @@ export const RouteCard = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 pt-2">
+        <div className="flex justify-center pt-2">
           <Button
             variant="outline"
             size="sm"
@@ -131,10 +131,6 @@ export const RouteCard = ({
           >
             <MapPin className="h-4 w-4 mr-2" />
             Como chegar
-          </Button>
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Exportar GPX
           </Button>
         </div>
       </CardContent>

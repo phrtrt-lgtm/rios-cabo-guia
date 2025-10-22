@@ -1682,22 +1682,6 @@ const Index = () => {
             })}
           </div>
         </div>
-
-        {/* Botão PDF */}
-        <div className="flex justify-center mt-8">
-          <Button
-            variant="secondary"
-            size="lg"
-            className="gap-2"
-            onClick={() => {
-              // TODO: Implementar geração de PDF
-              console.log('Gerar PDF das rotas');
-            }}
-          >
-            <Download className="h-5 w-5" />
-            Baixar Guia de Rotas (PDF)
-          </Button>
-        </div>
       </GuideSection>
 
       {/* Contato */}
