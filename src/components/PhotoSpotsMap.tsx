@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { PhotoSpot } from '@/data/photospots';
@@ -21,20 +20,6 @@ interface PhotoSpotsMapProps {
   onAddToItinerary?: (spotId: string) => void;
 }
 
-// Componente para ajustar o bounds do mapa
-function FitBounds({ spots }: { spots: PhotoSpot[] }) {
-  const map = useMap();
-  
-  useEffect(() => {
-    if (spots.length > 0) {
-      const bounds = L.latLngBounds(spots.map(spot => [spot.lat, spot.lng]));
-      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 13 });
-    }
-  }, [spots, map]);
-  
-  return null;
-}
-
 export function PhotoSpotsMap({ spots, onAddToItinerary }: PhotoSpotsMapProps) {
   // Centro inicial (aproximadamente no meio da região)
   const center: [number, number] = [-22.88, -42.02];
@@ -51,7 +36,8 @@ export function PhotoSpotsMap({ spots, onAddToItinerary }: PhotoSpotsMapProps) {
     <div className="w-full h-[280px] md:h-[360px] rounded-lg overflow-hidden border border-border shadow-lg" id="photospots-map">
       <MapContainer
         center={center}
-        zoom={11}
+        zoom={10}
+        scrollWheelZoom={true}
         className="w-full h-full"
       >
         <TileLayer
@@ -102,8 +88,6 @@ export function PhotoSpotsMap({ spots, onAddToItinerary }: PhotoSpotsMapProps) {
             </Popup>
           </Marker>
         ))}
-        
-        <FitBounds spots={spots} />
       </MapContainer>
     </div>
   );
