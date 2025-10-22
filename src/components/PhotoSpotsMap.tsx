@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { PhotoSpot } from '@/data/photospots';
@@ -66,54 +65,49 @@ export function PhotoSpotsMap({ spots, onAddToItinerary }: PhotoSpotsMapProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         
-        <MarkerClusterGroup
-          chunkedLoading
-          maxClusterRadius={50}
-        >
-          {spots.map((spot) => (
-            <Marker
-              key={spot.id}
-              position={[spot.lat, spot.lng]}
-            >
-              <Popup maxWidth={280}>
-                <div className="p-2">
-                  <h3 className="font-bold text-base mb-1">{spot.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {spot.bairro}, {spot.city}
-                  </p>
-                  <div className="flex flex-col gap-2">
+        {spots.map((spot) => (
+          <Marker
+            key={spot.id}
+            position={[spot.lat, spot.lng]}
+          >
+            <Popup maxWidth={280}>
+              <div className="p-2">
+                <h3 className="font-bold text-base mb-1">{spot.name}</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {spot.bairro}, {spot.city}
+                </p>
+                <div className="flex flex-col gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    asChild
+                  >
+                    <a
+                      href={spot.mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Navigation className="h-4 w-4 mr-2" />
+                      Como chegar
+                    </a>
+                  </Button>
+                  {onAddToItinerary && (
                     <Button
-                      variant="outline"
+                      variant="default"
                       size="sm"
                       className="w-full"
-                      asChild
+                      onClick={() => onAddToItinerary(spot.id)}
                     >
-                      <a
-                        href={spot.mapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Navigation className="h-4 w-4 mr-2" />
-                        Como chegar
-                      </a>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Adicionar ao roteiro
                     </Button>
-                    {onAddToItinerary && (
-                      <Button
-                        variant="default"
-                        size="sm"
-                        className="w-full"
-                        onClick={() => onAddToItinerary(spot.id)}
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Adicionar ao roteiro
-                      </Button>
-                    )}
-                  </div>
+                  )}
                 </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MarkerClusterGroup>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
         
         <FitBounds spots={spots} />
       </MapContainer>
