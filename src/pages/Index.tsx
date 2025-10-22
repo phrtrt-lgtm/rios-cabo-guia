@@ -1487,7 +1487,7 @@ const Index = () => {
             janelas de luz ideais e dicas de composição para fotos incríveis.
           </p>
           
-          {/* Botões do mapa e PDF */}
+          {/* Botões do mapa */}
           <div className="flex flex-wrap gap-3 justify-center no-print">
             <Button
               variant={showPhotoSpotsMap ? "default" : "outline"}
@@ -1497,15 +1497,6 @@ const Index = () => {
             >
               <MapIcon className="h-5 w-5" />
               {showPhotoSpotsMap ? 'Ocultar mapa' : 'Mostrar mapa'}
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={handleExportPhotoSpotsPDF}
-              className="gap-2"
-            >
-              <FileDown className="h-5 w-5" />
-              Salvar PDF
             </Button>
           </div>
         </div>
