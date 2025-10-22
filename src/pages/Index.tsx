@@ -6,6 +6,7 @@ import { TouristCard } from "@/components/TouristCard";
 import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
 import { ItineraryBuilder } from "@/components/ItineraryBuilder";
+import { RiosIntro } from "@/components/RiosIntro";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
@@ -268,6 +269,9 @@ const Index = () => {
         currentMode={currentMode}
         isLoading={isLoading}
       />
+
+      {/* Rios Introduction */}
+      <RiosIntro />
 
       {/* Boas-vindas */}
       <GuideSection id="boas-vindas" title="Boas-vindas & Como Usar Este Guia">
