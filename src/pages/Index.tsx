@@ -299,11 +299,6 @@ const Index = () => {
       {/* Boas-vindas */}
       <GuideSection id="boas-vindas" title="Boas-vindas & Como Usar Este Guia">
         <div className="prose max-w-none">
-          <p className="text-lg text-muted-foreground mb-6">
-            Seja bem-vindo(a) a Cabo Frio! Este guia foi criado para você aproveitar ao máximo sua estadia,
-            com dicas locais, endereços úteis e sugestões de passeios nos bairros Braga, Vila Nova, Algodoal, 
-            Portinho e Passagem.
-          </p>
           
           <div className="mb-4 not-prose">
             <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 p-6 rounded-lg border-2 border-primary/30">
