@@ -1,4 +1,4 @@
-import { Camera, Clock, Aperture, Lightbulb, MapPin } from 'lucide-react';
+import { Camera, Clock, Lightbulb, MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +10,6 @@ interface PhotoSpotCardProps {
   bairro: string;
   bestWindow: string;
   angle: string;
-  lens: string;
   tip: string;
   mapsUrl: string;
   walkingMinutes: number | null;
@@ -33,7 +32,6 @@ export const PhotoSpotCard = ({
   bairro,
   bestWindow,
   angle,
-  lens,
   tip,
   mapsUrl,
   walkingMinutes,
@@ -71,13 +69,6 @@ export const PhotoSpotCard = ({
             <Camera className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <div>
               <span className="font-medium">Ângulo:</span> {angle}
-            </div>
-          </div>
-
-          <div className="flex gap-2 text-sm">
-            <Aperture className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-            <div>
-              <span className="font-medium">Lente:</span> {lens}
             </div>
           </div>
 

@@ -8,7 +8,6 @@ export interface PhotoSpot {
   mapsUrl: string;
   bestWindow: 'golden-sunrise' | 'golden-sunset' | 'blue-hour' | 'golden-morning';
   angle: string;
-  lens: string;
   tip: string;
   sceneType: 'costão' | 'igreja' | 'canal' | 'praia' | 'orla' | 'mirante';
 }
@@ -25,7 +24,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Forte+São+Mateus+Cabo+Frio',
     bestWindow: 'golden-sunrise',
     angle: 'Do costão para o forte com linhas do molhe',
-    lens: '16–24mm; 50mm para detalhes',
     tip: 'Chegue cedo para capturar o sol nascendo por trás do forte',
     sceneType: 'costão',
   },
@@ -39,7 +37,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Praça+das+Águas+Cabo+Frio',
     bestWindow: 'golden-sunset',
     angle: 'Passarela com leading lines e mar ao fundo',
-    lens: '24–35mm',
     tip: 'Use a passarela como linha guia para o pôr do sol',
     sceneType: 'orla',
   },
@@ -53,7 +50,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Praça+São+Benedito+Cabo+Frio',
     bestWindow: 'blue-hour',
     angle: 'Fachada lateral + calçamento molhado pós-chuva',
-    lens: '35–50mm',
     tip: 'Melhor em dias de chuva leve; calçamento molhado reflete as luzes',
     sceneType: 'igreja',
   },
@@ -67,7 +63,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Boulevard+Canal+Cabo+Frio',
     bestWindow: 'golden-sunset',
     angle: 'Barcos como primeiro plano, sol no eixo do canal',
-    lens: '24–70mm',
     tip: 'Posicione-se no píer para alinhar o sol com o canal',
     sceneType: 'canal',
   },
@@ -81,7 +76,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Trilha+Morro+do+Vigia+Cabo+Frio',
     bestWindow: 'golden-sunrise',
     angle: 'Moldura natural das rochas, Conchas em "U"',
-    lens: '16–24mm',
     tip: 'Suba antes do amanhecer; use filtro ND gradual',
     sceneType: 'mirante',
   },
@@ -95,7 +89,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Ilha+do+Japonês+Cabo+Frio',
     bestWindow: 'golden-morning',
     angle: 'Água rasa com reflexo; atenção à tábua de maré',
-    lens: '16–35mm',
     tip: 'Maré média/cheia cria espelho d\'água perfeito',
     sceneType: 'praia',
   },
@@ -111,7 +104,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Escadaria+Prainhas+Pontal+do+Atalaia',
     bestWindow: 'golden-morning',
     angle: 'Topo da escadaria em leve contra-mergulho',
-    lens: '16–24mm',
     tip: 'Chegue cedo para evitar multidão e capturar luz suave',
     sceneType: 'praia',
   },
@@ -125,7 +117,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Praia+Grande+Arraial+do+Cabo+deck',
     bestWindow: 'golden-sunset',
     angle: 'Silhueta na passarela com horizonte limpo',
-    lens: '24–50mm',
     tip: 'Tripé recomendado; use pessoas como escala/silhueta',
     sceneType: 'orla',
   },
@@ -139,7 +130,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Mirante+Pontal+do+Atalaia',
     bestWindow: 'golden-morning',
     angle: 'Composição em camadas (mar/ilhas/costas)',
-    lens: '24–70mm',
     tip: 'Vento forte pode exigir tripé pesado; cuidado nas bordas',
     sceneType: 'mirante',
   },
@@ -155,7 +145,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Estátua+Brigitte+Bardot+Búzios',
     bestWindow: 'blue-hour',
     angle: 'Calçadão com luzes refletidas no mar',
-    lens: '35–50mm',
     tip: 'Blue hour realça as luzes; ISO mais alto pode ser necessário',
     sceneType: 'orla',
   },
@@ -169,7 +158,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Porto+da+Barra+Búzios',
     bestWindow: 'golden-sunset',
     angle: 'Trapiches com sol se pondo por trás',
-    lens: '24–70mm',
     tip: 'Use trapiches como primeiro plano; cuidado com backlight',
     sceneType: 'orla',
   },
@@ -183,7 +171,6 @@ export const photospots: PhotoSpot[] = [
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Praia+Azeda+Búzios',
     bestWindow: 'golden-morning',
     angle: 'Escadaria em diagonal + enseadas',
-    lens: '16–35mm',
     tip: 'Ângulo amplo captura ambas as praias; evite meio-dia',
     sceneType: 'mirante',
   },

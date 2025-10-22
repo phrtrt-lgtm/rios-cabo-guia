@@ -1491,7 +1491,6 @@ const Index = () => {
                     bairro={spot.bairro}
                     bestWindow={spot.bestWindow}
                     angle={spot.angle}
-                    lens={spot.lens}
                     tip={spot.tip}
                     mapsUrl={spot.mapsUrl}
                     walkingMinutes={eta?.walkingMinutes || null}
@@ -1524,7 +1523,6 @@ const Index = () => {
                     bairro={spot.bairro}
                     bestWindow={spot.bestWindow}
                     angle={spot.angle}
-                    lens={spot.lens}
                     tip={spot.tip}
                     mapsUrl={spot.mapsUrl}
                     walkingMinutes={eta?.walkingMinutes || null}
@@ -1557,7 +1555,6 @@ const Index = () => {
                     bairro={spot.bairro}
                     bestWindow={spot.bestWindow}
                     angle={spot.angle}
-                    lens={spot.lens}
                     tip={spot.tip}
                     mapsUrl={spot.mapsUrl}
                     walkingMinutes={eta?.walkingMinutes || null}
