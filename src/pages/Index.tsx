@@ -8,13 +8,14 @@ import { DistanceBadge } from "@/components/DistanceBadge";
 import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { RiosIntro } from "@/components/RiosIntro";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route } from "lucide-react";
+import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
 import { allPlaces, touristPlaces, utilityPlaces, arraialPlaces, buziosPlaces } from "@/data/places";
 import { trails } from "@/data/trails";
 import { TrailCard } from "@/components/TrailCard";
 import { photospots } from "@/data/photospots";
 import { PhotoSpotCard } from "@/components/PhotoSpotCard";
+import { PhotoSpotsMap } from "@/components/PhotoSpotsMap";
 import { runningRoutes, extensionRoutes } from "@/data/routes";
 import { RouteCard } from "@/components/RouteCard";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
@@ -149,6 +150,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [sortByTime, setSortByTime] = useState(false);
   const [itineraryBuilderOpen, setItineraryBuilderOpen] = useState(false);
+  const [showPhotoSpotsMap, setShowPhotoSpotsMap] = useState(false);
 
   const getPlaceDescription = (placeId: string) => placeInfo[placeId]?.description || '';
   const getPlaceTips = (placeId: string) => placeInfo[placeId]?.tips;
@@ -178,6 +180,16 @@ const Index = () => {
 
   const handleSortByTime = () => {
     setSortByTime(!sortByTime);
+  };
+
+  const handleExportPhotoSpotsPDF = () => {
+    // Marca a seção para impressão
+    const section = document.getElementById('fotospots');
+    if (section) {
+      section.classList.add('printing-section');
+      window.print();
+      section.classList.remove('printing-section');
+    }
   };
 
   const getETA = (placeId: string) => {
@@ -1458,10 +1470,41 @@ const Index = () => {
 
       {/* Foto-spots */}
       <GuideSection id="fotospots" title="Foto-spots & Horário da Luz" printBreak>
-        <p className="text-lg text-muted-foreground mb-8">
-          Capture os melhores momentos da Região dos Lagos. Descubra pontos fotogênicos, 
-          janelas de luz ideais e dicas de composição para fotos incríveis.
-        </p>
+        <div className="flex flex-col gap-6 mb-8">
+          <p className="text-lg text-muted-foreground">
+            Capture os melhores momentos da Região dos Lagos. Descubra pontos fotogênicos, 
+            janelas de luz ideais e dicas de composição para fotos incríveis.
+          </p>
+          
+          {/* Botões do mapa e PDF */}
+          <div className="flex flex-wrap gap-3 justify-center">
+            <Button
+              variant={showPhotoSpotsMap ? "default" : "outline"}
+              size="lg"
+              onClick={() => setShowPhotoSpotsMap(!showPhotoSpotsMap)}
+              className="gap-2"
+            >
+              <MapIcon className="h-5 w-5" />
+              {showPhotoSpotsMap ? 'Ocultar mapa' : 'Mostrar mapa'}
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={handleExportPhotoSpotsPDF}
+              className="gap-2"
+            >
+              <FileDown className="h-5 w-5" />
+              Salvar PDF
+            </Button>
+          </div>
+        </div>
+
+        {/* Mapa */}
+        {showPhotoSpotsMap && (
+          <div className="mb-8 no-print">
+            <PhotoSpotsMap spots={photospots} />
+          </div>
+        )}
 
         {/* Filtros de foto-spots */}
         <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
@@ -1591,21 +1634,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Botão PDF */}
-        <div className="flex justify-center mt-8">
-          <Button
-            variant="secondary"
-            size="lg"
-            className="gap-2"
-            onClick={() => {
-              // TODO: Implementar geração de PDF
-              console.log('Gerar PDF dos foto-spots');
-            }}
-          >
-            <Download className="h-5 w-5" />
-            Mapa de Foto-spots Rios (PDF)
-          </Button>
-        </div>
       </GuideSection>
 
       {/* Rotas para correr/pedalar */}
