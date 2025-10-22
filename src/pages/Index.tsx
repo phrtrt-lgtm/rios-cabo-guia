@@ -1684,20 +1684,15 @@ const Index = () => {
         </div>
       </GuideSection>
 
-      {/* Contato */}
-      <GuideSection id="sobre" title="Atendimento" printBreak>
+      {/* Sobre Nós */}
+      <GuideSection id="sobre" title="Sobre Nós" printBreak>
         <div className="bg-card p-8 rounded-lg border border-border text-center max-w-3xl mx-auto">
           <img src={riosLogoFooter} alt="Rios Logo" className="mx-auto mb-6 h-16 object-contain" />
           <p className="text-lg text-muted-foreground mb-6">
             A Rios cuida de imóveis e pessoas em Cabo Frio e Região dos Lagos. 
             Oferecemos hospedagens exclusivas com todo o conforto e charme que você merece.
           </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button asChild variant="default" size="lg">
-              <a href="https://wa.me/5522999999999" target="_blank" rel="noopener noreferrer">
-                <Phone className="mr-2 h-5 w-5" /> Falar no WhatsApp
-              </a>
-            </Button>
+          <div className="flex justify-center">
             <Button asChild variant="outline" size="lg">
               <a href="https://www.airbnb.com.br" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="mr-2 h-5 w-5" /> Ver Imóveis no Airbnb
