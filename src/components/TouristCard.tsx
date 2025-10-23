@@ -1,5 +1,6 @@
 import { MapPin, ExternalLink, Info, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
 import { ReactNode } from "react";
+import { ReviewsSection } from "@/components/ReviewsSection";
 
 interface TouristCardProps {
   name: string;
@@ -80,6 +81,8 @@ export const TouristCard = ({
             <MapPin className="w-3 h-3" /> Ver no Google Maps
           </a>
         </div>
+
+        <ReviewsSection placeName={name} address={location} />
       </div>
     </div>
   );

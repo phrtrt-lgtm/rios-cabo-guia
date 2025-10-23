@@ -1,6 +1,7 @@
 import { MapPin, Clock, DollarSign, ExternalLink, Utensils } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ReactNode } from "react";
+import { ReviewsSection } from "@/components/ReviewsSection";
 
 interface RestaurantCardProps {
   name: string;
@@ -105,6 +106,8 @@ export const RestaurantCard = ({
         <p className="text-xs text-muted-foreground mt-3 italic">
           Horários podem mudar — confirme no Google Maps
         </p>
+
+        <ReviewsSection placeName={name} address={address} />
       </CardContent>
     </Card>
   );

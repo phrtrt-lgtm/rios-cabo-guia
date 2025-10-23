@@ -1,5 +1,6 @@
 import { MapPin, Clock, Phone, ExternalLink, Info, ShoppingCart, Pill, Beef, Coffee, PawPrint, ShoppingBag } from "lucide-react";
 import { ReactNode } from "react";
+import { ReviewsSection } from "@/components/ReviewsSection";
 
 interface UtilityCardProps {
   name: string;
@@ -130,6 +131,8 @@ export const UtilityCard = ({
             </a>
           )}
         </div>
+
+        <ReviewsSection placeName={name} address={address} />
       </div>
     </div>
   );
