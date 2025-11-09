@@ -387,69 +387,85 @@ export const ItineraryBuilder = ({
           </Button>
         </div>
 
-        <div className="border rounded-lg overflow-auto max-h-[500px]">
-          <table className="w-full">
-            <thead className="bg-muted/50 sticky top-0">
-              <tr>
-                <th className="p-3 text-left w-12">
-                  <Checkbox
-                    checked={filtered.length > 0 && filtered.every(p => selectedPlaces.has(p.id))}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        setSelectedPlaces(new Set([...selectedPlaces, ...filtered.map(p => p.id)]));
-                      } else {
-                        const newSet = new Set(selectedPlaces);
-                        filtered.forEach(p => newSet.delete(p.id));
-                        setSelectedPlaces(newSet);
-                      }
-                    }}
-                  />
-                </th>
-                <th className="p-3 text-left">Nome</th>
-                <th className="p-3 text-left">Tempo até lá</th>
-                <th className="p-3 text-left w-32">Ação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((place) => {
-                const eta = currentEtas[place.id]?.[mode] || 0;
-                const defaultDuration = DEFAULT_DURATIONS[place.category] || 60;
-                
-                return (
-                  <tr key={place.id} className="border-t hover:bg-muted/30">
-                    <td className="p-3">
-                      <Checkbox
-                        checked={selectedPlaces.has(place.id)}
-                        onCheckedChange={(checked) => {
+        <div className="border rounded-lg overflow-hidden">
+          <div className="overflow-auto max-h-[500px]">
+            <table className="w-full">
+              <thead className="bg-secondary/10 border-b-2 border-secondary/20 sticky top-0 z-10">
+                <tr>
+                  <th className="px-2 py-2 text-left w-10">
+                    <Checkbox
+                      checked={filtered.length > 0 && filtered.every(p => selectedPlaces.has(p.id))}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          setSelectedPlaces(new Set([...selectedPlaces, ...filtered.map(p => p.id)]));
+                        } else {
                           const newSet = new Set(selectedPlaces);
-                          if (checked) {
-                            newSet.add(place.id);
-                          } else {
-                            newSet.delete(place.id);
-                          }
+                          filtered.forEach(p => newSet.delete(p.id));
                           setSelectedPlaces(newSet);
-                        }}
-                      />
-                    </td>
-                    <td className="p-3 font-medium">{place.name}</td>
-                    <td className="p-3 text-sm">
-                      {eta > 0 ? (
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {currentEtas[place.id]?.isFallback && '~'}{eta} min
-                        </span>
-                      ) : '-'}
-                    </td>
-                    <td className="p-3">
-                      <Button size="sm" variant="ghost" onClick={() => handleAddPlace(place)}>
-                        Adicionar
-                      </Button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                        }
+                      }}
+                    />
+                  </th>
+                  <th className="px-3 py-2 text-left font-semibold text-sm">Nome</th>
+                  <th className="px-3 py-2 text-left font-semibold text-sm w-28">Tempo</th>
+                  <th className="px-3 py-2 text-center font-semibold text-sm w-24">Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((place, idx) => {
+                  const eta = currentEtas[place.id]?.[mode] || 0;
+                  const defaultDuration = DEFAULT_DURATIONS[place.category] || 60;
+                  
+                  return (
+                    <tr 
+                      key={place.id} 
+                      className={`border-t border-border/50 hover:bg-secondary/5 transition-colors ${
+                        idx % 2 === 0 ? 'bg-background' : 'bg-muted/20'
+                      }`}
+                    >
+                      <td className="px-2 py-2">
+                        <Checkbox
+                          checked={selectedPlaces.has(place.id)}
+                          onCheckedChange={(checked) => {
+                            const newSet = new Set(selectedPlaces);
+                            if (checked) {
+                              newSet.add(place.id);
+                            } else {
+                              newSet.delete(place.id);
+                            }
+                            setSelectedPlaces(newSet);
+                          }}
+                        />
+                      </td>
+                      <td className="px-3 py-2 font-medium text-sm">{place.name}</td>
+                      <td className="px-3 py-2">
+                        {eta > 0 ? (
+                          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <Clock className="w-3.5 h-3.5 text-secondary" />
+                            <span className="font-medium">
+                              {currentEtas[place.id]?.isFallback && '~'}{eta} min
+                            </span>
+                          </span>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">-</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-center">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => handleAddPlace(place)}
+                          className="h-7 text-xs hover:bg-secondary/20 hover:text-secondary-foreground"
+                        >
+                          Adicionar
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
