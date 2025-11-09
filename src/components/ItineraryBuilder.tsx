@@ -406,8 +406,7 @@ export const ItineraryBuilder = ({
                   />
                 </th>
                 <th className="p-3 text-left">Nome</th>
-                <th className="p-3 text-left">ETA</th>
-                <th className="p-3 text-left">Duração</th>
+                <th className="p-3 text-left">Tempo até lá</th>
                 <th className="p-3 text-left w-32">Ação</th>
               </tr>
             </thead>
@@ -441,7 +440,6 @@ export const ItineraryBuilder = ({
                         </span>
                       ) : '-'}
                     </td>
-                    <td className="p-3 text-sm">{defaultDuration} min</td>
                     <td className="p-3">
                       <Button size="sm" variant="ghost" onClick={() => handleAddPlace(place)}>
                         Adicionar
