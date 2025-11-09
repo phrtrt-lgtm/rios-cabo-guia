@@ -25,21 +25,22 @@ export function RiosIntro() {
 
           {/* Button */}
           <div className="mt-4 flex flex-col items-center gap-3">
-            <Button
-              asChild
-              size="lg"
-              className="gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="gap-2 bg-background border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground shadow-lg transition-all"
+          >
+            <a 
+              href="https://www.airbnb.com.br/users/profile/1465782997269992090" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center"
             >
-              <a 
-                href="https://www.airbnb.com.br/users/profile/1465782997269992090" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center"
-              >
-                <span className="font-semibold">Ver nossos imóveis para alugar</span>
-                <ExternalLink className="h-4 w-4" />
-              </a>
-            </Button>
+              <span className="font-semibold">Ver Nossos Imóveis</span>
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </Button>
           </div>
         </div>
       </div>
