@@ -18,6 +18,8 @@ import { photospots } from '@/data/photospots';
 import { runningRoutes, extensionRoutes } from '@/data/routes';
 import { distanceService, PlaceCoords } from '@/services/distance.service';
 import { ItineraryPrintView } from './ItineraryPrintView';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface ItineraryBuilderProps {
   open: boolean;
@@ -104,6 +106,8 @@ export const ItineraryBuilder = ({
   const [targetBlock, setTargetBlock] = useState<TimeBlock>('manha');
   const [searchQuery, setSearchQuery] = useState('');
   const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas' | 'fotospots' | 'rotas'>('cabo-frio');
+  const [isPrinting, setIsPrinting] = useState(false);
+  const { toast: toastHook } = useToast();
 
   // Inicializar itinerários
   useEffect(() => {
@@ -325,8 +329,8 @@ export const ItineraryBuilder = ({
     );
   };
 
-  // Exportar roteiro como PDF
-  const handleExportPDF = () => {
+  // Exportar roteiro como PDF com IA
+  const handleExportPDF = async () => {
     const hasContent = itineraries.some(day => 
       Object.values(day).some(block => block.length > 0)
     );
@@ -336,14 +340,45 @@ export const ItineraryBuilder = ({
       return;
     }
 
-    // Adicionar classe para impressão
-    document.body.classList.add('printing-itinerary');
-    
-    setTimeout(() => {
-      window.print();
-      document.body.classList.remove('printing-itinerary');
-      toast.success('Roteiro pronto para exportar como PDF');
-    }, 100);
+    try {
+      setIsPrinting(true);
+      toast.info('Gerando roteiro com IA...');
+
+      const { data, error } = await supabase.functions.invoke('generate-itinerary-pdf', {
+        body: {
+          itineraries,
+          origin,
+          mode
+        }
+      });
+
+      if (error) throw error;
+
+      // Criar elemento temporário com o HTML gerado pela IA
+      const printDiv = document.createElement('div');
+      printDiv.innerHTML = data.html;
+      printDiv.className = 'ai-generated-itinerary';
+      document.body.appendChild(printDiv);
+
+      // Adicionar classe para impressão
+      document.body.classList.add('printing-itinerary');
+      
+      setTimeout(() => {
+        window.print();
+        document.body.classList.remove('printing-itinerary');
+        document.body.removeChild(printDiv);
+        setIsPrinting(false);
+        toast.success('Roteiro pronto para exportar!');
+      }, 500);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      setIsPrinting(false);
+      toastHook({
+        title: "Erro ao gerar roteiro",
+        description: error instanceof Error ? error.message : "Não foi possível gerar o roteiro com IA. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   };
 
   // Renderizar tabela de seleção
@@ -730,9 +765,13 @@ export const ItineraryBuilder = ({
             Fechar
           </Button>
           <div className="flex-1" />
-          <Button variant="outline" onClick={handleExportPDF}>
+          <Button 
+            variant="outline" 
+            onClick={handleExportPDF}
+            disabled={isPrinting}
+          >
             <FileDown className="w-4 h-4 mr-2" />
-            PDF
+            {isPrinting ? 'Gerando...' : 'PDF'}
           </Button>
           <Button variant="outline" onClick={() => toast.info('Compartilhamento em breve!')}>
             <Share2 className="w-4 h-4 mr-2" />

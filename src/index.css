@@ -107,6 +107,18 @@ All colors MUST be HSL.
   }
 
   @media print {
+    .ai-generated-itinerary {
+      display: block !important;
+    }
+    
+    body:not(.printing-itinerary) .ai-generated-itinerary {
+      display: none !important;
+    }
+
+    .print-only {
+      display: none !important;
+    }
+
     body {
       print-color-adjust: exact;
       -webkit-print-color-adjust: exact;
