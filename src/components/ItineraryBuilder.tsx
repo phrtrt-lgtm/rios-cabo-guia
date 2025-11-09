@@ -17,6 +17,7 @@ import { trails } from '@/data/trails';
 import { photospots } from '@/data/photospots';
 import { runningRoutes, extensionRoutes } from '@/data/routes';
 import { distanceService, PlaceCoords } from '@/services/distance.service';
+import { ItineraryPrintView } from './ItineraryPrintView';
 
 interface ItineraryBuilderProps {
   open: boolean;
@@ -462,110 +463,103 @@ export const ItineraryBuilder = ({
     );
   };
 
-  // Renderizar roteiro do dia
+  // Renderizar roteiro do dia em layout de colunas
   const renderItinerary = () => {
     if (!itineraries[currentDay - 1]) return null;
     
     const dayItinerary = itineraries[currentDay - 1];
     
     return (
-      <div className="space-y-6">
+      <div className="flex gap-2 overflow-x-auto pb-4">
         {Object.entries(TIME_BLOCKS).map(([blockKey, { label, start, end, maxMinutes }]) => {
           const block = dayItinerary[blockKey as TimeBlock];
           const totalTime = calculateBlockTime(block);
           const isOvertime = totalTime > maxMinutes;
           
           return (
-            <Card key={blockKey} className={isOvertime ? 'border-destructive' : ''}>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold">{label}</h3>
-                    <Badge variant="outline" className="text-xs">
-                      {start} - {end}
-                    </Badge>
-                  </div>
-                  <div className={`flex items-center gap-2 ${isOvertime ? 'text-destructive' : ''}`}>
-                    <Clock className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      {totalTime} / {maxMinutes} min
-                    </span>
-                    {isOvertime && (
-                      <Badge variant="destructive" className="text-xs">
-                        Ajustar tempo
-                      </Badge>
-                    )}
+            <Card key={blockKey} className={`${isOvertime ? 'border-destructive' : ''} flex flex-col h-full min-w-[180px] flex-shrink-0`}>
+              <CardContent className="p-3 flex flex-col h-full">
+                <div className="mb-3 space-y-1">
+                  <h3 className="font-semibold text-sm">{label}</h3>
+                  <Badge variant="outline" className="text-xs w-fit">
+                    {start} - {end}
+                  </Badge>
+                  <div className={`flex items-center gap-1 text-xs ${isOvertime ? 'text-destructive' : 'text-muted-foreground'}`}>
+                    <Clock className="w-3 h-3" />
+                    <span>{totalTime}/{maxMinutes}m</span>
                   </div>
                 </div>
 
                 {block.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground text-sm">
-                    Nenhum lugar adicionado neste bloco
+                  <div className="text-center py-4 text-muted-foreground text-xs flex-1 flex items-center justify-center">
+                    Vazio
                   </div>
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-2 flex-1 overflow-auto">
                     {block.map((item, index) => (
-                      <div key={index} className="border rounded-lg p-3 bg-background">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <MapPin className="w-4 h-4 text-primary" />
-                              <h4 className="font-medium">{item.placeName}</h4>
-                              <Badge variant="secondary" className="text-xs">{item.category}</Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground">{item.bairro}</p>
-                            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                              <span className="flex items-center gap-1">
-                                <Navigation className="w-3 h-3" />
-                                {item.isFallback && '~'}{item.eta || 0} min
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                <Select
-                                  value={item.duration.toString()}
-                                  onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
-                                >
-                                  <SelectTrigger className="h-6 w-20 text-xs">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="30">30 min</SelectItem>
-                                    <SelectItem value="45">45 min</SelectItem>
-                                    <SelectItem value="60">60 min</SelectItem>
-                                    <SelectItem value="90">90 min</SelectItem>
-                                    <SelectItem value="120">120 min</SelectItem>
-                                    <SelectItem value="180">180 min</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </span>
+                      <div key={index} className="border rounded p-2 bg-background text-xs group relative">
+                        <div className="space-y-1">
+                          <div className="flex items-start gap-1">
+                            <MapPin className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium leading-tight break-words">{item.placeName}</h4>
+                              <p className="text-muted-foreground text-xs">{item.bairro}</p>
                             </div>
                           </div>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-0.5">
+                              <Navigation className="w-3 h-3" />
+                              {item.isFallback && '~'}{item.eta || 0}m
+                            </span>
+                            <span className="flex items-center gap-0.5">
+                              <Clock className="w-3 h-3" />
+                              <Select
+                                value={item.duration.toString()}
+                                onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
+                              >
+                                <SelectTrigger className="h-5 w-14 text-xs border-0 bg-transparent p-0">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="30">30m</SelectItem>
+                                  <SelectItem value="45">45m</SelectItem>
+                                  <SelectItem value="60">1h</SelectItem>
+                                  <SelectItem value="90">1.5h</SelectItem>
+                                  <SelectItem value="120">2h</SelectItem>
+                                  <SelectItem value="180">3h</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </span>
+                          </div>
+                        </div>
                           
-                          <div className="flex flex-col gap-1">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
-                              disabled={index === 0}
-                            >
-                              <ChevronUp className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
-                              disabled={index === block.length - 1}
-                            >
-                              <ChevronDown className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
-                            >
-                              <Trash2 className="w-4 h-4 text-destructive" />
-                            </Button>
-                          </div>
+                        <div className="absolute -right-1 -top-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="h-5 w-5 p-0"
+                            onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
+                            disabled={index === 0}
+                          >
+                            <ChevronUp className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="h-5 w-5 p-0"
+                            onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
+                            disabled={index === block.length - 1}
+                          >
+                            <ChevronDown className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            className="h-5 w-5 p-0"
+                            onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -581,7 +575,7 @@ export const ItineraryBuilder = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-[95vw] w-[95vw] max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Construtor de Roteiro Rios</span>
@@ -739,6 +733,13 @@ export const ItineraryBuilder = ({
             Maps
           </Button>
         </div>
+
+        {/* Print View - Hidden, only visible when printing */}
+        <ItineraryPrintView 
+          itineraries={itineraries}
+          origin={origin}
+          mode={mode}
+        />
       </DialogContent>
     </Dialog>
   );
