@@ -59,6 +59,10 @@ const placeInfo: Record<string, { description: string; tips?: string }> = {
     description: 'Praias mais afastadas, com ondas para surf. Conchas oferece trilhas curtas e visual deslumbrante. Ótimas para quem busca natureza.',
     tips: 'Praia do Peró é perfeita para surfistas. Praia das Conchas tem trilhas e piscinas naturais.',
   },
+  'reserva-do-pero': {
+    description: 'Praia selvagem e preservada com dunas e vegetação nativa. Águas cristalinas e ambiente tranquilo, ideal para quem busca contato com a natureza.',
+    tips: 'Praia mais isolada, leve água e lanches. Caminhada pela areia pode ser longa. Ideal para fotos e contemplação.',
+  },
   'forte-sao-mateus': {
     description: 'Fortificação do século XVII com vista panorâmica da cidade. Museu e área histórica. Visite ao entardecer para fotos incríveis.',
     tips: 'Entrada gratuita. Funciona Ter-Dom, 9h-17h. Ótimo para fotos do pôr do sol.',

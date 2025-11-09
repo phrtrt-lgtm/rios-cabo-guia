@@ -27,6 +27,14 @@ export const touristPlaces: PlaceCoords[] = [
     bairro: 'Peró',
   },
   {
+    id: 'reserva-do-pero',
+    name: 'Reserva do Peró',
+    category: 'beach',
+    lat: -22.8033,
+    lng: -41.9881,
+    bairro: 'Peró',
+  },
+  {
     id: 'forte-sao-mateus',
     name: 'Forte São Mateus',
     category: 'landmark',
