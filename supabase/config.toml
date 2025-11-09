@@ -1,1 +1,4 @@
 project_id = "dtswcneukopktnmucskq"
+
+[functions.generate-itinerary-pdf]
+verify_jwt = false
