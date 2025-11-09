@@ -389,10 +389,10 @@ export const ItineraryBuilder = ({
 
         <div className="border rounded-lg overflow-hidden">
           <div className="overflow-auto max-h-[500px]">
-            <table className="w-full">
+            <table className="w-full table-fixed">
               <thead className="bg-secondary/10 border-b-2 border-secondary/20 sticky top-0 z-10">
                 <tr>
-                  <th className="px-2 py-2 text-left w-10">
+                  <th className="px-2 py-2 text-left w-12">
                     <Checkbox
                       checked={filtered.length > 0 && filtered.every(p => selectedPlaces.has(p.id))}
                       onCheckedChange={(checked) => {
@@ -406,9 +406,9 @@ export const ItineraryBuilder = ({
                       }}
                     />
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-sm">Nome</th>
-                  <th className="px-3 py-2 text-left font-semibold text-sm w-28">Tempo</th>
-                  <th className="px-3 py-2 text-center font-semibold text-sm w-24">Ação</th>
+                  <th className="px-3 py-2 text-left font-semibold text-sm w-[40%]">Nome</th>
+                  <th className="px-3 py-2 text-left font-semibold text-sm w-[25%]">Tempo</th>
+                  <th className="px-3 py-2 text-center font-semibold text-sm w-[23%]">Ação</th>
                 </tr>
               </thead>
               <tbody>
@@ -437,7 +437,9 @@ export const ItineraryBuilder = ({
                           }}
                         />
                       </td>
-                      <td className="px-3 py-2 font-medium text-sm">{place.name}</td>
+                      <td className="px-3 py-2 font-medium text-sm truncate" title={place.name}>
+                        {place.name}
+                      </td>
                       <td className="px-3 py-2">
                         {eta > 0 ? (
                           <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
