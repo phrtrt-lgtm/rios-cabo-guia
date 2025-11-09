@@ -1507,38 +1507,6 @@ const Index = () => {
           </div>
         )}
 
-        {/* Filtros de foto-spots */}
-        <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20 no-print">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="h-5 w-5 text-secondary" />
-            <h3 className="font-semibold text-secondary">Filtrar foto-spots</h3>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as cidades</option>
-              <option value="Cabo Frio">Cabo Frio</option>
-              <option value="Arraial do Cabo">Arraial do Cabo</option>
-              <option value="Armação dos Búzios">Búzios</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as janelas</option>
-              <option value="golden-sunrise">Golden Hour — Amanhecer</option>
-              <option value="golden-sunset">Golden Hour — Entardecer</option>
-              <option value="blue-hour">Blue Hour</option>
-              <option value="golden-morning">Golden Hour — Manhã</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todos os tipos</option>
-              <option value="costão">Costão</option>
-              <option value="igreja">Igreja</option>
-              <option value="canal">Canal</option>
-              <option value="praia">Praia</option>
-              <option value="orla">Orla</option>
-              <option value="mirante">Mirante</option>
-            </select>
-          </div>
-        </div>
-
         {/* Cabo Frio */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
