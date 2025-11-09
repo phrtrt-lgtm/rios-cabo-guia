@@ -23,13 +23,8 @@ export function RiosIntro() {
             </p>
           </div>
 
-          {/* Logo and Button */}
+          {/* Button */}
           <div className="mt-4 flex flex-col items-center gap-3">
-            <img 
-              src={riosLogoButton} 
-              alt="Rios Logo" 
-              className="h-8 w-auto"
-            />
             <Button
               asChild
               size="lg"
