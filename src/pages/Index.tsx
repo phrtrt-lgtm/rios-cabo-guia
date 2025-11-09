@@ -1161,11 +1161,6 @@ const Index = () => {
                   <span><strong>Tarde:</strong> Passeio de barco (Gruta Azul + Ilha do Farol)</span>
                 </li>
               </ul>
-              <div className="mt-4 p-3 bg-amber-500/10 rounded border border-amber-500/20">
-                <p className="text-xs text-amber-700 dark:text-amber-400">
-                  ⚠️ Praia do Farol tem controle da Marinha — permanência limitada a 30-40 min
-                </p>
-              </div>
             </div>
           </div>
         </div>
