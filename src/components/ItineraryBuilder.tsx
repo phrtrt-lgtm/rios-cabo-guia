@@ -406,8 +406,6 @@ export const ItineraryBuilder = ({
                   />
                 </th>
                 <th className="p-3 text-left">Nome</th>
-                <th className="p-3 text-left">Local</th>
-                <th className="p-3 text-left">Categoria</th>
                 <th className="p-3 text-left">ETA</th>
                 <th className="p-3 text-left">Duração</th>
                 <th className="p-3 text-left w-32">Ação</th>
@@ -435,10 +433,6 @@ export const ItineraryBuilder = ({
                       />
                     </td>
                     <td className="p-3 font-medium">{place.name}</td>
-                    <td className="p-3 text-sm text-muted-foreground">{place.bairro || getCidade(place)}</td>
-                    <td className="p-3">
-                      <Badge variant="outline" className="text-xs">{place.category}</Badge>
-                    </td>
                     <td className="p-3 text-sm">
                       {eta > 0 ? (
                         <span className="flex items-center gap-1">
