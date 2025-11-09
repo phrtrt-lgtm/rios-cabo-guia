@@ -324,6 +324,27 @@ export const ItineraryBuilder = ({
     );
   };
 
+  // Exportar roteiro como PDF
+  const handleExportPDF = () => {
+    const hasContent = itineraries.some(day => 
+      Object.values(day).some(block => block.length > 0)
+    );
+
+    if (!hasContent) {
+      toast.error('Adicione lugares ao roteiro antes de exportar');
+      return;
+    }
+
+    // Adicionar classe para impressão
+    document.body.classList.add('printing-itinerary');
+    
+    setTimeout(() => {
+      window.print();
+      document.body.classList.remove('printing-itinerary');
+      toast.success('Roteiro pronto para exportar como PDF');
+    }, 100);
+  };
+
   // Renderizar tabela de seleção
   const renderPlacesTable = (places: PlaceCoords[]) => {
     const filtered = filterPlaces(places);
@@ -705,7 +726,7 @@ export const ItineraryBuilder = ({
             Fechar
           </Button>
           <div className="flex-1" />
-          <Button variant="outline" onClick={() => toast.info('Geração de PDF em breve!')}>
+          <Button variant="outline" onClick={handleExportPDF}>
             <FileDown className="w-4 h-4 mr-2" />
             PDF
           </Button>

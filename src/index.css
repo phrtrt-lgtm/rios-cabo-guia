@@ -150,6 +150,35 @@ All colors MUST be HSL.
     body.printing-photospots #fotospots {
       margin-top: 2rem;
     }
+
+    /* Quando estiver imprimindo o roteiro - mostrar apenas o conteúdo do diálogo */
+    body.printing-itinerary > *:not([role="dialog"]) {
+      display: none !important;
+    }
+
+    body.printing-itinerary [role="dialog"] {
+      position: static !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: auto !important;
+      max-height: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      background: white !important;
+    }
+
+    body.printing-itinerary button,
+    body.printing-itinerary [role="tablist"],
+    body.printing-itinerary input,
+    body.printing-itinerary select {
+      display: none !important;
+    }
+
+    body.printing-itinerary .border-destructive {
+      border-color: #ef4444 !important;
+    }
   }
 }
 
