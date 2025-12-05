@@ -179,7 +179,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
-    description: 'Culinária italiana autêntica com massas artesanais',
+    description: 'Casa italiana contemporânea com receitas da nonna e bar de drinks',
   },
   {
     id: 'arcos-do-canal',
@@ -188,16 +188,16 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
-    description: 'Frutos do mar com vista para o canal',
+    description: 'Restaurante tradicional com frutos do mar e música ao vivo',
   },
   {
-    id: 'fixi-kaiseki',
-    name: 'Fixi Kaiseki',
+    id: 'fixi-restaurante',
+    name: 'Fixi Restaurante',
     category: 'restaurant',
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
-    description: 'Alta gastronomia japonesa contemporânea',
+    description: 'Cozinha experimental com pesca seletiva e agricultura sustentável',
   },
   {
     id: 'kento-cozinha-oriental',
@@ -206,7 +206,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
-    description: 'Sushi e pratos orientais bem servidos',
+    description: 'Culinária japonesa com rodízio de sushi e pratos à la carte',
   },
   {
     id: 'casa-kanaloa',
@@ -215,7 +215,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
-    description: 'Culinária havaiana fusion com ambiente descontraído',
+    description: 'Cozinha tailandesa e frutos do mar em ambiente acolhedor',
   },
   {
     id: 'picanha-do-ze',
@@ -224,7 +224,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8784,
     lng: -42.0171,
     bairro: 'Centro',
-    description: 'Churrascaria tradicional com picanha no ponto',
+    description: 'Carnes grelhadas, frutos do mar e pizzas com varanda',
   },
   {
     id: 'cabo-grill',
@@ -233,7 +233,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
-    description: 'Carnes grelhadas e ambiente familiar',
+    description: 'Churrasquinho e espetinhos em ambiente descontraído',
   },
   {
     id: 'paelo-hamburgueria',
@@ -242,7 +242,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8798,
     lng: -42.0158,
     bairro: 'Novo Portinho',
-    description: 'Hambúrgueres artesanais e milkshakes',
+    description: 'Hambúrgueres artesanais com blend especial da casa',
   },
   {
     id: 'sem-frescura-burger',
@@ -251,7 +251,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8834,
     lng: -42.0336,
     bairro: 'Braga',
-    description: 'Burgers suculentos com preço justo',
+    description: 'Melhor hamburgueria de Cabo Frio com mais de 4 mil avaliações',
   },
   {
     id: 'bem-fresh',
@@ -260,16 +260,16 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
-    description: 'Alimentação saudável e pratos leves',
+    description: 'Alimentação saudável com açaí, saladas e sucos naturais',
   },
   {
     id: 'office-cafe',
-    name: 'Office Café',
+    name: 'Office Café Braga',
     category: 'restaurant',
     lat: -22.8834,
     lng: -42.0336,
     bairro: 'Braga',
-    description: 'Cafeteria moderna com brunch',
+    description: 'Café moderno com pizzas, croissants e brunch completo',
   },
   {
     id: 'espaco-cafe',
@@ -278,7 +278,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8799,
     lng: -42.0195,
     bairro: 'Ville Blanche',
-    description: 'Café especial e doces caseiros',
+    description: 'Cafeteria aconchegante com café especial e bolos caseiros',
   },
   {
     id: 'o-suisso',
@@ -287,7 +287,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
-    description: 'Doces europeus e fondue',
+    description: 'Confeitaria e sorveteria com doces finos e sobremesas',
   },
   {
     id: 'brigaderia-da-vovo',
@@ -296,7 +296,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
-    description: 'Brigadeiros gourmet artesanais',
+    description: 'Doces artesanais com brigadeiros gourmet de vários sabores',
   },
   {
     id: 'los-crepes',
@@ -305,7 +305,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8803,
     lng: -42.0112,
     bairro: 'Praia do Forte',
-    description: 'Crepes doces e salgados na praia',
+    description: 'Creperia na orla com opções doces e salgadas',
   },
   {
     id: 'nova-onda',
@@ -314,7 +314,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8803,
     lng: -42.0112,
     bairro: 'Praia do Forte',
-    description: 'Quiosque pé na areia com petiscos',
+    description: 'Restaurante do hotel com vista para a Praia do Forte',
   },
   {
     id: 'restaurante-estrela-do-mar',
@@ -323,7 +323,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
-    description: 'Frutos do mar frescos e tradicionais',
+    description: 'Especialidade em peixes e frutos do mar no bairro histórico',
   },
   {
     id: 'oca-branca',
@@ -332,7 +332,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8803,
     lng: -42.0112,
     bairro: 'Praia do Forte',
-    description: 'Restaurante na praia com vista mar',
+    description: 'Quiosque na orla com petiscos, drinks e porções de frutos do mar',
   },
   {
     id: 'mister-sheik',
@@ -341,7 +341,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
-    description: 'Comida árabe e esfihas',
+    description: 'Rede de comida árabe com esfihas, quibes e shawarma',
   },
 ];
 
