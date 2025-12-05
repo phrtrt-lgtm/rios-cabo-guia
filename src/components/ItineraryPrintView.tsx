@@ -1,5 +1,4 @@
 import { MapPin, Clock, Car, Footprints, Calendar, Star } from 'lucide-react';
-import riosLogo from '@/assets/rios-logo-header.png';
 
 interface ItineraryItem {
   placeName: string;
@@ -60,9 +59,197 @@ const formatDuration = (minutes: number): string => {
   return mins > 0 ? `${hours}h${mins}min` : `${hours}h`;
 };
 
+// Inline styles for PDF generation (html2canvas compatible)
+const styles = {
+  page: {
+    width: '210mm',
+    minHeight: '297mm',
+    backgroundColor: '#ffffff',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
+    boxSizing: 'border-box' as const,
+  },
+  header: {
+    backgroundColor: '#1E3A5F',
+    color: '#ffffff',
+    padding: '20px',
+    borderRadius: '12px',
+    marginBottom: '20px',
+  },
+  headerTitle: {
+    fontSize: '28px',
+    fontWeight: 'bold',
+    margin: '0 0 8px 0',
+  },
+  headerSubtitle: {
+    fontSize: '14px',
+    opacity: 0.8,
+    margin: 0,
+  },
+  dayBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    backgroundColor: '#E67E50',
+    color: '#ffffff',
+    padding: '6px 12px',
+    borderRadius: '20px',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    marginBottom: '12px',
+  },
+  statsRow: {
+    display: 'flex',
+    gap: '20px',
+    marginTop: '12px',
+  },
+  stat: {
+    textAlign: 'center' as const,
+  },
+  statValue: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: '11px',
+    opacity: 0.7,
+  },
+  origin: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    fontSize: '12px',
+    marginTop: '12px',
+    padding: '8px 12px',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: '6px',
+  },
+  blockContainer: {
+    marginBottom: '16px',
+  },
+  blockHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 14px',
+    backgroundColor: '#f8f9fa',
+    borderRadius: '8px',
+    marginBottom: '10px',
+    borderLeft: '4px solid #E67E50',
+  },
+  blockEmoji: {
+    fontSize: '18px',
+  },
+  blockLabel: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: '#1E3A5F',
+  },
+  placeCard: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '12px',
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '8px',
+    marginBottom: '8px',
+    marginLeft: '20px',
+  },
+  placeTime: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    fontSize: '11px',
+    color: '#6b7280',
+    minWidth: '50px',
+  },
+  placeInfo: {
+    flex: 1,
+    marginLeft: '12px',
+  },
+  placeName: {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: '#1E3A5F',
+    margin: '0 0 4px 0',
+  },
+  placeMeta: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    fontSize: '11px',
+    color: '#6b7280',
+  },
+  placeLocation: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  placeCategory: {
+    backgroundColor: '#E67E50',
+    color: '#ffffff',
+    padding: '2px 8px',
+    borderRadius: '10px',
+    fontSize: '10px',
+  },
+  placeDuration: {
+    textAlign: 'right' as const,
+    minWidth: '50px',
+  },
+  durationValue: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    color: '#E67E50',
+  },
+  durationLabel: {
+    fontSize: '10px',
+    color: '#6b7280',
+  },
+  travelConnector: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '8px',
+    padding: '6px 0',
+    marginLeft: '40px',
+    color: '#9ca3af',
+    fontSize: '11px',
+  },
+  travelLine: {
+    width: '30px',
+    height: '1px',
+    backgroundColor: '#d1d5db',
+  },
+  travelBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    backgroundColor: '#f3f4f6',
+    padding: '4px 8px',
+    borderRadius: '12px',
+  },
+  footer: {
+    marginTop: '20px',
+    padding: '16px',
+    backgroundColor: '#1E3A5F',
+    borderRadius: '8px',
+    textAlign: 'center' as const,
+    color: '#ffffff',
+  },
+  footerText: {
+    fontSize: '12px',
+    margin: 0,
+  },
+  footerLink: {
+    fontSize: '11px',
+    opacity: 0.7,
+    margin: '4px 0 0 0',
+  },
+};
+
 export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: ItineraryPrintViewProps) => {
   return (
-    <div className="itinerary-print-container">
+    <div>
       {itineraries.map((dayItinerary, dayIndex) => {
         const hasContent = Object.values(dayItinerary).some(block => block.length > 0);
         if (!hasContent) return null;
@@ -70,39 +257,30 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
         const totalTime = calculateTotalDayTime(dayItinerary);
         const placesCount = Object.values(dayItinerary).reduce((total, block) => total + block.length, 0);
 
-        // Calculate timeline with estimated times
-        let currentMinutes = 7 * 60; // Start at 7:00
+        let currentMinutes = 7 * 60;
 
         return (
-          <div key={dayIndex} className="itinerary-page">
-            {/* Beautiful Header */}
-            <div className="itinerary-header">
-              <div className="itinerary-header-bg"></div>
-              <div className="itinerary-header-content">
-                <div className="itinerary-logo-section">
-                  <img src={riosLogo} alt="Rios" className="itinerary-logo" />
+          <div key={dayIndex} className="itinerary-page" style={styles.page}>
+            {/* Header */}
+            <div style={styles.header}>
+              <div style={styles.dayBadge}>
+                <Calendar size={14} />
+                <span>Dia {dayIndex + 1}</span>
+              </div>
+              <h1 style={styles.headerTitle}>Roteiro Cabo Frio</h1>
+              <p style={styles.headerSubtitle}>Região dos Lagos • RJ</p>
+              <div style={styles.statsRow}>
+                <div style={styles.stat}>
+                  <div style={styles.statValue}>{placesCount}</div>
+                  <div style={styles.statLabel}>lugares</div>
                 </div>
-                <div className="itinerary-title-section">
-                  <div className="itinerary-badge">
-                    <Calendar size={14} />
-                    <span>Dia {dayIndex + 1}</span>
-                  </div>
-                  <h1 className="itinerary-main-title">Roteiro Cabo Frio</h1>
-                  <p className="itinerary-subtitle">Região dos Lagos • RJ</p>
-                </div>
-                <div className="itinerary-stats">
-                  <div className="itinerary-stat">
-                    <span className="itinerary-stat-value">{placesCount}</span>
-                    <span className="itinerary-stat-label">lugares</span>
-                  </div>
-                  <div className="itinerary-stat">
-                    <span className="itinerary-stat-value">{formatDuration(totalTime)}</span>
-                    <span className="itinerary-stat-label">total</span>
-                  </div>
+                <div style={styles.stat}>
+                  <div style={styles.statValue}>{formatDuration(totalTime)}</div>
+                  <div style={styles.statLabel}>total</div>
                 </div>
               </div>
               {origin && (
-                <div className="itinerary-origin">
+                <div style={styles.origin}>
                   <MapPin size={12} />
                   <span>Partindo de: {origin}</span>
                 </div>
@@ -110,63 +288,61 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
             </div>
 
             {/* Timeline Content */}
-            <div className="itinerary-timeline">
-              {Object.entries(TIME_BLOCKS).map(([blockKey, { label, start, emoji }]) => {
+            <div>
+              {Object.entries(TIME_BLOCKS).map(([blockKey, { label, emoji }]) => {
                 const block = dayItinerary[blockKey as keyof DayItinerary];
                 if (block.length === 0) return null;
 
                 return (
-                  <div key={blockKey} className="itinerary-block">
-                    <div className="itinerary-block-header">
-                      <span className="itinerary-block-emoji">{emoji}</span>
-                      <span className="itinerary-block-label">{label}</span>
+                  <div key={blockKey} style={styles.blockContainer}>
+                    <div style={styles.blockHeader}>
+                      <span style={styles.blockEmoji}>{emoji}</span>
+                      <span style={styles.blockLabel}>{label}</span>
                     </div>
 
-                    <div className="itinerary-places">
+                    <div>
                       {block.map((item, index) => {
-                        // Calculate estimated arrival time
                         const arrivalHour = Math.floor(currentMinutes / 60);
                         const arrivalMin = currentMinutes % 60;
                         const arrivalTime = `${arrivalHour.toString().padStart(2, '0')}:${arrivalMin.toString().padStart(2, '0')}`;
                         
-                        // Update time for next place
                         currentMinutes += (item.eta || 0) + item.duration;
 
                         return (
-                          <div key={index} className="itinerary-place">
+                          <div key={index}>
                             {/* Travel Time Connector */}
                             {item.eta && item.eta > 0 && (
-                              <div className="itinerary-travel">
-                                <div className="itinerary-travel-line"></div>
-                                <div className="itinerary-travel-badge">
+                              <div style={styles.travelConnector}>
+                                <div style={styles.travelLine}></div>
+                                <div style={styles.travelBadge}>
                                   {mode === 'driving' ? <Car size={10} /> : <Footprints size={10} />}
                                   <span>{item.isFallback && '~'}{item.eta}min</span>
                                 </div>
-                                <div className="itinerary-travel-line"></div>
+                                <div style={styles.travelLine}></div>
                               </div>
                             )}
 
                             {/* Place Card */}
-                            <div className="itinerary-place-card">
-                              <div className="itinerary-place-time">
+                            <div style={styles.placeCard}>
+                              <div style={styles.placeTime}>
                                 <Clock size={10} />
                                 <span>{arrivalTime}</span>
                               </div>
-                              <div className="itinerary-place-info">
-                                <h3 className="itinerary-place-name">{item.placeName}</h3>
-                                <div className="itinerary-place-meta">
-                                  <span className="itinerary-place-location">
+                              <div style={styles.placeInfo}>
+                                <h3 style={styles.placeName}>{item.placeName}</h3>
+                                <div style={styles.placeMeta}>
+                                  <span style={styles.placeLocation}>
                                     <MapPin size={10} />
                                     {item.bairro}
                                   </span>
-                                  <span className="itinerary-place-category">
+                                  <span style={styles.placeCategory}>
                                     {CATEGORY_LABELS[item.category] || item.category}
                                   </span>
                                 </div>
                               </div>
-                              <div className="itinerary-place-duration">
-                                <span className="itinerary-duration-value">{item.duration}</span>
-                                <span className="itinerary-duration-label">min</span>
+                              <div style={styles.placeDuration}>
+                                <span style={styles.durationValue}>{item.duration}</span>
+                                <span style={styles.durationLabel}>min</span>
                               </div>
                             </div>
                           </div>
@@ -178,17 +354,14 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
               })}
             </div>
 
-            {/* Beautiful Footer */}
-            <div className="itinerary-footer">
-              <div className="itinerary-footer-content">
-                <div className="itinerary-footer-brand">
-                  <Star size={14} className="itinerary-footer-star" />
-                  <span>Criado com <strong>Guia Rios</strong></span>
-                  <Star size={14} className="itinerary-footer-star" />
-                </div>
-                <p className="itinerary-footer-link">@rios.cabofrio</p>
-              </div>
-              <div className="itinerary-footer-wave"></div>
+            {/* Footer */}
+            <div style={styles.footer}>
+              <p style={styles.footerText}>
+                <Star size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
+                Criado com <strong>Guia Rios</strong>
+                <Star size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '4px' }} />
+              </p>
+              <p style={styles.footerLink}>@rios.cabofrio</p>
             </div>
           </div>
         );
