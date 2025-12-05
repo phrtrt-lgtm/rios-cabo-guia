@@ -1,4 +1,5 @@
 import { MapPin, Clock, Car, Footprints, Calendar, Star } from 'lucide-react';
+// PDF Print View Component
 
 interface ItineraryItem {
   placeName: string;
