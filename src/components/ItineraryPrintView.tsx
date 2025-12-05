@@ -1,5 +1,5 @@
-import { MapPin, Clock, Navigation, Calendar } from 'lucide-react';
-import riosLogo from '@/assets/rios-logo-full.png';
+import { MapPin, Clock, Car, Footprints, Calendar, Star } from 'lucide-react';
+import riosLogoFull from '@/assets/rios-logo-full.png';
 
 interface ItineraryItem {
   placeName: string;
@@ -27,106 +27,168 @@ interface ItineraryPrintViewProps {
 }
 
 const TIME_BLOCKS = {
-  cafe: { label: 'Café da Manhã', start: '07:00', end: '09:00', icon: '☕' },
-  manha: { label: 'Manhã', start: '09:00', end: '12:00', icon: '🌅' },
-  almoco: { label: 'Almoço', start: '12:00', end: '14:00', icon: '🍽️' },
-  tarde: { label: 'Tarde', start: '14:00', end: '17:00', icon: '☀️' },
-  fimDeTarde: { label: 'Fim de Tarde', start: '17:00', end: '19:00', icon: '🌆' },
-  noite: { label: 'Noite', start: '19:00', end: '21:00', icon: '🌙' },
-  jantar: { label: 'Jantar', start: '21:00', end: '23:00', icon: '🍴' },
+  cafe: { label: 'Café', start: '07:00', emoji: '☕' },
+  manha: { label: 'Manhã', start: '09:00', emoji: '🌅' },
+  almoco: { label: 'Almoço', start: '12:00', emoji: '🍽️' },
+  tarde: { label: 'Tarde', start: '14:00', emoji: '☀️' },
+  fimDeTarde: { label: 'Fim de Tarde', start: '17:00', emoji: '🌆' },
+  noite: { label: 'Noite', start: '19:00', emoji: '🌙' },
+  jantar: { label: 'Jantar', start: '21:00', emoji: '🍴' },
 } as const;
 
-const calculateBlockTime = (block: ItineraryItem[]): number => {
-  return block.reduce((total, item) => total + (item.eta || 0) + item.duration, 0);
+const CATEGORY_LABELS: { [key: string]: string } = {
+  beach: 'Praia',
+  island: 'Ilha',
+  viewpoint: 'Mirante',
+  landmark: 'Ponto Turístico',
+  restaurant: 'Restaurante',
+  trail: 'Trilha',
+  photospot: 'Foto-spot',
+  route: 'Rota',
+};
+
+const calculateTotalDayTime = (dayItinerary: DayItinerary): number => {
+  return Object.values(dayItinerary).reduce((total, block) => {
+    return total + block.reduce((blockTotal, item) => blockTotal + (item.eta || 0) + item.duration, 0);
+  }, 0);
+};
+
+const formatDuration = (minutes: number): string => {
+  if (minutes < 60) return `${minutes}min`;
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return mins > 0 ? `${hours}h${mins}min` : `${hours}h`;
 };
 
 export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: ItineraryPrintViewProps) => {
   return (
-    <div className="print-only hidden">
+    <div className="itinerary-print-container">
       {itineraries.map((dayItinerary, dayIndex) => {
         const hasContent = Object.values(dayItinerary).some(block => block.length > 0);
         if (!hasContent) return null;
 
+        const totalTime = calculateTotalDayTime(dayItinerary);
+        const placesCount = Object.values(dayItinerary).reduce((total, block) => total + block.length, 0);
+
+        // Calculate timeline with estimated times
+        let currentMinutes = 7 * 60; // Start at 7:00
+
         return (
-          <div key={dayIndex} className="print-page">
-            {/* Header */}
-            <div className="print-header">
-              <img src={riosLogo} alt="Rios" className="print-logo" />
-              <div className="print-header-content">
-                <h1 className="print-title">Roteiro - Dia {dayIndex + 1}</h1>
-                <p className="print-subtitle">Região dos Lagos • Cabo Frio</p>
-                {origin && (
-                  <div className="print-origin">
-                    <MapPin className="w-4 h-4" />
-                    <span>Origem: {origin}</span>
+          <div key={dayIndex} className="itinerary-page">
+            {/* Beautiful Header */}
+            <div className="itinerary-header">
+              <div className="itinerary-header-bg"></div>
+              <div className="itinerary-header-content">
+                <div className="itinerary-logo-section">
+                  <img src={riosLogoFull} alt="Rios" className="itinerary-logo" />
+                </div>
+                <div className="itinerary-title-section">
+                  <div className="itinerary-badge">
+                    <Calendar size={14} />
+                    <span>Dia {dayIndex + 1}</span>
                   </div>
-                )}
+                  <h1 className="itinerary-main-title">Roteiro Cabo Frio</h1>
+                  <p className="itinerary-subtitle">Região dos Lagos • RJ</p>
+                </div>
+                <div className="itinerary-stats">
+                  <div className="itinerary-stat">
+                    <span className="itinerary-stat-value">{placesCount}</span>
+                    <span className="itinerary-stat-label">lugares</span>
+                  </div>
+                  <div className="itinerary-stat">
+                    <span className="itinerary-stat-value">{formatDuration(totalTime)}</span>
+                    <span className="itinerary-stat-label">total</span>
+                  </div>
+                </div>
               </div>
+              {origin && (
+                <div className="itinerary-origin">
+                  <MapPin size={12} />
+                  <span>Partindo de: {origin}</span>
+                </div>
+              )}
             </div>
 
-            {/* Timeline */}
-            <div className="print-timeline">
-              {Object.entries(TIME_BLOCKS).map(([blockKey, { label, start, end, icon }]) => {
+            {/* Timeline Content */}
+            <div className="itinerary-timeline">
+              {Object.entries(TIME_BLOCKS).map(([blockKey, { label, start, emoji }]) => {
                 const block = dayItinerary[blockKey as keyof DayItinerary];
                 if (block.length === 0) return null;
 
-                const totalTime = calculateBlockTime(block);
-
                 return (
-                  <div key={blockKey} className="print-block">
-                    <div className="print-block-header">
-                      <div className="print-block-title">
-                        <span className="print-block-icon">{icon}</span>
-                        <div>
-                          <h2 className="print-block-name">{label}</h2>
-                          <p className="print-block-time">{start} - {end}</p>
-                        </div>
-                      </div>
-                      <div className="print-block-total">
-                        <Clock className="w-4 h-4" />
-                        <span>{totalTime} min</span>
-                      </div>
+                  <div key={blockKey} className="itinerary-block">
+                    <div className="itinerary-block-header">
+                      <span className="itinerary-block-emoji">{emoji}</span>
+                      <span className="itinerary-block-label">{label}</span>
                     </div>
 
-                    <div className="print-places">
-                      {block.map((item, index) => (
-                        <div key={index} className="print-place">
-                          <div className="print-place-number">{index + 1}</div>
-                          <div className="print-place-content">
-                            <div className="print-place-header">
-                              <h3 className="print-place-name">{item.placeName}</h3>
-                              <span className="print-place-category">{item.category}</span>
-                            </div>
-                            <p className="print-place-location">
-                              <MapPin className="w-3 h-3" />
-                              {item.bairro}
-                            </p>
-                            <div className="print-place-meta">
-                              {item.eta && item.eta > 0 && (
-                                <span className="print-place-eta">
-                                  <Navigation className="w-3 h-3" />
-                                  {item.isFallback && '~'}{item.eta} min
-                                  <span className="print-place-mode">({mode === 'walking' ? 'a pé' : 'carro'})</span>
-                                </span>
-                              )}
-                              <span className="print-place-duration">
-                                <Clock className="w-3 h-3" />
-                                {item.duration} min
-                              </span>
+                    <div className="itinerary-places">
+                      {block.map((item, index) => {
+                        // Calculate estimated arrival time
+                        const arrivalHour = Math.floor(currentMinutes / 60);
+                        const arrivalMin = currentMinutes % 60;
+                        const arrivalTime = `${arrivalHour.toString().padStart(2, '0')}:${arrivalMin.toString().padStart(2, '0')}`;
+                        
+                        // Update time for next place
+                        currentMinutes += (item.eta || 0) + item.duration;
+
+                        return (
+                          <div key={index} className="itinerary-place">
+                            {/* Travel Time Connector */}
+                            {item.eta && item.eta > 0 && (
+                              <div className="itinerary-travel">
+                                <div className="itinerary-travel-line"></div>
+                                <div className="itinerary-travel-badge">
+                                  {mode === 'driving' ? <Car size={10} /> : <Footprints size={10} />}
+                                  <span>{item.isFallback && '~'}{item.eta}min</span>
+                                </div>
+                                <div className="itinerary-travel-line"></div>
+                              </div>
+                            )}
+
+                            {/* Place Card */}
+                            <div className="itinerary-place-card">
+                              <div className="itinerary-place-time">
+                                <Clock size={10} />
+                                <span>{arrivalTime}</span>
+                              </div>
+                              <div className="itinerary-place-info">
+                                <h3 className="itinerary-place-name">{item.placeName}</h3>
+                                <div className="itinerary-place-meta">
+                                  <span className="itinerary-place-location">
+                                    <MapPin size={10} />
+                                    {item.bairro}
+                                  </span>
+                                  <span className="itinerary-place-category">
+                                    {CATEGORY_LABELS[item.category] || item.category}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="itinerary-place-duration">
+                                <span className="itinerary-duration-value">{item.duration}</span>
+                                <span className="itinerary-duration-label">min</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Footer */}
-            <div className="print-footer">
-              <p>Criado com o Guia Rios • Região dos Lagos</p>
-              <p>www.airbnb.com.br/users/profile/1465782997269992090</p>
+            {/* Beautiful Footer */}
+            <div className="itinerary-footer">
+              <div className="itinerary-footer-content">
+                <div className="itinerary-footer-brand">
+                  <Star size={14} className="itinerary-footer-star" />
+                  <span>Criado com <strong>Guia Rios</strong></span>
+                  <Star size={14} className="itinerary-footer-star" />
+                </div>
+                <p className="itinerary-footer-link">@rios.cabofrio</p>
+              </div>
+              <div className="itinerary-footer-wave"></div>
             </div>
           </div>
         );
