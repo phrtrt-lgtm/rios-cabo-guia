@@ -605,73 +605,82 @@ export const ItineraryBuilder = ({
                       <span className="text-[10px]">Adicione na aba "Selecionar"</span>
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       {block.map((item, index) => (
-                        <div 
-                          key={index} 
-                          className="border border-secondary/20 rounded-lg p-2.5 bg-background shadow-sm text-xs group relative hover:shadow-md hover:border-secondary/40 transition-all"
-                        >
-                          <div className="space-y-1.5">
-                            <div className="flex items-start gap-2">
-                              <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                                <MapPin className="w-3 h-3 text-secondary" />
+                        <div key={index}>
+                          {/* Conector de deslocamento */}
+                          {item.eta && item.eta > 0 && (
+                            <div className="flex items-center gap-1.5 py-1.5 px-2">
+                              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                              <span className="flex items-center gap-1 text-[10px] text-secondary font-medium bg-secondary/10 px-2 py-0.5 rounded-full">
+                                {mode === 'driving' ? <Car className="w-3 h-3" /> : <Footprints className="w-3 h-3" />}
+                                {item.isFallback && '~'}{item.eta}min
+                              </span>
+                              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                            </div>
+                          )}
+                          
+                          {/* Card do lugar */}
+                          <div className="border border-secondary/20 rounded-lg p-2.5 bg-background shadow-sm text-xs group relative hover:shadow-md hover:border-secondary/40 transition-all">
+                            <div className="space-y-1.5">
+                              <div className="flex items-start gap-2">
+                                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                                  <MapPin className="w-3 h-3 text-secondary" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="font-semibold leading-tight break-words text-foreground">{item.placeName}</h4>
+                                  <p className="text-muted-foreground text-[10px]">{item.bairro}</p>
+                                </div>
                               </div>
-                              <div className="flex-1 min-w-0">
-                                <h4 className="font-semibold leading-tight break-words text-foreground">{item.placeName}</h4>
-                                <p className="text-muted-foreground text-[10px]">{item.bairro}</p>
+                              <div className="flex items-center gap-2 text-[10px] text-muted-foreground pl-8">
+                                <span className="flex items-center gap-1 bg-accent/20 text-accent-foreground px-2 py-0.5 rounded-full font-medium">
+                                  <Clock className="w-2.5 h-2.5" />
+                                  <Select
+                                    value={item.duration.toString()}
+                                    onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
+                                  >
+                                    <SelectTrigger className="h-4 w-12 text-[10px] border-0 bg-transparent p-0 font-medium">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="30">30min</SelectItem>
+                                      <SelectItem value="45">45min</SelectItem>
+                                      <SelectItem value="60">1h</SelectItem>
+                                      <SelectItem value="90">1h30</SelectItem>
+                                      <SelectItem value="120">2h</SelectItem>
+                                      <SelectItem value="180">3h</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  permanência
+                                </span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground pl-8">
-                              <span className="flex items-center gap-1 bg-muted/50 px-1.5 py-0.5 rounded">
-                                <Navigation className="w-2.5 h-2.5 text-secondary" />
-                                {item.isFallback && '~'}{item.eta || 0}min
-                              </span>
-                              <span className="flex items-center gap-1 bg-muted/50 px-1.5 py-0.5 rounded">
-                                <Clock className="w-2.5 h-2.5 text-secondary" />
-                                <Select
-                                  value={item.duration.toString()}
-                                  onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
-                                >
-                                  <SelectTrigger className="h-4 w-12 text-[10px] border-0 bg-transparent p-0 font-medium">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="30">30min</SelectItem>
-                                    <SelectItem value="45">45min</SelectItem>
-                                    <SelectItem value="60">1h</SelectItem>
-                                    <SelectItem value="90">1h30</SelectItem>
-                                    <SelectItem value="120">2h</SelectItem>
-                                    <SelectItem value="180">3h</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </span>
+                              
+                            <div className="absolute -right-1 -top-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
+                              <Button
+                                size="sm"
+                                className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
+                                onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
+                                disabled={index === 0}
+                              >
+                                <ChevronUp className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
+                                onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
+                                disabled={index === block.length - 1}
+                              >
+                                <ChevronDown className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                className="h-5 w-5 p-0 bg-destructive text-destructive-foreground hover:bg-destructive/80 shadow-sm"
+                                onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
                             </div>
-                          </div>
-                            
-                          <div className="absolute -right-1 -top-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
-                            <Button
-                              size="sm"
-                              className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
-                              onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
-                              disabled={index === 0}
-                            >
-                              <ChevronUp className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
-                              onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
-                              disabled={index === block.length - 1}
-                            >
-                              <ChevronDown className="w-3 h-3" />
-                            </Button>
-                            <Button
-                              size="sm"
-                              className="h-5 w-5 p-0 bg-destructive text-destructive-foreground hover:bg-destructive/80 shadow-sm"
-                              onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
                           </div>
                         </div>
                       ))}

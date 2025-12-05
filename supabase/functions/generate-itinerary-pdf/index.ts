@@ -40,26 +40,35 @@ serve(async (req) => {
     const prompt = `Você é um guia turístico especializado em Cabo Frio e Região dos Lagos. 
 Crie um roteiro de viagem atraente e bem formatado em HTML para impressão.
 
-DADOS DO ROTEIRO:
+DADOS DO ROTEIRO (cada item tem eta = tempo de deslocamento em minutos até o lugar, e duration = tempo de permanência):
 ${JSON.stringify(itineraries, null, 2)}
 
 Origem: ${origin || "Não especificada"}
-Modo de transporte: ${mode === 'walking' ? 'a pé' : 'carro'}
+Modo de transporte: ${mode === 'walking' ? 'a pé' : 'de carro'}
 
-INSTRUÇÕES:
-- Crie um HTML estiloso e bem formatado para cada dia
-- Use cores vibrantes e elementos visuais atraentes
-- Inclua emojis e ícones para tornar mais visual
-- Adicione dicas úteis e descrições envolventes para cada local
-- Organize o conteúdo de forma clara com horários sugeridos
-- Use a paleta de cores terracota (#E67E50) como destaque
-- Cada dia deve caber em uma página A4 quando impresso
-- Inclua cabeçalho com logo e título atraente
-- Adicione um rodapé com informações de contato
-- Use tipografia hierárquica e espaçamento adequado
-- Retorne APENAS o HTML, sem explicações adicionais
-- Use classes Tailwind CSS para estilização
-- Torne o design moderno, clean e profissional
+INSTRUÇÕES CRÍTICAS:
+1. TEMPOS DE DESLOCAMENTO: Para cada lugar, mostre claramente "🚗 X min de deslocamento" ou "🚶 X min caminhando" ANTES do nome do lugar
+2. TEMPO DE PERMANÊNCIA: Mostre quanto tempo ficar em cada lugar (campo "duration" em minutos)
+3. HORÁRIOS: Calcule horários sugeridos começando às 7h, somando deslocamento + permanência
+4. FORMATO VISUAL: Para cada lugar, mostre:
+   - Ícone de carro/pessoa + tempo de deslocamento
+   - Nome do lugar em destaque
+   - Bairro/localização
+   - Tempo sugerido de permanência
+   - Horário estimado de chegada e saída
+
+DESIGN:
+- Paleta terracota (#E67E50) e azul oceano (#1E3A5F) como cores principais
+- Cada dia em uma página A4
+- Visual moderno, clean e profissional
+- Emojis para tornar mais visual
+- Timeline vertical conectando os lugares
+- Badge com tempo total do dia
+
+IMPORTANTE: 
+- Retorne APENAS o HTML, sem explicações
+- Use inline CSS (não Tailwind) para garantir compatibilidade de impressão
+- Destaque visualmente os tempos de deslocamento entre lugares
 
 Retorne o HTML completo pronto para impressão.`;
 
