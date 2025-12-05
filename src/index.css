@@ -100,6 +100,11 @@ All colors MUST be HSL.
   }
 }
 
+/* Esconder container de impressão fora do modo de impressão */
+.itinerary-print-container {
+  display: none !important;
+}
+
 @layer base {
   @page {
     size: A4;
