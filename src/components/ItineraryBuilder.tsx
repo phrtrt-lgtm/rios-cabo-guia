@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
   MapPin, Clock, Trash2, ChevronUp, ChevronDown, ExternalLink, 
-  Share2, FileDown, Navigation, Search, X, Calendar, Locate, Car, Footprints
+  Share2, FileDown, Navigation, Search, X, Calendar, Locate, Car, Footprints, Loader2, Route
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { touristPlaces, restaurantPlaces, arraialPlaces, buziosPlaces, allPlaces } from '@/data/places';
@@ -107,6 +107,7 @@ export const ItineraryBuilder = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas' | 'fotospots' | 'rotas'>('cabo-frio');
   const [isPrinting, setIsPrinting] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
   const { toast: toastHook } = useToast();
 
   // Inicializar itinerários
@@ -282,6 +283,52 @@ export const ItineraryBuilder = ({
     }
 
     setItineraries(newItineraries);
+  };
+
+  // Recalcular TODAS as ETAs do dia inteiro - entre blocos consecutivos
+  const recalculateAllDayETAs = async (dayIndex: number) => {
+    if (!originCoords) {
+      toast.error('Defina uma origem primeiro');
+      return;
+    }
+
+    const newItineraries = [...itineraries];
+    const dayItinerary = newItineraries[dayIndex];
+    
+    // Flatten todos os itens do dia em ordem
+    const blockOrder: TimeBlock[] = ['cafe', 'manha', 'almoco', 'tarde', 'fimDeTarde', 'noite', 'jantar'];
+    let previousPoint: { lat: number; lng: number } | null = originCoords;
+    
+    toast.info('Calculando distâncias entre os lugares...');
+    
+    for (const blockKey of blockOrder) {
+      const block = dayItinerary[blockKey];
+      
+      for (let i = 0; i < block.length; i++) {
+        const item = block[i];
+        
+        if (previousPoint) {
+          const eta = await calculateETA(previousPoint, { lat: item.lat, lng: item.lng });
+          block[i].eta = eta;
+        }
+        
+        // O próximo ponto é este lugar atual
+        previousPoint = { lat: item.lat, lng: item.lng };
+      }
+    }
+
+    setItineraries(newItineraries);
+    toast.success('Roteiro gerado com sucesso! Distâncias calculadas.');
+  };
+
+  // Gerar roteiro - recalcula ETAs do dia atual
+  const handleGenerateItinerary = async () => {
+    setIsCalculating(true);
+    try {
+      await recalculateAllDayETAs(currentDay - 1);
+    } finally {
+      setIsCalculating(false);
+    }
   };
 
   // Atualizar duração
@@ -894,20 +941,29 @@ export const ItineraryBuilder = ({
           </Button>
           <div className="flex-1" />
           <Button 
+            onClick={handleGenerateItinerary}
+            disabled={isCalculating}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-md px-6"
+          >
+            {isCalculating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Calculando distâncias...
+              </>
+            ) : (
+              <>
+                <Route className="w-4 h-4 mr-2" />
+                Gerar Roteiro
+              </>
+            )}
+          </Button>
+          <Button 
             variant="outline"
             onClick={() => toast.info('Compartilhamento em breve!')}
             className="border-secondary/30 hover:bg-secondary/10"
           >
             <Share2 className="w-4 h-4 mr-2" />
             Compartilhar
-          </Button>
-          <Button 
-            variant="outline"
-            onClick={() => toast.info('Integração com Maps em breve!')}
-            className="border-secondary/30 hover:bg-secondary/10"
-          >
-            <Navigation className="w-4 h-4 mr-2" />
-            Maps
           </Button>
           <Button 
             onClick={handleExportPDF}
