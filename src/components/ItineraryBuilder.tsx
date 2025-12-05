@@ -467,14 +467,13 @@ export const ItineraryBuilder = ({
                       className="border-secondary data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
                     />
                   </th>
-                  <th className="px-3 py-3 text-left font-bold text-sm text-foreground w-[40%]">Nome</th>
-                  <th className="px-3 py-3 text-left font-bold text-sm text-foreground w-[25%]">Tempo até lá</th>
-                  <th className="px-3 py-3 text-center font-bold text-sm text-foreground w-[23%]">Ação</th>
+                  <th className="px-3 py-3 text-left font-bold text-sm text-foreground w-[35%]">Nome</th>
+                  <th className="px-3 py-3 text-left font-bold text-sm text-foreground w-[40%]">Descrição</th>
+                  <th className="px-3 py-3 text-center font-bold text-sm text-foreground w-[13%]">Ação</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((place, idx) => {
-                  const eta = currentEtas[place.id]?.[mode] || 0;
                   const isSelected = selectedPlaces.has(place.id);
                   
                   return (
@@ -514,19 +513,17 @@ export const ItineraryBuilder = ({
                         />
                       </td>
                       <td className="px-3 py-3">
-                        <span className={`font-medium text-sm ${isSelected ? 'text-secondary' : ''}`}>
-                          {place.name}
-                        </span>
+                        <div>
+                          <span className={`font-medium text-sm ${isSelected ? 'text-secondary' : ''}`}>
+                            {place.name}
+                          </span>
+                          <span className="block text-xs text-muted-foreground">{place.bairro}</span>
+                        </div>
                       </td>
                       <td className="px-3 py-3">
-                        {eta > 0 ? (
-                          <span className="inline-flex items-center gap-1.5 text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-full font-medium">
-                            <Clock className="w-3 h-3" />
-                            {currentEtas[place.id]?.isFallback && '~'}{eta} min
-                          </span>
-                        ) : (
-                          <span className="text-xs text-muted-foreground">-</span>
-                        )}
+                        <span className="text-xs text-muted-foreground line-clamp-2">
+                          {place.description || '-'}
+                        </span>
                       </td>
                       <td className="px-3 py-3 text-center">
                         <Button 

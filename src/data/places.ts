@@ -9,6 +9,7 @@ export const touristPlaces: PlaceCoords[] = [
     lat: -22.8796,
     lng: -42.0109,
     bairro: 'Centro',
+    description: 'Águas cristalinas e calmas, ideal para famílias',
   },
   {
     id: 'ilha-do-japones',
@@ -17,6 +18,7 @@ export const touristPlaces: PlaceCoords[] = [
     lat: -22.8833,
     lng: -42.0072,
     bairro: 'Praia do Forte',
+    description: 'Passeio de barco com mergulho e snorkel',
   },
   {
     id: 'pero-conchas',
@@ -25,6 +27,7 @@ export const touristPlaces: PlaceCoords[] = [
     lat: -22.8122,
     lng: -41.9958,
     bairro: 'Peró',
+    description: 'Praias selvagens com dunas e ondas',
   },
   {
     id: 'reserva-do-pero',
@@ -33,6 +36,7 @@ export const touristPlaces: PlaceCoords[] = [
     lat: -22.8033,
     lng: -41.9881,
     bairro: 'Peró',
+    description: 'Área de preservação com natureza intocada',
   },
   {
     id: 'forte-sao-mateus',
@@ -41,6 +45,7 @@ export const touristPlaces: PlaceCoords[] = [
     lat: -22.8853,
     lng: -42.0186,
     bairro: 'Praia do Forte',
+    description: 'Forte histórico do século XVII com vista panorâmica',
   },
   {
     id: 'morro-da-guia',
@@ -49,6 +54,7 @@ export const touristPlaces: PlaceCoords[] = [
     lat: -22.8847,
     lng: -42.0053,
     bairro: 'Praia do Forte',
+    description: 'Mirante com vista 360° da cidade e praias',
   },
   {
     id: 'bairro-passagem',
@@ -57,6 +63,7 @@ export const touristPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
+    description: 'Polo gastronômico com restaurantes e bares',
   },
 ];
 
@@ -69,6 +76,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8784,
     lng: -42.0171,
     bairro: 'Palmeiras',
+    description: 'Farmácia 24h com amplo estoque',
   },
   {
     id: 'drogaria-pacheco',
@@ -77,6 +85,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8756,
     lng: -42.0221,
     bairro: 'Centro',
+    description: 'Farmácia tradicional no centro da cidade',
   },
   {
     id: 'supermercado-carone',
@@ -85,6 +94,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8834,
     lng: -42.0336,
     bairro: 'Braga',
+    description: 'Supermercado completo com bons preços',
   },
   {
     id: 'supermercado-extra',
@@ -93,6 +103,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8798,
     lng: -42.0158,
     bairro: 'Novo Portinho',
+    description: 'Grande variedade e estacionamento fácil',
   },
   {
     id: 'supermercado-princesa',
@@ -101,6 +112,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8911,
     lng: -42.0389,
     bairro: 'Braga',
+    description: 'Mercado local com produtos regionais',
   },
   {
     id: 'hortifruti-green',
@@ -109,6 +121,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8801,
     lng: -42.0214,
     bairro: 'Centro',
+    description: 'Frutas e verduras frescas selecionadas',
   },
   {
     id: 'lojas-americanas',
@@ -117,6 +130,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8772,
     lng: -42.0231,
     bairro: 'Centro',
+    description: 'Variedades, eletrônicos e itens de praia',
   },
   {
     id: 'padaria-remmar',
@@ -125,6 +139,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8932,
     lng: -42.0512,
     bairro: 'Braga',
+    description: 'Pães artesanais e café da manhã',
   },
   {
     id: 'padaria-dupao',
@@ -133,6 +148,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8756,
     lng: -42.0268,
     bairro: 'Centro',
+    description: 'Padaria tradicional com lanches rápidos',
   },
   {
     id: 'pes-e-patas',
@@ -141,6 +157,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8821,
     lng: -42.0307,
     bairro: 'Braga',
+    description: 'Pet shop completo com banho e tosa',
   },
   {
     id: 'racoes-e-cia',
@@ -149,6 +166,7 @@ export const utilityPlaces: PlaceCoords[] = [
     lat: -22.8799,
     lng: -42.0195,
     bairro: 'Centro',
+    description: 'Rações premium e acessórios pet',
   },
 ];
 
@@ -161,6 +179,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
+    description: 'Culinária italiana autêntica com massas artesanais',
   },
   {
     id: 'arcos-do-canal',
@@ -169,6 +188,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
+    description: 'Frutos do mar com vista para o canal',
   },
   {
     id: 'fixi-kaiseki',
@@ -177,6 +197,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
+    description: 'Alta gastronomia japonesa contemporânea',
   },
   {
     id: 'kento-cozinha-oriental',
@@ -185,6 +206,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
+    description: 'Sushi e pratos orientais bem servidos',
   },
   {
     id: 'casa-kanaloa',
@@ -193,6 +215,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
+    description: 'Culinária havaiana fusion com ambiente descontraído',
   },
   {
     id: 'picanha-do-ze',
@@ -201,6 +224,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8784,
     lng: -42.0171,
     bairro: 'Centro',
+    description: 'Churrascaria tradicional com picanha no ponto',
   },
   {
     id: 'cabo-grill',
@@ -209,6 +233,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
+    description: 'Carnes grelhadas e ambiente familiar',
   },
   {
     id: 'paelo-hamburgueria',
@@ -217,6 +242,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8798,
     lng: -42.0158,
     bairro: 'Novo Portinho',
+    description: 'Hambúrgueres artesanais e milkshakes',
   },
   {
     id: 'sem-frescura-burger',
@@ -225,6 +251,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8834,
     lng: -42.0336,
     bairro: 'Braga',
+    description: 'Burgers suculentos com preço justo',
   },
   {
     id: 'bem-fresh',
@@ -233,6 +260,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
+    description: 'Alimentação saudável e pratos leves',
   },
   {
     id: 'office-cafe',
@@ -241,6 +269,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8834,
     lng: -42.0336,
     bairro: 'Braga',
+    description: 'Cafeteria moderna com brunch',
   },
   {
     id: 'espaco-cafe',
@@ -249,6 +278,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8799,
     lng: -42.0195,
     bairro: 'Ville Blanche',
+    description: 'Café especial e doces caseiros',
   },
   {
     id: 'o-suisso',
@@ -257,6 +287,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
+    description: 'Doces europeus e fondue',
   },
   {
     id: 'brigaderia-da-vovo',
@@ -265,6 +296,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
+    description: 'Brigadeiros gourmet artesanais',
   },
   {
     id: 'los-crepes',
@@ -273,6 +305,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8803,
     lng: -42.0112,
     bairro: 'Praia do Forte',
+    description: 'Crepes doces e salgados na praia',
   },
   {
     id: 'nova-onda',
@@ -281,6 +314,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8803,
     lng: -42.0112,
     bairro: 'Praia do Forte',
+    description: 'Quiosque pé na areia com petiscos',
   },
   {
     id: 'restaurante-estrela-do-mar',
@@ -289,6 +323,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8819,
     lng: -41.9992,
     bairro: 'Passagem',
+    description: 'Frutos do mar frescos e tradicionais',
   },
   {
     id: 'oca-branca',
@@ -297,6 +332,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8803,
     lng: -42.0112,
     bairro: 'Praia do Forte',
+    description: 'Restaurante na praia com vista mar',
   },
   {
     id: 'mister-sheik',
@@ -305,6 +341,7 @@ export const restaurantPlaces: PlaceCoords[] = [
     lat: -22.8775,
     lng: -42.0234,
     bairro: 'Centro',
+    description: 'Comida árabe e esfihas',
   },
 ];
 
@@ -317,6 +354,7 @@ export const arraialPlaces: PlaceCoords[] = [
     lat: -22.9661,
     lng: -42.0275,
     bairro: 'Atalaia',
+    description: 'Cartão postal com águas azul-turquesa',
   },
   {
     id: 'praia-do-forno',
@@ -325,6 +363,7 @@ export const arraialPlaces: PlaceCoords[] = [
     lat: -22.9686,
     lng: -42.0256,
     bairro: 'Forno',
+    description: 'Águas calmas cercada por montanhas',
   },
   {
     id: 'praia-do-farol',
@@ -333,6 +372,7 @@ export const arraialPlaces: PlaceCoords[] = [
     lat: -22.9886,
     lng: -42.0064,
     bairro: 'Ilha do Farol',
+    description: 'Uma das praias mais bonitas do Brasil',
   },
   {
     id: 'praia-grande-arraial',
@@ -341,6 +381,7 @@ export const arraialPlaces: PlaceCoords[] = [
     lat: -22.9656,
     lng: -42.0289,
     bairro: 'Centro',
+    description: 'Extensa e ventosa, ideal para kitesurf',
   },
   {
     id: 'prainha-arraial',
@@ -349,6 +390,7 @@ export const arraialPlaces: PlaceCoords[] = [
     lat: -22.9675,
     lng: -42.0231,
     bairro: 'Centro',
+    description: 'Praia pequena e charmosa no centro',
   },
   {
     id: 'praia-dos-anjos',
@@ -357,6 +399,7 @@ export const arraialPlaces: PlaceCoords[] = [
     lat: -22.9703,
     lng: -42.0206,
     bairro: 'Praia dos Anjos',
+    description: 'Porto de barcos para passeios',
   },
   {
     id: 'gruta-azul-arraial',
@@ -365,6 +408,7 @@ export const arraialPlaces: PlaceCoords[] = [
     lat: -22.9800,
     lng: -42.0100,
     bairro: 'Ilha do Farol',
+    description: 'Caverna com águas azuis brilhantes',
   },
 ];
 
@@ -377,6 +421,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7597,
     lng: -41.9383,
     bairro: 'Geribá',
+    description: 'Praia de surf com vida noturna agitada',
   },
   {
     id: 'praia-ferradurinha',
@@ -385,6 +430,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7450,
     lng: -41.9086,
     bairro: 'Ferradurinha',
+    description: 'Pequena enseada com águas transparentes',
   },
   {
     id: 'praia-ferradura',
@@ -393,6 +439,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7419,
     lng: -41.9122,
     bairro: 'Ferradura',
+    description: 'Baía em formato de ferradura, águas calmas',
   },
   {
     id: 'praia-joao-fernandes',
@@ -401,6 +448,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7528,
     lng: -41.8886,
     bairro: 'João Fernandes',
+    description: 'Águas cristalinas, boa para snorkel',
   },
   {
     id: 'praia-azeda',
@@ -409,6 +457,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7556,
     lng: -41.8833,
     bairro: 'Ossos',
+    description: 'Praias vizinhas com mar calmo e verde',
   },
   {
     id: 'praia-tartaruga',
@@ -417,6 +466,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7583,
     lng: -41.8814,
     bairro: 'Centro',
+    description: 'Ideal para famílias com crianças',
   },
   {
     id: 'praia-brava',
@@ -425,6 +475,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7686,
     lng: -41.9464,
     bairro: 'Geribá',
+    description: 'Ondas fortes e visual selvagem',
   },
   {
     id: 'orla-bardot',
@@ -433,6 +484,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7472,
     lng: -41.8817,
     bairro: 'Centro',
+    description: 'Calçadão com estátua de Brigitte Bardot',
   },
   {
     id: 'porto-da-barra',
@@ -441,6 +493,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7658,
     lng: -41.9281,
     bairro: 'Manguinhos',
+    description: 'Complexo gastronômico à beira-mar',
   },
   {
     id: 'rua-das-pedras',
@@ -449,6 +502,7 @@ export const buziosPlaces: PlaceCoords[] = [
     lat: -22.7472,
     lng: -41.8844,
     bairro: 'Centro',
+    description: 'Principal rua de lojas e restaurantes',
   },
 ];
 

@@ -5,6 +5,7 @@ export interface PlaceCoords {
   lat: number;
   lng: number;
   bairro?: string;
+  description?: string;
 }
 
 export interface ETAResult {
