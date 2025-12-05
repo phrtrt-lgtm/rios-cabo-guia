@@ -1,5 +1,5 @@
 import { MapPin, Clock, Car, Footprints, Calendar, Star } from 'lucide-react';
-import riosLogoFull from '@/assets/rios-logo-full.png';
+import riosLogo from '@/assets/rios-logo-header.png';
 
 interface ItineraryItem {
   placeName: string;
@@ -80,7 +80,7 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
               <div className="itinerary-header-bg"></div>
               <div className="itinerary-header-content">
                 <div className="itinerary-logo-section">
-                  <img src={riosLogoFull} alt="Rios" className="itinerary-logo" />
+                  <img src={riosLogo} alt="Rios" className="itinerary-logo" />
                 </div>
                 <div className="itinerary-title-section">
                   <div className="itinerary-badge">
