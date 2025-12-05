@@ -387,47 +387,57 @@ export const ItineraryBuilder = ({
     
     return (
       <div className="space-y-4">
-        <div className="flex gap-4 items-center flex-wrap">
+        {/* Barra de ação com destino */}
+        <div className="flex gap-3 items-center flex-wrap p-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent rounded-xl border border-secondary/20">
           <div className="flex-1 min-w-[200px] relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
             <Input
               placeholder="Buscar por nome, bairro..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 border-secondary/30 focus:border-secondary focus:ring-secondary/30"
             />
           </div>
-          <Select value={targetDay.toString()} onValueChange={(v) => setTargetDay(Number(v))}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: numDays }, (_, i) => (
-                <SelectItem key={i + 1} value={(i + 1).toString()}>Dia {i + 1}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={targetBlock} onValueChange={(v) => setTargetBlock(v as TimeBlock)}>
-            <SelectTrigger className="w-40">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(TIME_BLOCKS).map(([key, { label }]) => (
-                <SelectItem key={key} value={key}>{label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Button onClick={handleAddSelected} disabled={selectedPlaces.size === 0}>
+          
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-muted-foreground font-medium">Adicionar em:</span>
+            <Select value={targetDay.toString()} onValueChange={(v) => setTargetDay(Number(v))}>
+              <SelectTrigger className="w-28 border-secondary/30">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: numDays }, (_, i) => (
+                  <SelectItem key={i + 1} value={(i + 1).toString()}>Dia {i + 1}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={targetBlock} onValueChange={(v) => setTargetBlock(v as TimeBlock)}>
+              <SelectTrigger className="w-36 border-secondary/30">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(TIME_BLOCKS).map(([key, { label }]) => (
+                  <SelectItem key={key} value={key}>{label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Button 
+            onClick={handleAddSelected} 
+            disabled={selectedPlaces.size === 0}
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md"
+          >
             Adicionar {selectedPlaces.size > 0 && `(${selectedPlaces.size})`}
           </Button>
         </div>
 
-        <div className="border rounded-lg overflow-hidden">
+        <div className="border-2 border-secondary/20 rounded-xl overflow-hidden shadow-sm">
           <div className="overflow-auto max-h-[500px]">
             <table className="w-full table-fixed">
-              <thead className="bg-secondary/10 border-b-2 border-secondary/20 sticky top-0 z-10">
+              <thead className="bg-gradient-to-r from-secondary/15 via-secondary/10 to-secondary/5 border-b-2 border-secondary/20 sticky top-0 z-10">
                 <tr>
-                  <th className="px-2 py-2 text-left w-12">
+                  <th className="px-3 py-3 text-left w-12">
                     <Checkbox
                       checked={filtered.length > 0 && filtered.every(p => selectedPlaces.has(p.id))}
                       onCheckedChange={(checked) => {
@@ -439,28 +449,42 @@ export const ItineraryBuilder = ({
                           setSelectedPlaces(newSet);
                         }
                       }}
+                      className="border-secondary data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
                     />
                   </th>
-                  <th className="px-3 py-2 text-left font-semibold text-sm w-[40%]">Nome</th>
-                  <th className="px-3 py-2 text-left font-semibold text-sm w-[25%]">Tempo</th>
-                  <th className="px-3 py-2 text-center font-semibold text-sm w-[23%]">Ação</th>
+                  <th className="px-3 py-3 text-left font-bold text-sm text-foreground w-[40%]">Nome</th>
+                  <th className="px-3 py-3 text-left font-bold text-sm text-foreground w-[25%]">Tempo até lá</th>
+                  <th className="px-3 py-3 text-center font-bold text-sm text-foreground w-[23%]">Ação</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((place, idx) => {
                   const eta = currentEtas[place.id]?.[mode] || 0;
-                  const defaultDuration = DEFAULT_DURATIONS[place.category] || 60;
+                  const isSelected = selectedPlaces.has(place.id);
                   
                   return (
                     <tr 
                       key={place.id} 
-                      className={`border-t border-border/50 hover:bg-secondary/5 transition-colors ${
-                        idx % 2 === 0 ? 'bg-background' : 'bg-muted/20'
+                      className={`border-t border-border/30 transition-all cursor-pointer ${
+                        isSelected 
+                          ? 'bg-secondary/10 hover:bg-secondary/15' 
+                          : idx % 2 === 0 
+                            ? 'bg-background hover:bg-secondary/5' 
+                            : 'bg-muted/20 hover:bg-secondary/5'
                       }`}
+                      onClick={() => {
+                        const newSet = new Set(selectedPlaces);
+                        if (isSelected) {
+                          newSet.delete(place.id);
+                        } else {
+                          newSet.add(place.id);
+                        }
+                        setSelectedPlaces(newSet);
+                      }}
                     >
-                      <td className="px-2 py-2">
+                      <td className="px-3 py-3">
                         <Checkbox
-                          checked={selectedPlaces.has(place.id)}
+                          checked={isSelected}
                           onCheckedChange={(checked) => {
                             const newSet = new Set(selectedPlaces);
                             if (checked) {
@@ -470,29 +494,34 @@ export const ItineraryBuilder = ({
                             }
                             setSelectedPlaces(newSet);
                           }}
+                          onClick={(e) => e.stopPropagation()}
+                          className="border-secondary data-[state=checked]:bg-secondary data-[state=checked]:border-secondary"
                         />
                       </td>
-                      <td className="px-3 py-2 font-medium text-sm truncate" title={place.name}>
-                        {place.name}
+                      <td className="px-3 py-3">
+                        <span className={`font-medium text-sm ${isSelected ? 'text-secondary' : ''}`}>
+                          {place.name}
+                        </span>
                       </td>
-                      <td className="px-3 py-2">
+                      <td className="px-3 py-3">
                         {eta > 0 ? (
-                          <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <Clock className="w-3.5 h-3.5 text-secondary" />
-                            <span className="font-medium">
-                              {currentEtas[place.id]?.isFallback && '~'}{eta} min
-                            </span>
+                          <span className="inline-flex items-center gap-1.5 text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-full font-medium">
+                            <Clock className="w-3 h-3" />
+                            {currentEtas[place.id]?.isFallback && '~'}{eta} min
                           </span>
                         ) : (
                           <span className="text-xs text-muted-foreground">-</span>
                         )}
                       </td>
-                      <td className="px-3 py-2 text-center">
+                      <td className="px-3 py-3 text-center">
                         <Button 
                           size="sm" 
-                          variant="ghost" 
-                          onClick={() => handleAddPlace(place)}
-                          className="h-7 text-xs hover:bg-secondary/20 hover:text-secondary-foreground"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAddPlace(place);
+                          }}
+                          className="h-7 text-xs bg-secondary/10 text-secondary hover:bg-secondary hover:text-secondary-foreground border-secondary/30"
+                          variant="outline"
                         >
                           Adicionar
                         </Button>
@@ -515,101 +544,140 @@ export const ItineraryBuilder = ({
     const dayItinerary = itineraries[currentDay - 1];
     
     return (
-      <div className="flex gap-2 overflow-x-auto pb-4">
+      <div className="flex gap-3 overflow-x-auto pb-4 pt-2">
         {Object.entries(TIME_BLOCKS).map(([blockKey, { label, start, end, maxMinutes }]) => {
           const block = dayItinerary[blockKey as TimeBlock];
           const totalTime = calculateBlockTime(block);
           const isOvertime = totalTime > maxMinutes;
+          const progressPercent = Math.min((totalTime / maxMinutes) * 100, 100);
           
           return (
-            <Card key={blockKey} className={`${isOvertime ? 'border-destructive' : ''} flex flex-col h-full min-w-[180px] flex-shrink-0`}>
-              <CardContent className="p-3 flex flex-col h-full">
-                <div className="mb-3 space-y-1">
-                  <h3 className="font-semibold text-sm">{label}</h3>
-                  <Badge variant="outline" className="text-xs w-fit">
-                    {start} - {end}
-                  </Badge>
-                  <div className={`flex items-center gap-1 text-xs ${isOvertime ? 'text-destructive' : 'text-muted-foreground'}`}>
-                    <Clock className="w-3 h-3" />
-                    <span>{totalTime}/{maxMinutes}m</span>
+            <Card 
+              key={blockKey} 
+              className={`flex flex-col h-full min-w-[200px] flex-shrink-0 border-2 transition-all ${
+                isOvertime 
+                  ? 'border-destructive/50 bg-destructive/5' 
+                  : block.length > 0 
+                    ? 'border-secondary/30 bg-secondary/5' 
+                    : 'border-border/50 hover:border-secondary/20'
+              }`}
+            >
+              <CardContent className="p-0 flex flex-col h-full">
+                {/* Header do bloco */}
+                <div className="p-3 border-b border-border/50 bg-gradient-to-r from-muted/50 to-transparent">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="font-bold text-sm text-foreground">{label}</h3>
+                    <Badge 
+                      variant="outline" 
+                      className="text-[10px] font-medium bg-background/80 border-secondary/30"
+                    >
+                      {start} - {end}
+                    </Badge>
+                  </div>
+                  {/* Barra de progresso */}
+                  <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-300 rounded-full ${
+                        isOvertime ? 'bg-destructive' : 'bg-secondary'
+                      }`}
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                  <div className={`flex items-center justify-between mt-1.5 text-[10px] ${
+                    isOvertime ? 'text-destructive font-medium' : 'text-muted-foreground'
+                  }`}>
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      {totalTime}min usados
+                    </span>
+                    <span>{maxMinutes}min max</span>
                   </div>
                 </div>
 
-                {block.length === 0 ? (
-                  <div className="text-center py-4 text-muted-foreground text-xs flex-1 flex items-center justify-center">
-                    Vazio
-                  </div>
-                ) : (
-                  <div className="space-y-2 flex-1 overflow-auto">
-                    {block.map((item, index) => (
-                      <div key={index} className="border rounded p-2 bg-background text-xs group relative">
-                        <div className="space-y-1">
-                          <div className="flex items-start gap-1">
-                            <MapPin className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-medium leading-tight break-words">{item.placeName}</h4>
-                              <p className="text-muted-foreground text-xs">{item.bairro}</p>
+                {/* Conteúdo */}
+                <div className="flex-1 p-2 overflow-auto">
+                  {block.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground py-8">
+                      <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center mb-2">
+                        <MapPin className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs">Nenhum lugar</span>
+                      <span className="text-[10px]">Adicione na aba "Selecionar"</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {block.map((item, index) => (
+                        <div 
+                          key={index} 
+                          className="border border-secondary/20 rounded-lg p-2.5 bg-background shadow-sm text-xs group relative hover:shadow-md hover:border-secondary/40 transition-all"
+                        >
+                          <div className="space-y-1.5">
+                            <div className="flex items-start gap-2">
+                              <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                                <MapPin className="w-3 h-3 text-secondary" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-semibold leading-tight break-words text-foreground">{item.placeName}</h4>
+                                <p className="text-muted-foreground text-[10px]">{item.bairro}</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground pl-8">
+                              <span className="flex items-center gap-1 bg-muted/50 px-1.5 py-0.5 rounded">
+                                <Navigation className="w-2.5 h-2.5 text-secondary" />
+                                {item.isFallback && '~'}{item.eta || 0}min
+                              </span>
+                              <span className="flex items-center gap-1 bg-muted/50 px-1.5 py-0.5 rounded">
+                                <Clock className="w-2.5 h-2.5 text-secondary" />
+                                <Select
+                                  value={item.duration.toString()}
+                                  onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
+                                >
+                                  <SelectTrigger className="h-4 w-12 text-[10px] border-0 bg-transparent p-0 font-medium">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="30">30min</SelectItem>
+                                    <SelectItem value="45">45min</SelectItem>
+                                    <SelectItem value="60">1h</SelectItem>
+                                    <SelectItem value="90">1h30</SelectItem>
+                                    <SelectItem value="120">2h</SelectItem>
+                                    <SelectItem value="180">3h</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </span>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-0.5">
-                              <Navigation className="w-3 h-3" />
-                              {item.isFallback && '~'}{item.eta || 0}m
-                            </span>
-                            <span className="flex items-center gap-0.5">
-                              <Clock className="w-3 h-3" />
-                              <Select
-                                value={item.duration.toString()}
-                                onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
-                              >
-                                <SelectTrigger className="h-5 w-14 text-xs border-0 bg-transparent p-0">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="30">30m</SelectItem>
-                                  <SelectItem value="45">45m</SelectItem>
-                                  <SelectItem value="60">1h</SelectItem>
-                                  <SelectItem value="90">1.5h</SelectItem>
-                                  <SelectItem value="120">2h</SelectItem>
-                                  <SelectItem value="180">3h</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </span>
+                            
+                          <div className="absolute -right-1 -top-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
+                            <Button
+                              size="sm"
+                              className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
+                              onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
+                              disabled={index === 0}
+                            >
+                              <ChevronUp className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
+                              onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
+                              disabled={index === block.length - 1}
+                            >
+                              <ChevronDown className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              className="h-5 w-5 p-0 bg-destructive text-destructive-foreground hover:bg-destructive/80 shadow-sm"
+                              onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
                           </div>
                         </div>
-                          
-                        <div className="absolute -right-1 -top-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            className="h-5 w-5 p-0"
-                            onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
-                            disabled={index === 0}
-                          >
-                            <ChevronUp className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            className="h-5 w-5 p-0"
-                            onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
-                            disabled={index === block.length - 1}
-                          >
-                            <ChevronDown className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="secondary"
-                            className="h-5 w-5 p-0"
-                            onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           );
@@ -620,68 +688,115 @@ export const ItineraryBuilder = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] w-[95vw] max-h-[90vh] overflow-hidden flex flex-col">
-        <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>Construtor de Roteiro Rios</span>
-            <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)}>
-              <X className="w-5 h-5" />
-            </Button>
-          </DialogTitle>
-        </DialogHeader>
+      <DialogContent className="max-w-[95vw] w-[95vw] max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-background via-background to-secondary/5 p-0">
+        {/* Header sofisticado */}
+        <div className="bg-gradient-to-r from-primary via-primary to-primary/90 text-primary-foreground px-6 py-4">
+          <DialogHeader className="p-0">
+            <DialogTitle className="flex items-center justify-between text-primary-foreground">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-secondary/90 flex items-center justify-center shadow-lg">
+                  <Calendar className="w-5 h-5 text-secondary-foreground" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight">Construtor de Roteiro</h2>
+                  <p className="text-primary-foreground/70 text-sm font-normal">Monte sua experiência perfeita na Região dos Lagos</p>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => onOpenChange(false)}
+                className="text-primary-foreground hover:bg-primary-foreground/10 rounded-full"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+        </div>
 
-        {/* Barra superior */}
-        <div className="flex gap-4 items-center flex-wrap border-b pb-4">
-          <div className="flex-1 min-w-[200px] flex gap-2">
-            <Input
-              placeholder="Digite o endereço da origem..."
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              className="flex-1"
-            />
-            <Button variant="outline" size="icon" onClick={handleUseMyLocation}>
-              <Locate className="w-4 h-4" />
-            </Button>
-          </div>
-          
-          <div className="flex gap-2">
-            <Button
-              variant={mode === 'walking' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setMode('walking')}
-            >
-              <Footprints className="w-4 h-4 mr-1" />
-              A pé
-            </Button>
-            <Button
-              variant={mode === 'driving' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setMode('driving')}
-            >
-              <Car className="w-4 h-4 mr-1" />
-              Carro
-            </Button>
-          </div>
+        {/* Barra de configuração */}
+        <div className="px-6 py-4 border-b border-secondary/20 bg-secondary/5">
+          <div className="flex gap-4 items-center flex-wrap">
+            <div className="flex-1 min-w-[200px] flex gap-2">
+              <div className="relative flex-1">
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
+                <Input
+                  placeholder="Digite o endereço da origem..."
+                  value={origin}
+                  onChange={(e) => setOrigin(e.target.value)}
+                  className="pl-10 border-secondary/30 focus:border-secondary focus:ring-secondary/30"
+                />
+              </div>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={handleUseMyLocation}
+                className="border-secondary/30 hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all"
+              >
+                <Locate className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <div className="flex gap-1 p-1 bg-muted rounded-lg">
+              <Button
+                variant={mode === 'walking' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setMode('walking')}
+                className={mode === 'walking' 
+                  ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md' 
+                  : 'hover:bg-secondary/10 text-muted-foreground'
+                }
+              >
+                <Footprints className="w-4 h-4 mr-1.5" />
+                A pé
+              </Button>
+              <Button
+                variant={mode === 'driving' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setMode('driving')}
+                className={mode === 'driving' 
+                  ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md' 
+                  : 'hover:bg-secondary/10 text-muted-foreground'
+                }
+              >
+                <Car className="w-4 h-4 mr-1.5" />
+                Carro
+              </Button>
+            </div>
 
-          <Select value={numDays.toString()} onValueChange={(v) => setNumDays(Number(v))}>
-            <SelectTrigger className="w-48">
-              <SelectValue placeholder="Quantos dias?" />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 10 }, (_, i) => (
-                <SelectItem key={i + 1} value={(i + 1).toString()}>
-                  {i + 1} {i === 0 ? 'dia' : 'dias'}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <Select value={numDays.toString()} onValueChange={(v) => setNumDays(Number(v))}>
+              <SelectTrigger className="w-40 border-secondary/30 focus:ring-secondary/30">
+                <Calendar className="w-4 h-4 mr-2 text-secondary" />
+                <SelectValue placeholder="Quantos dias?" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 10 }, (_, i) => (
+                  <SelectItem key={i + 1} value={(i + 1).toString()}>
+                    {i + 1} {i === 0 ? 'dia' : 'dias'}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Tabs principais */}
-        <Tabs value={currentTab} onValueChange={(v) => setCurrentTab(v as any)} className="flex-1 overflow-hidden flex flex-col">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="places">Selecionar lugares</TabsTrigger>
-            <TabsTrigger value="itinerary">Meu roteiro</TabsTrigger>
+        <Tabs value={currentTab} onValueChange={(v) => setCurrentTab(v as any)} className="flex-1 overflow-hidden flex flex-col px-6">
+          <TabsList className="grid w-full grid-cols-2 bg-muted/50 p-1 mt-4">
+            <TabsTrigger 
+              value="places" 
+              className="data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground data-[state=active]:shadow-md transition-all"
+            >
+              <Search className="w-4 h-4 mr-2" />
+              Selecionar lugares
+            </TabsTrigger>
+            <TabsTrigger 
+              value="itinerary"
+              className="data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground data-[state=active]:shadow-md transition-all"
+            >
+              <Calendar className="w-4 h-4 mr-2" />
+              Meu roteiro
+            </TabsTrigger>
           </TabsList>
 
           {/* Aba Selecionar lugares */}
@@ -759,27 +874,39 @@ export const ItineraryBuilder = ({
           </TabsContent>
         </Tabs>
 
-        {/* Rodapé */}
-        <div className="flex gap-2 border-t pt-4">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        {/* Rodapé sofisticado */}
+        <div className="flex gap-3 border-t border-secondary/20 px-6 py-4 bg-muted/30">
+          <Button 
+            variant="ghost" 
+            onClick={() => onOpenChange(false)}
+            className="text-muted-foreground hover:text-foreground"
+          >
             Fechar
           </Button>
           <div className="flex-1" />
           <Button 
-            variant="outline" 
-            onClick={handleExportPDF}
-            disabled={isPrinting}
+            variant="outline"
+            onClick={() => toast.info('Compartilhamento em breve!')}
+            className="border-secondary/30 hover:bg-secondary/10"
           >
-            <FileDown className="w-4 h-4 mr-2" />
-            {isPrinting ? 'Gerando...' : 'PDF'}
-          </Button>
-          <Button variant="outline" onClick={() => toast.info('Compartilhamento em breve!')}>
             <Share2 className="w-4 h-4 mr-2" />
             Compartilhar
           </Button>
-          <Button variant="outline" onClick={() => toast.info('Integração com Maps em breve!')}>
+          <Button 
+            variant="outline"
+            onClick={() => toast.info('Integração com Maps em breve!')}
+            className="border-secondary/30 hover:bg-secondary/10"
+          >
             <Navigation className="w-4 h-4 mr-2" />
             Maps
+          </Button>
+          <Button 
+            onClick={handleExportPDF}
+            disabled={isPrinting}
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md px-6"
+          >
+            <FileDown className="w-4 h-4 mr-2" />
+            {isPrinting ? 'Gerando roteiro...' : 'Exportar PDF'}
           </Button>
         </div>
 
