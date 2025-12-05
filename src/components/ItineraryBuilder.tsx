@@ -18,6 +18,8 @@ import { photospots } from '@/data/photospots';
 import { runningRoutes, extensionRoutes } from '@/data/routes';
 import { distanceService, PlaceCoords } from '@/services/distance.service';
 import { ItineraryPrintView } from './ItineraryPrintView';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface ItineraryBuilderProps {
   open: boolean;
@@ -373,8 +375,8 @@ export const ItineraryBuilder = ({
     );
   };
 
-  // Exportar roteiro como PDF
-  const handleExportPDF = () => {
+  // Exportar roteiro como PDF usando html2canvas + jsPDF
+  const handleExportPDF = async () => {
     const hasContent = itineraries.some(day => 
       Object.values(day).some(block => block.length > 0)
     );
@@ -385,15 +387,59 @@ export const ItineraryBuilder = ({
     }
 
     setIsPrinting(true);
-    
-    // Adicionar classe para impressão
-    document.body.classList.add('printing-itinerary');
-    
-    setTimeout(() => {
-      window.print();
-      document.body.classList.remove('printing-itinerary');
+    toast.info('Gerando PDF do roteiro...');
+
+    try {
+      const printContainer = document.getElementById('itinerary-print-target');
+      if (!printContainer) {
+        throw new Error('Container de impressão não encontrado');
+      }
+
+      // Temporarily show the print container for capture
+      printContainer.style.display = 'block';
+      printContainer.style.position = 'absolute';
+      printContainer.style.left = '-9999px';
+      printContainer.style.top = '0';
+
+      // Wait for images to load
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pages = printContainer.querySelectorAll('.itinerary-page');
+      
+      for (let i = 0; i < pages.length; i++) {
+        const page = pages[i] as HTMLElement;
+        
+        const canvas = await html2canvas(page, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const imgWidth = 210; // A4 width in mm
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        if (i > 0) {
+          pdf.addPage();
+        }
+        
+        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, Math.min(imgHeight, 297));
+      }
+
+      // Hide the container again
+      printContainer.style.display = 'none';
+      
+      pdf.save(`roteiro-cabo-frio-${new Date().toISOString().split('T')[0]}.pdf`);
+      toast.success('PDF exportado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      toast.error('Erro ao gerar PDF. Tente novamente.');
+    } finally {
       setIsPrinting(false);
-    }, 300);
+    }
   };
 
   // Renderizar tabela de seleção
@@ -940,12 +986,14 @@ export const ItineraryBuilder = ({
           </Button>
         </div>
 
-        {/* Print View - Hidden, only visible when printing */}
-        <ItineraryPrintView 
-          itineraries={itineraries}
-          origin={origin}
-          mode={mode}
-        />
+        {/* Print View - Hidden container for PDF generation */}
+        <div id="itinerary-print-target" style={{ display: 'none' }}>
+          <ItineraryPrintView 
+            itineraries={itineraries}
+            origin={origin}
+            mode={mode}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
