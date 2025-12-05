@@ -1,10 +1,12 @@
-import { MapPin, Clock, Car, Footprints, Calendar, Star } from 'lucide-react';
-// PDF Print View Component
+import { MapPin, Clock, Car, Footprints, Calendar } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface ItineraryItem {
   placeName: string;
   category: string;
   bairro: string;
+  lat: number;
+  lng: number;
   duration: number;
   eta?: number;
   isFallback?: boolean;
@@ -27,13 +29,13 @@ interface ItineraryPrintViewProps {
 }
 
 const TIME_BLOCKS = {
-  cafe: { label: 'Café', start: '07:00', emoji: '☕' },
-  manha: { label: 'Manhã', start: '09:00', emoji: '🌅' },
-  almoco: { label: 'Almoço', start: '12:00', emoji: '🍽️' },
-  tarde: { label: 'Tarde', start: '14:00', emoji: '☀️' },
-  fimDeTarde: { label: 'Fim de Tarde', start: '17:00', emoji: '🌆' },
-  noite: { label: 'Noite', start: '19:00', emoji: '🌙' },
-  jantar: { label: 'Jantar', start: '21:00', emoji: '🍴' },
+  cafe: { label: 'Café', emoji: '☕' },
+  manha: { label: 'Manhã', emoji: '🌅' },
+  almoco: { label: 'Almoço', emoji: '🍽️' },
+  tarde: { label: 'Tarde', emoji: '☀️' },
+  fimDeTarde: { label: 'Fim de Tarde', emoji: '🌆' },
+  noite: { label: 'Noite', emoji: '🌙' },
+  jantar: { label: 'Jantar', emoji: '🍴' },
 } as const;
 
 const CATEGORY_LABELS: { [key: string]: string } = {
@@ -57,194 +59,205 @@ const formatDuration = (minutes: number): string => {
   if (minutes < 60) return `${minutes}min`;
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
-  return mins > 0 ? `${hours}h${mins}min` : `${hours}h`;
+  return mins > 0 ? `${hours}h${mins}` : `${hours}h`;
 };
 
-// Inline styles for PDF generation (html2canvas compatible)
+const getGoogleMapsUrl = (lat: number, lng: number, name: string): string => {
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${encodeURIComponent(name)}`;
+};
+
+// Compact inline styles for PDF
 const styles = {
   page: {
     width: '210mm',
     minHeight: '297mm',
+    maxHeight: '297mm',
     backgroundColor: '#ffffff',
-    padding: '20px',
+    padding: '8mm 10mm',
     fontFamily: 'Arial, sans-serif',
     boxSizing: 'border-box' as const,
+    overflow: 'hidden',
   },
   header: {
     backgroundColor: '#1E3A5F',
     color: '#ffffff',
-    padding: '20px',
-    borderRadius: '12px',
-    marginBottom: '20px',
+    padding: '10px 14px',
+    borderRadius: '8px',
+    marginBottom: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  headerTitle: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    margin: '0 0 8px 0',
-  },
-  headerSubtitle: {
-    fontSize: '14px',
-    opacity: 0.8,
-    margin: 0,
+  headerLeft: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
   },
   dayBadge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
     backgroundColor: '#E67E50',
     color: '#ffffff',
-    padding: '6px 12px',
-    borderRadius: '20px',
-    fontSize: '12px',
+    padding: '4px 10px',
+    borderRadius: '12px',
+    fontSize: '11px',
     fontWeight: 'bold',
-    marginBottom: '12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  headerTitle: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    margin: 0,
+  },
+  headerSubtitle: {
+    fontSize: '10px',
+    opacity: 0.7,
+    margin: 0,
   },
   statsRow: {
     display: 'flex',
-    gap: '20px',
-    marginTop: '12px',
+    gap: '16px',
+    alignItems: 'center',
   },
   stat: {
     textAlign: 'center' as const,
   },
   statValue: {
-    fontSize: '24px',
+    fontSize: '16px',
     fontWeight: 'bold',
   },
   statLabel: {
-    fontSize: '11px',
+    fontSize: '8px',
     opacity: 0.7,
   },
   origin: {
+    fontSize: '9px',
+    padding: '4px 8px',
+    backgroundColor: '#f3f4f6',
+    borderRadius: '4px',
+    marginBottom: '6px',
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
-    fontSize: '12px',
-    marginTop: '12px',
-    padding: '8px 12px',
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: '6px',
+    gap: '4px',
+    color: '#6b7280',
   },
   blockContainer: {
-    marginBottom: '16px',
+    marginBottom: '6px',
   },
   blockHeader: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
-    padding: '10px 14px',
-    backgroundColor: '#f8f9fa',
-    borderRadius: '8px',
-    marginBottom: '10px',
-    borderLeft: '4px solid #E67E50',
+    gap: '6px',
+    padding: '4px 8px',
+    backgroundColor: '#FEF3E8',
+    borderRadius: '4px',
+    marginBottom: '4px',
+    borderLeft: '3px solid #E67E50',
   },
   blockEmoji: {
-    fontSize: '18px',
+    fontSize: '12px',
   },
   blockLabel: {
-    fontSize: '14px',
+    fontSize: '11px',
     fontWeight: 'bold',
     color: '#1E3A5F',
   },
-  placeCard: {
+  placeRow: {
     display: 'flex',
     alignItems: 'center',
-    padding: '12px',
+    padding: '4px 6px',
     backgroundColor: '#ffffff',
     border: '1px solid #e5e7eb',
-    borderRadius: '8px',
-    marginBottom: '8px',
-    marginLeft: '20px',
+    borderRadius: '4px',
+    marginBottom: '3px',
+    marginLeft: '8px',
+    gap: '6px',
   },
   placeTime: {
+    fontSize: '9px',
+    color: '#1E3A5F',
+    fontWeight: 'bold',
+    minWidth: '32px',
     display: 'flex',
     alignItems: 'center',
-    gap: '4px',
-    fontSize: '11px',
-    color: '#6b7280',
-    minWidth: '50px',
+    gap: '2px',
   },
   placeInfo: {
     flex: 1,
-    marginLeft: '12px',
   },
   placeName: {
-    fontSize: '14px',
+    fontSize: '10px',
     fontWeight: 'bold',
     color: '#1E3A5F',
-    margin: '0 0 4px 0',
+    margin: 0,
   },
   placeMeta: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
-    fontSize: '11px',
+    gap: '6px',
+    fontSize: '8px',
     color: '#6b7280',
-  },
-  placeLocation: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '4px',
   },
   placeCategory: {
     backgroundColor: '#E67E50',
     color: '#ffffff',
-    padding: '2px 8px',
-    borderRadius: '10px',
-    fontSize: '10px',
+    padding: '1px 5px',
+    borderRadius: '6px',
+    fontSize: '7px',
   },
   placeDuration: {
     textAlign: 'right' as const,
-    minWidth: '50px',
+    minWidth: '30px',
   },
   durationValue: {
-    fontSize: '18px',
+    fontSize: '12px',
     fontWeight: 'bold',
     color: '#E67E50',
   },
   durationLabel: {
-    fontSize: '10px',
+    fontSize: '7px',
     color: '#6b7280',
+  },
+  qrCode: {
+    width: '28px',
+    height: '28px',
+    padding: '2px',
+    backgroundColor: '#ffffff',
+    borderRadius: '2px',
   },
   travelConnector: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '8px',
-    padding: '6px 0',
-    marginLeft: '40px',
+    gap: '4px',
+    padding: '2px 0',
+    marginLeft: '20px',
     color: '#9ca3af',
-    fontSize: '11px',
-  },
-  travelLine: {
-    width: '30px',
-    height: '1px',
-    backgroundColor: '#d1d5db',
+    fontSize: '8px',
   },
   travelBadge: {
     display: 'flex',
     alignItems: 'center',
-    gap: '4px',
-    backgroundColor: '#f3f4f6',
-    padding: '4px 8px',
-    borderRadius: '12px',
+    gap: '3px',
+    backgroundColor: '#FEF9E8',
+    border: '1px dashed #E67E50',
+    padding: '2px 6px',
+    borderRadius: '8px',
+    color: '#E67E50',
+    fontWeight: 'bold',
   },
   footer: {
-    marginTop: '20px',
-    padding: '16px',
+    marginTop: '6px',
+    padding: '6px 10px',
     backgroundColor: '#1E3A5F',
-    borderRadius: '8px',
+    borderRadius: '6px',
     textAlign: 'center' as const,
     color: '#ffffff',
+    fontSize: '9px',
   },
-  footerText: {
-    fontSize: '12px',
-    margin: 0,
-  },
-  footerLink: {
-    fontSize: '11px',
-    opacity: 0.7,
-    margin: '4px 0 0 0',
+  coordsText: {
+    fontSize: '7px',
+    color: '#9ca3af',
   },
 };
 
@@ -262,14 +275,18 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
 
         return (
           <div key={dayIndex} className="itinerary-page" style={styles.page}>
-            {/* Header */}
+            {/* Compact Header */}
             <div style={styles.header}>
-              <div style={styles.dayBadge}>
-                <Calendar size={14} />
-                <span>Dia {dayIndex + 1}</span>
+              <div style={styles.headerLeft}>
+                <div style={styles.dayBadge}>
+                  <Calendar size={10} />
+                  <span>Dia {dayIndex + 1}</span>
+                </div>
+                <div>
+                  <h1 style={styles.headerTitle}>Roteiro Cabo Frio</h1>
+                  <p style={styles.headerSubtitle}>Região dos Lagos • RJ</p>
+                </div>
               </div>
-              <h1 style={styles.headerTitle}>Roteiro Cabo Frio</h1>
-              <p style={styles.headerSubtitle}>Região dos Lagos • RJ</p>
               <div style={styles.statsRow}>
                 <div style={styles.stat}>
                   <div style={styles.statValue}>{placesCount}</div>
@@ -280,15 +297,16 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                   <div style={styles.statLabel}>total</div>
                 </div>
               </div>
-              {origin && (
-                <div style={styles.origin}>
-                  <MapPin size={12} />
-                  <span>Partindo de: {origin}</span>
-                </div>
-              )}
             </div>
 
-            {/* Timeline Content */}
+            {origin && (
+              <div style={styles.origin}>
+                <MapPin size={10} />
+                <span>Partindo de: {origin}</span>
+              </div>
+            )}
+
+            {/* Timeline Content - Compact */}
             <div>
               {Object.entries(TIME_BLOCKS).map(([blockKey, { label, emoji }]) => {
                 const block = dayItinerary[blockKey as keyof DayItinerary];
@@ -309,41 +327,57 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                         
                         currentMinutes += (item.eta || 0) + item.duration;
 
+                        const mapsUrl = getGoogleMapsUrl(item.lat, item.lng, item.placeName);
+
                         return (
                           <div key={index}>
                             {/* Travel Time Connector */}
                             {item.eta && item.eta > 0 && (
                               <div style={styles.travelConnector}>
-                                <div style={styles.travelLine}></div>
                                 <div style={styles.travelBadge}>
-                                  {mode === 'driving' ? <Car size={10} /> : <Footprints size={10} />}
-                                  <span>{item.isFallback && '~'}{item.eta}min</span>
+                                  {mode === 'driving' ? <Car size={8} /> : <Footprints size={8} />}
+                                  <span>{item.isFallback && '~'}{item.eta}min de deslocamento</span>
                                 </div>
-                                <div style={styles.travelLine}></div>
                               </div>
                             )}
 
-                            {/* Place Card */}
-                            <div style={styles.placeCard}>
+                            {/* Place Row - Compact */}
+                            <div style={styles.placeRow}>
                               <div style={styles.placeTime}>
-                                <Clock size={10} />
-                                <span>{arrivalTime}</span>
+                                <Clock size={8} />
+                                {arrivalTime}
                               </div>
+                              
                               <div style={styles.placeInfo}>
                                 <h3 style={styles.placeName}>{item.placeName}</h3>
                                 <div style={styles.placeMeta}>
-                                  <span style={styles.placeLocation}>
-                                    <MapPin size={10} />
-                                    {item.bairro}
+                                  <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                                    <MapPin size={7} />
+                                    {item.bairro}, Cabo Frio
                                   </span>
                                   <span style={styles.placeCategory}>
                                     {CATEGORY_LABELS[item.category] || item.category}
                                   </span>
+                                  <span style={styles.coordsText}>
+                                    {item.lat.toFixed(4)}, {item.lng.toFixed(4)}
+                                  </span>
                                 </div>
                               </div>
+                              
                               <div style={styles.placeDuration}>
                                 <span style={styles.durationValue}>{item.duration}</span>
                                 <span style={styles.durationLabel}>min</span>
+                              </div>
+
+                              {/* QR Code for Google Maps */}
+                              <div style={styles.qrCode} title="Escaneie para abrir no Maps">
+                                <QRCodeSVG 
+                                  value={mapsUrl}
+                                  size={24}
+                                  level="L"
+                                  bgColor="#ffffff"
+                                  fgColor="#1E3A5F"
+                                />
                               </div>
                             </div>
                           </div>
@@ -355,14 +389,9 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
               })}
             </div>
 
-            {/* Footer */}
+            {/* Compact Footer */}
             <div style={styles.footer}>
-              <p style={styles.footerText}>
-                <Star size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }} />
-                Criado com <strong>Guia Rios</strong>
-                <Star size={12} style={{ display: 'inline', verticalAlign: 'middle', marginLeft: '4px' }} />
-              </p>
-              <p style={styles.footerLink}>@rios.cabofrio</p>
+              Criado com <strong>Guia Rios</strong> • @rios.cabofrio • Escaneie os QR codes para abrir no Maps
             </div>
           </div>
         );
