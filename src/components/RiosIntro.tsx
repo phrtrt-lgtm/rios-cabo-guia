@@ -24,8 +24,8 @@ export function RiosIntro() {
           </div>
 
           {/* Button */}
-          <div className="mt-4 flex flex-col items-center gap-3">
-          <Button
+          <div className="mt-6 flex justify-center">
+            <Button
             asChild
             size="lg"
             variant="outline"
