@@ -73,6 +73,7 @@ export const ItineraryBuilder = ({
   const [currentDay, setCurrentDay] = useState(1);
   const [currentTab, setCurrentTab] = useState<'itinerary' | 'places'>('itinerary');
   const [itineraries, setItineraries] = useState<ItineraryItem[][]>([]);
+  const [startTimes, setStartTimes] = useState<string[]>(['08:00']); // Horário inicial de cada dia
   const [origin, setOrigin] = useState(currentOrigin?.address || '');
   const [originCoords, setOriginCoords] = useState<{ lat: number; lng: number } | null>(
     currentOrigin ? { lat: currentOrigin.lat, lng: currentOrigin.lng } : null
@@ -85,12 +86,47 @@ export const ItineraryBuilder = ({
   const [isPrinting, setIsPrinting] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
 
-  // Inicializar itinerários
+  // Função para formatar minutos em horário HH:MM
+  const formatTime = (totalMinutes: number): string => {
+    const hours = Math.floor(totalMinutes / 60) % 24;
+    const mins = totalMinutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  };
+
+  // Função para converter horário HH:MM em minutos
+  const timeToMinutes = (time: string): number => {
+    const [hours, mins] = time.split(':').map(Number);
+    return hours * 60 + mins;
+  };
+
+  // Calcular horários de cada item do dia
+  const calculateItemTimes = (dayIndex: number) => {
+    const dayItems = itineraries[dayIndex] || [];
+    const startTime = startTimes[dayIndex] || '08:00';
+    let currentMinutes = timeToMinutes(startTime);
+    
+    return dayItems.map((item) => {
+      const arrivalTime = formatTime(currentMinutes);
+      currentMinutes += (item.eta || 0);
+      const startActivityTime = formatTime(currentMinutes);
+      currentMinutes += item.duration;
+      const endTime = formatTime(currentMinutes);
+      
+      return { arrivalTime, startActivityTime, endTime };
+    });
+  };
+
+  // Inicializar itinerários e horários
   useEffect(() => {
     const newItineraries = Array(numDays).fill(null).map((_, i) => 
       itineraries[i] || []
     );
     setItineraries(newItineraries);
+    
+    const newStartTimes = Array(numDays).fill(null).map((_, i) => 
+      startTimes[i] || '08:00'
+    );
+    setStartTimes(newStartTimes);
   }, [numDays]);
 
   // Atualizar origem e modo
@@ -541,15 +577,18 @@ export const ItineraryBuilder = ({
   // Renderizar roteiro do dia - lista simples
   const renderItinerary = () => {
     const dayItems = itineraries[currentDay - 1] || [];
+    const itemTimes = calculateItemTimes(currentDay - 1);
     const totalTime = calculateDayTime(dayItems);
     const totalHours = Math.floor(totalTime / 60);
     const totalMins = totalTime % 60;
+    const startTime = startTimes[currentDay - 1] || '08:00';
+    const endTime = dayItems.length > 0 ? itemTimes[itemTimes.length - 1]?.endTime : startTime;
     
     return (
       <div className="space-y-4">
         {/* Resumo do dia */}
         <div className="flex items-center justify-between p-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent rounded-xl border border-secondary/20">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
               <Calendar className="w-5 h-5 text-secondary-foreground" />
             </div>
@@ -557,12 +596,37 @@ export const ItineraryBuilder = ({
               <h3 className="font-bold text-lg">Dia {currentDay}</h3>
               <p className="text-sm text-muted-foreground">{dayItems.length} lugares</p>
             </div>
+            
+            {/* Horário inicial */}
+            <div className="flex items-center gap-2 ml-4">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Início:</span>
+              <Input
+                type="time"
+                value={startTime}
+                onChange={(e) => {
+                  const newStartTimes = [...startTimes];
+                  newStartTimes[currentDay - 1] = e.target.value;
+                  setStartTimes(newStartTimes);
+                }}
+                className="w-24 h-8 text-sm"
+              />
+            </div>
           </div>
-          <div className="text-right">
-            <p className="text-2xl font-bold text-secondary">
-              {totalHours > 0 ? `${totalHours}h${totalMins > 0 ? totalMins : ''}` : `${totalMins}min`}
-            </p>
-            <p className="text-xs text-muted-foreground">tempo total</p>
+          
+          <div className="flex items-center gap-6">
+            {dayItems.length > 0 && (
+              <div className="text-center">
+                <p className="text-lg font-bold text-primary">{startTime} → {endTime}</p>
+                <p className="text-xs text-muted-foreground">início → fim</p>
+              </div>
+            )}
+            <div className="text-right">
+              <p className="text-2xl font-bold text-secondary">
+                {totalHours > 0 ? `${totalHours}h${totalMins > 0 ? totalMins : ''}` : `${totalMins}min`}
+              </p>
+              <p className="text-xs text-muted-foreground">tempo total</p>
+            </div>
           </div>
         </div>
 
@@ -581,92 +645,102 @@ export const ItineraryBuilder = ({
           </Card>
         ) : (
           <div className="space-y-2">
-            {dayItems.map((item, index) => (
-              <div key={index}>
-                {/* Conector de deslocamento */}
-                {item.eta && item.eta > 0 && (
-                  <div className="flex items-center gap-2 py-2 px-4">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
-                    <span className="flex items-center gap-1.5 text-xs text-secondary font-medium bg-secondary/10 px-3 py-1 rounded-full">
-                      {mode === 'driving' ? <Car className="w-3.5 h-3.5" /> : <Footprints className="w-3.5 h-3.5" />}
-                      {item.isFallback && '~'}{item.eta} min
-                    </span>
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
-                  </div>
-                )}
-                
-                {/* Card do lugar */}
-                <Card className="group hover:shadow-md hover:border-secondary/40 transition-all">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                      {/* Número da ordem */}
-                      <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-sm flex-shrink-0">
-                        {index + 1}
-                      </div>
-                      
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-foreground">{item.placeName}</h4>
-                        <p className="text-sm text-muted-foreground">{item.bairro}</p>
-                      </div>
-                      
-                      {/* Duração */}
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-muted-foreground" />
-                        <Select
-                          value={item.duration.toString()}
-                          onValueChange={(v) => handleUpdateDuration(currentDay - 1, index, Number(v))}
-                        >
-                          <SelectTrigger className="w-24 h-8 text-sm">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="15">15min</SelectItem>
-                            <SelectItem value="30">30min</SelectItem>
-                            <SelectItem value="45">45min</SelectItem>
-                            <SelectItem value="60">1h</SelectItem>
-                            <SelectItem value="90">1h30</SelectItem>
-                            <SelectItem value="120">2h</SelectItem>
-                            <SelectItem value="150">2h30</SelectItem>
-                            <SelectItem value="180">3h</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      {/* Ações */}
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8"
-                          onClick={() => handleMoveUp(currentDay - 1, index)}
-                          disabled={index === 0}
-                        >
-                          <ChevronUp className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8"
-                          onClick={() => handleMoveDown(currentDay - 1, index)}
-                          disabled={index === dayItems.length - 1}
-                        >
-                          <ChevronDown className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8 text-destructive hover:text-destructive"
-                          onClick={() => handleRemoveItem(currentDay - 1, index)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
+            {dayItems.map((item, index) => {
+              const times = itemTimes[index];
+              
+              return (
+                <div key={index}>
+                  {/* Conector de deslocamento */}
+                  {item.eta && item.eta > 0 && (
+                    <div className="flex items-center gap-2 py-2 px-4">
+                      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                      <span className="flex items-center gap-1.5 text-xs text-secondary font-medium bg-secondary/10 px-3 py-1 rounded-full">
+                        {mode === 'driving' ? <Car className="w-3.5 h-3.5" /> : <Footprints className="w-3.5 h-3.5" />}
+                        {item.isFallback && '~'}{item.eta} min
+                      </span>
+                      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
+                  )}
+                  
+                  {/* Card do lugar */}
+                  <Card className="group hover:shadow-md hover:border-secondary/40 transition-all">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4">
+                        {/* Horário */}
+                        <div className="flex flex-col items-center min-w-[70px]">
+                          <span className="text-lg font-bold text-primary">{times?.startActivityTime}</span>
+                          <span className="text-[10px] text-muted-foreground">até {times?.endTime}</span>
+                        </div>
+                        
+                        {/* Número da ordem */}
+                        <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-sm flex-shrink-0">
+                          {index + 1}
+                        </div>
+                        
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-foreground">{item.placeName}</h4>
+                          <p className="text-sm text-muted-foreground">{item.bairro}</p>
+                        </div>
+                        
+                        {/* Duração */}
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-muted-foreground" />
+                          <Select
+                            value={item.duration.toString()}
+                            onValueChange={(v) => handleUpdateDuration(currentDay - 1, index, Number(v))}
+                          >
+                            <SelectTrigger className="w-24 h-8 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="15">15min</SelectItem>
+                              <SelectItem value="30">30min</SelectItem>
+                              <SelectItem value="45">45min</SelectItem>
+                              <SelectItem value="60">1h</SelectItem>
+                              <SelectItem value="90">1h30</SelectItem>
+                              <SelectItem value="120">2h</SelectItem>
+                              <SelectItem value="150">2h30</SelectItem>
+                              <SelectItem value="180">3h</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        {/* Ações */}
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8"
+                            onClick={() => handleMoveUp(currentDay - 1, index)}
+                            disabled={index === 0}
+                          >
+                            <ChevronUp className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8"
+                            onClick={() => handleMoveDown(currentDay - 1, index)}
+                            disabled={index === dayItems.length - 1}
+                          >
+                            <ChevronDown className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 text-destructive hover:text-destructive"
+                            onClick={() => handleRemoveItem(currentDay - 1, index)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
@@ -909,6 +983,7 @@ export const ItineraryBuilder = ({
         <div id="itinerary-print-target" style={{ display: 'none' }}>
           <ItineraryPrintView 
             itineraries={itineraries}
+            startTimes={startTimes}
             origin={origin}
             mode={mode}
           />

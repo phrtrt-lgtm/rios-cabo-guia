@@ -14,6 +14,7 @@ interface ItineraryItem {
 
 interface ItineraryPrintViewProps {
   itineraries: ItineraryItem[][];
+  startTimes: string[];
   origin?: string;
   mode?: 'walking' | 'driving';
 }
@@ -27,6 +28,17 @@ const CATEGORY_LABELS: { [key: string]: string } = {
   trail: 'Trilha',
   photospot: 'Foto-spot',
   route: 'Rota',
+};
+
+const timeToMinutes = (time: string): number => {
+  const [hours, mins] = time.split(':').map(Number);
+  return hours * 60 + mins;
+};
+
+const formatTime = (totalMinutes: number): string => {
+  const hours = Math.floor(totalMinutes / 60) % 24;
+  const mins = totalMinutes % 60;
+  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 };
 
 const calculateTotalDayTime = (items: ItineraryItem[]): number => {
@@ -44,13 +56,15 @@ const getGoogleMapsUrl = (lat: number, lng: number): string => {
   return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 };
 
-export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: ItineraryPrintViewProps) => {
+export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'driving' }: ItineraryPrintViewProps) => {
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#ffffff' }}>
       {itineraries.map((dayItems, dayIndex) => {
         if (dayItems.length === 0) return null;
 
         const totalTime = calculateTotalDayTime(dayItems);
+        const startTime = startTimes[dayIndex] || '08:00';
+        let currentMinutes = timeToMinutes(startTime);
 
         return (
           <div 
@@ -109,14 +123,27 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                 borderRadius: '8px',
                 marginBottom: '15px',
                 color: '#666666',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}>
-                📍 Partindo de: {origin}
+                <span>📍 Partindo de: {origin}</span>
+                <span style={{ fontWeight: 'bold', color: '#1E3A5F' }}>
+                  🕐 Início: {startTime}
+                </span>
               </div>
             )}
 
             {/* Lista de lugares */}
             <div>
               {dayItems.map((item, index) => {
+                // Calcular horários
+                const arrivalTime = formatTime(currentMinutes);
+                currentMinutes += (item.eta || 0);
+                const startActivityTime = formatTime(currentMinutes);
+                currentMinutes += item.duration;
+                const endTime = formatTime(currentMinutes);
+                
                 const mapsUrl = getGoogleMapsUrl(item.lat, item.lng);
 
                 return (
@@ -152,6 +179,25 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                       marginBottom: '8px',
                       backgroundColor: '#ffffff',
                     }}>
+                      {/* Horário */}
+                      <div style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        marginRight: '15px',
+                        minWidth: '70px',
+                        padding: '8px',
+                        backgroundColor: '#f0f9ff',
+                        borderRadius: '8px',
+                      }}>
+                        <span style={{ fontSize: '18px', fontWeight: 'bold', color: '#1E3A5F' }}>
+                          {startActivityTime}
+                        </span>
+                        <span style={{ fontSize: '10px', color: '#666666' }}>
+                          até {endTime}
+                        </span>
+                      </div>
+
                       {/* Número */}
                       <div style={{
                         width: '36px',
