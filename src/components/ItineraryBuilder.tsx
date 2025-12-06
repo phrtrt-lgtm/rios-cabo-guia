@@ -514,44 +514,49 @@ export const ItineraryBuilder = ({
     }
   };
 
-  // Renderizar tabela de seleção
+  // Renderizar tabela de seleção - Mobile optimized
   const renderPlacesTable = (places: PlaceCoords[]) => {
     const filtered = filterPlaces(places);
     
     return (
-      <div className="space-y-4">
-        <div className="flex gap-3 items-center flex-wrap p-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent rounded-xl border border-secondary/20">
-          <div className="flex-1 min-w-[200px] relative">
+      <div className="space-y-3">
+        {/* Barra de busca e ações - Mobile stack */}
+        <div className="flex flex-col gap-2 p-3 md:p-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent rounded-xl border border-secondary/20">
+          {/* Linha 1: Busca */}
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
             <Input
               placeholder="Buscar por nome, bairro..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-secondary/30 focus:border-secondary focus:ring-secondary/30"
+              className="pl-10 h-9 text-sm border-secondary/30 focus:border-secondary focus:ring-secondary/30"
             />
           </div>
           
-          <div className="flex items-center gap-2 text-sm">
-            <span className="text-muted-foreground font-medium">Adicionar em:</span>
-            <Select value={targetDay.toString()} onValueChange={(v) => setTargetDay(Number(v))}>
-              <SelectTrigger className="w-28 border-secondary/30">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: numDays }, (_, i) => (
-                  <SelectItem key={i + 1} value={(i + 1).toString()}>Dia {i + 1}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Linha 2: Dia + Adicionar */}
+          <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2 flex-1">
+              <span className="text-xs text-muted-foreground font-medium whitespace-nowrap">Dia:</span>
+              <Select value={targetDay.toString()} onValueChange={(v) => setTargetDay(Number(v))}>
+                <SelectTrigger className="w-20 h-8 text-sm border-secondary/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: numDays }, (_, i) => (
+                    <SelectItem key={i + 1} value={(i + 1).toString()}>Dia {i + 1}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <Button 
+              onClick={handleAddSelected} 
+              disabled={selectedPlaces.size === 0}
+              className="h-8 text-sm bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md"
+            >
+              + Adicionar {selectedPlaces.size > 0 && `(${selectedPlaces.size})`}
+            </Button>
           </div>
-          
-          <Button 
-            onClick={handleAddSelected} 
-            disabled={selectedPlaces.size === 0}
-            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md"
-          >
-            Adicionar {selectedPlaces.size > 0 && `(${selectedPlaces.size})`}
-          </Button>
         </div>
 
         <div className="border-2 border-secondary/20 rounded-xl overflow-hidden shadow-sm">
@@ -684,22 +689,34 @@ export const ItineraryBuilder = ({
     }
     
     return (
-      <div className="space-y-4">
-        {/* Header do dia */}
-        <div className="flex items-center justify-between p-4 rounded-xl border bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-secondary/20">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-secondary-foreground" />
-            </div>
-            <div>
-              <h3 className="font-bold text-lg">Dia {dayIndex + 1}</h3>
-              <p className="text-sm text-muted-foreground">{dayItems.length} lugares</p>
+      <div className="space-y-3 md:space-y-4">
+        {/* Header do dia - Mobile optimized */}
+        <div className="p-3 md:p-4 rounded-xl border bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-secondary/20">
+          {/* Linha 1: Título + Tempo total */}
+          <div className="flex items-center justify-between mb-2 md:mb-3">
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-secondary flex items-center justify-center">
+                <Calendar className="w-4 h-4 md:w-5 md:h-5 text-secondary-foreground" />
+              </div>
+              <div>
+                <h3 className="font-bold text-base md:text-lg">Dia {dayIndex + 1}</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">{dayItems.length} lugares</p>
+              </div>
             </div>
             
-            {/* Horário inicial */}
-            <div className="flex items-center gap-2 ml-4">
-              <Clock className="w-4 h-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Início:</span>
+            <div className="text-right">
+              <p className="text-xl md:text-2xl font-bold text-secondary">
+                {totalHours > 0 ? `${totalHours}h${totalMins > 0 ? totalMins : ''}` : `${totalMins}min`}
+              </p>
+              <p className="text-[10px] md:text-xs text-muted-foreground">tempo total</p>
+            </div>
+          </div>
+          
+          {/* Linha 2: Horário início + Range */}
+          <div className="flex flex-wrap items-center gap-2 md:gap-4">
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-xs text-muted-foreground">Início:</span>
               <Input
                 type="time"
                 value={startTime}
@@ -708,24 +725,17 @@ export const ItineraryBuilder = ({
                   newStartTimes[dayIndex] = e.target.value;
                   setStartTimes(newStartTimes);
                 }}
-                className="w-24 h-8 text-sm"
+                className="w-20 h-7 text-xs"
               />
             </div>
-          </div>
-          
-          <div className="flex items-center gap-6">
+            
             {dayItems.length > 0 && (
-              <div className="text-center">
-                <p className="text-lg font-bold text-primary">{startTime} → {endTime}</p>
-                <p className="text-xs text-muted-foreground">início → fim</p>
+              <div className="flex items-center gap-1.5 text-xs md:text-sm">
+                <span className="font-medium text-primary">{startTime}</span>
+                <span className="text-muted-foreground">→</span>
+                <span className="font-medium text-primary">{endTime}</span>
               </div>
             )}
-            <div className="text-right">
-              <p className="text-2xl font-bold text-secondary">
-                {totalHours > 0 ? `${totalHours}h${totalMins > 0 ? totalMins : ''}` : `${totalMins}min`}
-              </p>
-              <p className="text-xs text-muted-foreground">tempo total</p>
-            </div>
           </div>
         </div>
 
@@ -748,78 +758,94 @@ export const ItineraryBuilder = ({
                   </div>
                 )}
                 
-                {/* Card do lugar */}
-                <Card className="group hover:shadow-md hover:border-secondary/40 transition-all">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                      {/* Horário */}
-                      <div className="flex flex-col items-center min-w-[70px]">
-                        <span className="text-lg font-bold text-primary">{times?.startActivityTime}</span>
-                        <span className="text-[10px] text-muted-foreground">até {times?.endTime}</span>
-                      </div>
-                      
-                      {/* Número da ordem */}
-                      <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-sm flex-shrink-0">
-                        {index + 1}
-                      </div>
-                      
-                      {/* Info */}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-foreground">{item.placeName}</h4>
-                        <p className="text-sm text-muted-foreground">{item.bairro}</p>
-                      </div>
-                      
-                      {/* Duração */}
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-muted-foreground" />
-                        <Select
-                          value={item.duration.toString()}
-                          onValueChange={(v) => handleUpdateDuration(dayIndex, index, Number(v))}
-                        >
-                          <SelectTrigger className="w-24 h-8 text-sm">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="15">15min</SelectItem>
-                            <SelectItem value="30">30min</SelectItem>
-                            <SelectItem value="45">45min</SelectItem>
-                            <SelectItem value="60">1h</SelectItem>
-                            <SelectItem value="90">1h30</SelectItem>
-                            <SelectItem value="120">2h</SelectItem>
-                            <SelectItem value="150">2h30</SelectItem>
-                            <SelectItem value="180">3h</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      {/* Ações */}
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                {/* Card do lugar - Mobile optimized */}
+                <Card className="hover:shadow-md hover:border-secondary/40 transition-all">
+                  <CardContent className="p-3 md:p-4">
+                    {/* Mobile: Layout vertical | Desktop: Layout horizontal */}
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                      {/* Linha 1 mobile: Número + Nome + Remover */}
+                      <div className="flex items-center gap-2 md:gap-4">
+                        {/* Número da ordem */}
+                        <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-xs md:text-sm flex-shrink-0">
+                          {index + 1}
+                        </div>
+                        
+                        {/* Horário - Desktop only inline */}
+                        <div className="hidden md:flex flex-col items-center min-w-[70px]">
+                          <span className="text-lg font-bold text-primary">{times?.startActivityTime}</span>
+                          <span className="text-[10px] text-muted-foreground">até {times?.endTime}</span>
+                        </div>
+                        
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-sm md:text-base text-foreground truncate">{item.placeName}</h4>
+                          <p className="text-xs md:text-sm text-muted-foreground">{item.bairro}</p>
+                        </div>
+                        
+                        {/* Remover - Always visible */}
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-8 w-8"
-                          onClick={() => handleMoveUp(dayIndex, index)}
-                          disabled={index === 0}
-                        >
-                          <ChevronUp className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8"
-                          onClick={() => handleMoveDown(dayIndex, index)}
-                          disabled={index === dayItems.length - 1}
-                        >
-                          <ChevronDown className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          className="h-7 w-7 md:h-8 md:w-8 text-destructive hover:text-destructive flex-shrink-0"
                           onClick={() => handleRemoveItem(dayIndex, index)}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
+                      </div>
+                      
+                      {/* Linha 2 mobile: Horário + Duração + Mover */}
+                      <div className="flex items-center gap-2 md:gap-4 pl-9 md:pl-0">
+                        {/* Horário - Mobile only */}
+                        <div className="md:hidden flex items-center gap-1 text-xs">
+                          <span className="font-medium text-primary">{times?.startActivityTime}</span>
+                          <span className="text-muted-foreground">-</span>
+                          <span className="text-muted-foreground">{times?.endTime}</span>
+                        </div>
+                        
+                        {/* Duração */}
+                        <div className="flex items-center gap-1.5 ml-auto md:ml-0">
+                          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                          <Select
+                            value={item.duration.toString()}
+                            onValueChange={(v) => handleUpdateDuration(dayIndex, index, Number(v))}
+                          >
+                            <SelectTrigger className="w-20 md:w-24 h-7 md:h-8 text-xs md:text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="15">15min</SelectItem>
+                              <SelectItem value="30">30min</SelectItem>
+                              <SelectItem value="45">45min</SelectItem>
+                              <SelectItem value="60">1h</SelectItem>
+                              <SelectItem value="90">1h30</SelectItem>
+                              <SelectItem value="120">2h</SelectItem>
+                              <SelectItem value="150">2h30</SelectItem>
+                              <SelectItem value="180">3h</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        {/* Mover - Always visible */}
+                        <div className="flex gap-0.5">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-7 w-7 md:h-8 md:w-8"
+                            onClick={() => handleMoveUp(dayIndex, index)}
+                            disabled={index === 0}
+                          >
+                            <ChevronUp className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-7 w-7 md:h-8 md:w-8"
+                            onClick={() => handleMoveDown(dayIndex, index)}
+                            disabled={index === dayItems.length - 1}
+                          >
+                            <ChevronDown className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -833,96 +859,100 @@ export const ItineraryBuilder = ({
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[95vw] w-[95vw] max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-background via-background to-secondary/5 p-0">
+      <DialogContent className="max-w-[95vw] w-[95vw] md:max-w-4xl max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-background via-background to-secondary/5 p-0">
         {/* Header */}
-        <div className="bg-gradient-to-r from-primary via-primary to-primary/90 text-primary-foreground px-6 py-4">
+        <div className="bg-gradient-to-r from-primary via-primary to-primary/90 text-primary-foreground px-4 md:px-6 py-3 md:py-4">
           <DialogHeader className="p-0">
             <DialogTitle className="flex items-center justify-between text-primary-foreground">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-secondary/90 flex items-center justify-center shadow-lg">
-                  <Calendar className="w-5 h-5 text-secondary-foreground" />
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-secondary/90 flex items-center justify-center shadow-lg">
+                  <Calendar className="w-4 h-4 md:w-5 md:h-5 text-secondary-foreground" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold tracking-tight">Construtor de Roteiro</h2>
-                  <p className="text-primary-foreground/70 text-sm font-normal">Monte sua experiência perfeita na Região dos Lagos</p>
+                  <h2 className="text-base md:text-xl font-bold tracking-tight">Construtor de Roteiro</h2>
+                  <p className="text-primary-foreground/70 text-xs md:text-sm font-normal hidden sm:block">Monte sua experiência perfeita</p>
                 </div>
               </div>
               <Button 
                 variant="ghost" 
                 size="icon" 
                 onClick={() => onOpenChange(false)}
-                className="text-primary-foreground hover:bg-primary-foreground/10 rounded-full"
+                className="text-primary-foreground hover:bg-primary-foreground/10 rounded-full h-8 w-8"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 md:w-5 md:h-5" />
               </Button>
             </DialogTitle>
           </DialogHeader>
         </div>
 
-        {/* Barra de configuração */}
-        <div className="px-6 py-4 border-b border-secondary/20 bg-secondary/5">
-          <div className="flex gap-4 items-center flex-wrap">
-            <div className="flex-1 min-w-[200px] flex gap-2">
+        {/* Barra de configuração - Mobile optimized */}
+        <div className="px-4 md:px-6 py-3 md:py-4 border-b border-secondary/20 bg-secondary/5">
+          <div className="flex flex-col gap-3">
+            {/* Linha 1: Origem + Localização */}
+            <div className="flex gap-2">
               <div className="relative flex-1">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
                 <Input
                   ref={originInputRef}
-                  placeholder="Digite o endereço da origem..."
+                  placeholder="Endereço de origem..."
                   value={origin}
                   onChange={(e) => setOrigin(e.target.value)}
-                  className="pl-10 border-secondary/30 focus:border-secondary focus:ring-secondary/30"
+                  className="pl-10 h-9 text-sm border-secondary/30 focus:border-secondary focus:ring-secondary/30"
                 />
               </div>
               <Button 
                 variant="outline" 
                 size="icon" 
                 onClick={handleUseMyLocation}
-                className="border-secondary/30 hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all"
+                className="h-9 w-9 border-secondary/30 hover:bg-secondary hover:text-secondary-foreground hover:border-secondary transition-all flex-shrink-0"
               >
                 <Locate className="w-4 h-4" />
               </Button>
             </div>
             
-            <div className="flex gap-1 p-1 bg-muted rounded-lg">
-              <Button
-                variant={mode === 'walking' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setMode('walking')}
-                className={mode === 'walking' 
-                  ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md' 
-                  : 'hover:bg-secondary/10 text-muted-foreground'
-                }
-              >
-                <Footprints className="w-4 h-4 mr-1.5" />
-                A pé
-              </Button>
-              <Button
-                variant={mode === 'driving' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setMode('driving')}
-                className={mode === 'driving' 
-                  ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md' 
-                  : 'hover:bg-secondary/10 text-muted-foreground'
-                }
-              >
-                <Car className="w-4 h-4 mr-1.5" />
-                Carro
-              </Button>
-            </div>
+            {/* Linha 2: Modo + Dias */}
+            <div className="flex gap-2 items-center">
+              <div className="flex gap-1 p-1 bg-muted rounded-lg flex-shrink-0">
+                <Button
+                  variant={mode === 'walking' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setMode('walking')}
+                  className={`h-7 px-2 md:px-3 ${mode === 'walking' 
+                    ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md' 
+                    : 'hover:bg-secondary/10 text-muted-foreground'
+                  }`}
+                >
+                  <Footprints className="w-4 h-4" />
+                  <span className="hidden sm:inline ml-1.5">A pé</span>
+                </Button>
+                <Button
+                  variant={mode === 'driving' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setMode('driving')}
+                  className={`h-7 px-2 md:px-3 ${mode === 'driving' 
+                    ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md' 
+                    : 'hover:bg-secondary/10 text-muted-foreground'
+                  }`}
+                >
+                  <Car className="w-4 h-4" />
+                  <span className="hidden sm:inline ml-1.5">Carro</span>
+                </Button>
+              </div>
 
-            <Select value={numDays.toString()} onValueChange={(v) => setNumDays(Number(v))}>
-              <SelectTrigger className="w-40 border-secondary/30 focus:ring-secondary/30">
-                <Calendar className="w-4 h-4 mr-2 text-secondary" />
-                <SelectValue placeholder="Quantos dias?" />
-              </SelectTrigger>
-              <SelectContent>
-                {Array.from({ length: 10 }, (_, i) => (
-                  <SelectItem key={i + 1} value={(i + 1).toString()}>
-                    {i + 1} {i === 0 ? 'dia' : 'dias'}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select value={numDays.toString()} onValueChange={(v) => setNumDays(Number(v))}>
+                <SelectTrigger className="flex-1 h-9 border-secondary/30 focus:ring-secondary/30">
+                  <Calendar className="w-4 h-4 mr-2 text-secondary" />
+                  <SelectValue placeholder="Dias" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Array.from({ length: 10 }, (_, i) => (
+                    <SelectItem key={i + 1} value={(i + 1).toString()}>
+                      {i + 1} {i === 0 ? 'dia' : 'dias'}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -946,17 +976,20 @@ export const ItineraryBuilder = ({
           </TabsList>
 
           {/* Aba Selecionar lugares */}
-          <TabsContent value="places" className="flex-1 overflow-auto">
+          <TabsContent value="places" className="flex-1 overflow-auto pb-4">
             <Tabs value={placeTab} onValueChange={(v) => setPlaceTab(v as any)}>
-              <TabsList className="grid w-full grid-cols-7">
-                <TabsTrigger value="cabo-frio">Praias</TabsTrigger>
-                <TabsTrigger value="restaurants">Restaurantes</TabsTrigger>
-                <TabsTrigger value="arraial">Arraial</TabsTrigger>
-                <TabsTrigger value="buzios">Búzios</TabsTrigger>
-                <TabsTrigger value="trilhas">Trilhas</TabsTrigger>
-                <TabsTrigger value="fotospots">Foto-spots</TabsTrigger>
-                <TabsTrigger value="rotas">Rotas</TabsTrigger>
-              </TabsList>
+              {/* Categorias com scroll horizontal no mobile */}
+              <div className="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0 pb-2">
+                <TabsList className="inline-flex w-auto min-w-full md:grid md:w-full md:grid-cols-7 gap-1">
+                  <TabsTrigger value="cabo-frio" className="whitespace-nowrap text-xs md:text-sm px-3 md:px-4">Praias</TabsTrigger>
+                  <TabsTrigger value="restaurants" className="whitespace-nowrap text-xs md:text-sm px-3 md:px-4">Restaurantes</TabsTrigger>
+                  <TabsTrigger value="arraial" className="whitespace-nowrap text-xs md:text-sm px-3 md:px-4">Arraial</TabsTrigger>
+                  <TabsTrigger value="buzios" className="whitespace-nowrap text-xs md:text-sm px-3 md:px-4">Búzios</TabsTrigger>
+                  <TabsTrigger value="trilhas" className="whitespace-nowrap text-xs md:text-sm px-3 md:px-4">Trilhas</TabsTrigger>
+                  <TabsTrigger value="fotospots" className="whitespace-nowrap text-xs md:text-sm px-3 md:px-4">Foto-spots</TabsTrigger>
+                  <TabsTrigger value="rotas" className="whitespace-nowrap text-xs md:text-sm px-3 md:px-4">Rotas</TabsTrigger>
+                </TabsList>
+              </div>
               <TabsContent value="cabo-frio" className="mt-4">
                 {renderPlacesTable(touristPlaces)}
               </TabsContent>
@@ -1019,49 +1052,54 @@ export const ItineraryBuilder = ({
           </TabsContent>
         </Tabs>
 
-        {/* Rodapé */}
-        <div className="flex gap-3 border-t border-secondary/20 px-6 py-4 bg-muted/30">
-          <Button 
-            variant="ghost" 
-            onClick={() => onOpenChange(false)}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            Fechar
-          </Button>
-          <div className="flex-1" />
-          <Button 
-            onClick={handleGenerateItinerary}
-            disabled={isCalculating}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-md px-6"
-          >
-            {isCalculating ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Calculando...
-              </>
-            ) : (
-              <>
-                <Route className="w-4 h-4 mr-2" />
-                Calcular Distâncias
-              </>
-            )}
-          </Button>
-          <Button 
-            variant="outline"
-            onClick={() => toast.info('Compartilhamento em breve!')}
-            className="border-secondary/30 hover:bg-secondary/10"
-          >
-            <Share2 className="w-4 h-4 mr-2" />
-            Compartilhar
-          </Button>
-          <Button 
-            onClick={handleExportPDF}
-            disabled={isPrinting}
-            className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md px-6"
-          >
-            <FileDown className="w-4 h-4 mr-2" />
-            {isPrinting ? 'Gerando...' : 'Exportar PDF'}
-          </Button>
+        {/* Rodapé - Mobile optimized */}
+        <div className="border-t border-secondary/20 px-4 md:px-6 py-3 md:py-4 bg-muted/30">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+            {/* Mobile: Botões principais empilhados */}
+            <div className="flex gap-2 flex-1">
+              <Button 
+                onClick={handleGenerateItinerary}
+                disabled={isCalculating}
+                className="flex-1 sm:flex-none bg-primary text-primary-foreground hover:bg-primary/90 shadow-md h-10"
+              >
+                {isCalculating ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <Route className="w-4 h-4 mr-1.5" />
+                    <span className="hidden sm:inline">Calcular</span>
+                  </>
+                )}
+              </Button>
+              <Button 
+                onClick={handleExportPDF}
+                disabled={isPrinting}
+                className="flex-1 sm:flex-none bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md h-10"
+              >
+                <FileDown className="w-4 h-4 mr-1.5" />
+                <span className="hidden sm:inline">{isPrinting ? 'Gerando...' : 'PDF'}</span>
+                <span className="sm:hidden">PDF</span>
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => toast.info('Compartilhamento em breve!')}
+                className="h-10 w-10 sm:w-auto sm:px-4 border-secondary/30 hover:bg-secondary/10 flex-shrink-0"
+              >
+                <Share2 className="w-4 h-4" />
+                <span className="hidden sm:inline ml-1.5">Compartilhar</span>
+              </Button>
+            </div>
+            
+            {/* Fechar */}
+            <Button 
+              variant="ghost" 
+              onClick={() => onOpenChange(false)}
+              className="text-muted-foreground hover:text-foreground h-10 sm:order-first"
+            >
+              <X className="w-4 h-4 sm:hidden" />
+              <span className="hidden sm:inline">Fechar</span>
+            </Button>
+          </div>
         </div>
 
         {/* Print View */}
