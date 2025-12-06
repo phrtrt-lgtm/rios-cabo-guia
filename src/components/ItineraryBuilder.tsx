@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+/// <reference types="google.maps" />
+import { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -85,6 +86,87 @@ export const ItineraryBuilder = ({
   const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas' | 'fotospots' | 'rotas'>('cabo-frio');
   const [isPrinting, setIsPrinting] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  
+  const originInputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+  // Inicializar Google Places Autocomplete
+  useEffect(() => {
+    if (!open) return;
+
+    const initAutocomplete = () => {
+      if (!originInputRef.current) return;
+
+      try {
+        const caboFrioBounds = new google.maps.LatLngBounds(
+          new google.maps.LatLng(-22.9200, -42.0600),
+          new google.maps.LatLng(-22.8400, -41.9600)
+        );
+
+        autocompleteRef.current = new google.maps.places.Autocomplete(originInputRef.current, {
+          bounds: caboFrioBounds,
+          strictBounds: false,
+          componentRestrictions: { country: 'br' },
+          fields: ['formatted_address', 'geometry', 'name'],
+          types: ['geocode', 'establishment'],
+        });
+
+        autocompleteRef.current.addListener('place_changed', () => {
+          const place = autocompleteRef.current?.getPlace();
+          
+          if (!place || !place.geometry || !place.geometry.location) {
+            return;
+          }
+
+          const selectedAddress = place.formatted_address || place.name || '';
+          const coords = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          };
+
+          setOrigin(selectedAddress);
+          setOriginCoords(coords);
+          toast.success(`Origem definida: ${selectedAddress}`);
+        });
+      } catch (error) {
+        console.warn('Erro ao inicializar autocomplete:', error);
+      }
+    };
+
+    // Verificar se Google Maps já está carregado
+    if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+      setTimeout(() => initAutocomplete(), 100);
+    } else {
+      // Carregar script se não existir
+      const apiKey = distanceService.getApiKey();
+      if (!document.querySelector(`script[src*="maps.googleapis.com"]`)) {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=pt-BR&loading=async`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          setTimeout(() => initAutocomplete(), 100);
+        };
+        document.head.appendChild(script);
+      } else {
+        // Script existe mas ainda não carregou
+        const checkGoogle = setInterval(() => {
+          if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+            clearInterval(checkGoogle);
+            initAutocomplete();
+          }
+        }, 100);
+        // Limpar após 5 segundos
+        setTimeout(() => clearInterval(checkGoogle), 5000);
+      }
+    }
+
+    return () => {
+      if (autocompleteRef.current && typeof google !== 'undefined') {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      }
+    };
+  }, [open]);
 
   // Função para formatar minutos em horário HH:MM
   const formatTime = (totalMinutes: number): string => {
@@ -784,6 +866,7 @@ export const ItineraryBuilder = ({
               <div className="relative flex-1">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
                 <Input
+                  ref={originInputRef}
                   placeholder="Digite o endereço da origem..."
                   value={origin}
                   onChange={(e) => setOrigin(e.target.value)}
