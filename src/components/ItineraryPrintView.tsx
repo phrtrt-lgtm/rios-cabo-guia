@@ -251,21 +251,19 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                       alignItems: 'center',
                       gap: '10px',
                     }}>
-                      {/* Número da ordem - centralizado */}
+                      {/* Número da ordem - centralizado com table-cell */}
                       <div style={{
                         width: '28px',
                         height: '28px',
                         borderRadius: '50%',
                         backgroundColor: '#E67E50',
                         color: '#ffffff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        display: 'table-cell',
+                        verticalAlign: 'middle',
+                        textAlign: 'center',
                         fontWeight: 'bold',
                         fontSize: '13px',
-                        flexShrink: 0,
-                        lineHeight: 1,
-                        textAlign: 'center',
+                        lineHeight: '28px',
                       }}>
                         {index + 1}
                       </div>
@@ -312,7 +310,7 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         flexShrink: 0,
                       }}>
                         <Clock style={{ width: '12px', height: '12px', color: '#666666' }} />
-                        <span style={{ fontSize: '10px', color: '#666666' }}>Permanência:</span>
+                        <span style={{ fontSize: '10px', color: '#666666' }}>Tempo de permanência:</span>
                         <span style={{ fontSize: '12px', fontWeight: '600', color: '#1E3A5F' }}>
                           {item.duration}min
                         </span>
