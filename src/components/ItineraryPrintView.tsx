@@ -209,67 +209,52 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
 
                 return (
                   <div key={index}>
-                    {/* Conector de deslocamento - Réplica do builder */}
+                    {/* Conector de deslocamento - Mais compacto */}
                     {item.eta && item.eta > 0 && (
-                      <div style={{ padding: '8px 16px' }}>
+                      <div style={{ padding: '4px 8px' }}>
                         <div style={{
                           display: 'flex',
-                          flexDirection: 'column',
                           alignItems: 'center',
-                          gap: '6px',
+                          justifyContent: 'center',
+                          gap: '8px',
                           backgroundColor: 'rgba(230, 126, 80, 0.05)',
-                          border: '1px solid rgba(230, 126, 80, 0.2)',
-                          borderRadius: '8px',
-                          padding: '10px 12px',
+                          border: '1px dashed rgba(230, 126, 80, 0.3)',
+                          borderRadius: '6px',
+                          padding: '6px 12px',
                         }}>
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            fontSize: '11px',
-                            color: '#E67E50',
-                            fontWeight: '500',
-                          }}>
-                            {mode === 'driving' ? (
-                              <Car style={{ width: '16px', height: '16px' }} />
-                            ) : (
-                              <Footprints style={{ width: '16px', height: '16px' }} />
-                            )}
-                            <span>Deslocamento</span>
-                          </div>
-                          <p style={{ 
-                            fontSize: '12px', 
-                            textAlign: 'center', 
-                            color: '#666666',
-                            margin: 0,
-                          }}>
+                          {mode === 'driving' ? (
+                            <Car style={{ width: '14px', height: '14px', color: '#E67E50' }} />
+                          ) : (
+                            <Footprints style={{ width: '14px', height: '14px', color: '#E67E50' }} />
+                          )}
+                          <span style={{ fontSize: '11px', color: '#666666' }}>
                             <span style={{ fontWeight: '500', color: '#1E3A5F' }}>
                               {prevItem ? prevItem.placeName : origin || 'Origem'}
                             </span>
-                            <span style={{ margin: '0 8px' }}>→</span>
+                            <span style={{ margin: '0 6px', color: '#E67E50' }}>→</span>
                             <span style={{ fontWeight: '500', color: '#1E3A5F' }}>{item.placeName}</span>
-                          </p>
-                          <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#E67E50' }}>
+                          </span>
+                          <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#E67E50' }}>
                             {item.isFallback && '~'}{item.eta} min
                           </span>
                         </div>
                       </div>
                     )}
 
-                    {/* Card do lugar - Réplica do builder */}
+                    {/* Card do lugar */}
                     <div style={{
                       border: '1px solid #e0e0e0',
                       borderRadius: '8px',
-                      padding: '12px 16px',
+                      padding: '10px 12px',
                       backgroundColor: '#ffffff',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '12px',
+                      gap: '10px',
                     }}>
                       {/* Número da ordem */}
                       <div style={{
-                        width: '28px',
-                        height: '28px',
+                        width: '26px',
+                        height: '26px',
                         borderRadius: '50%',
                         backgroundColor: '#E67E50',
                         color: '#ffffff',
@@ -277,7 +262,7 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontWeight: 'bold',
-                        fontSize: '12px',
+                        fontSize: '11px',
                         flexShrink: 0,
                       }}>
                         {index + 1}
@@ -288,51 +273,49 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        minWidth: '65px',
+                        minWidth: '55px',
                       }}>
-                        <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F' }}>
+                        <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F' }}>
                           {times?.startActivityTime}
                         </span>
-                        <span style={{ fontSize: '10px', color: '#666666' }}>
+                        <span style={{ fontSize: '9px', color: '#666666' }}>
                           até {times?.endTime}
                         </span>
                       </div>
 
-                      {/* Info */}
+                      {/* Info - sem corte */}
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ 
                           fontWeight: '600', 
-                          fontSize: '14px', 
+                          fontSize: '13px', 
                           color: '#1E3A5F',
                           marginBottom: '2px',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
+                          lineHeight: '1.2',
                         }}>
                           {item.placeName}
                         </div>
-                        <div style={{ fontSize: '12px', color: '#666666' }}>
+                        <div style={{ fontSize: '11px', color: '#666666' }}>
                           {item.bairro}
                         </div>
                       </div>
 
-                      {/* Tempo de permanência */}
+                      {/* Tempo de permanência - mais compacto */}
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
+                        gap: '4px',
                         backgroundColor: 'rgba(0, 0, 0, 0.03)',
-                        borderRadius: '8px',
-                        padding: '6px 10px',
+                        borderRadius: '6px',
+                        padding: '4px 8px',
+                        flexShrink: 0,
                       }}>
-                        <Clock style={{ width: '14px', height: '14px', color: '#666666' }} />
-                        <span style={{ fontSize: '10px', color: '#666666' }}>Permanência:</span>
-                        <span style={{ fontSize: '12px', fontWeight: '600', color: '#1E3A5F' }}>
+                        <Clock style={{ width: '12px', height: '12px', color: '#666666' }} />
+                        <span style={{ fontSize: '11px', fontWeight: '600', color: '#1E3A5F' }}>
                           {item.duration}min
                         </span>
                       </div>
 
-                      {/* QR Code */}
+                      {/* QR Code - maior */}
                       <div style={{ 
                         display: 'flex', 
                         flexDirection: 'column', 
@@ -347,7 +330,7 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         }}>
                           <QRCodeSVG 
                             value={mapsUrl}
-                            size={45}
+                            size={58}
                             level="L"
                             bgColor="#ffffff"
                             fgColor="#1E3A5F"
@@ -356,8 +339,7 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         <span style={{ 
                           fontSize: '8px', 
                           color: '#888888',
-                          marginTop: '3px',
-                          textAlign: 'center',
+                          marginTop: '2px',
                         }}>
                           Maps
                         </span>
