@@ -87,69 +87,76 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
               width: '210mm',
               minHeight: '297mm',
               backgroundColor: '#ffffff',
-              padding: '10mm',
+              padding: '8mm 10mm',
               fontFamily: 'Arial, sans-serif',
               boxSizing: 'border-box',
+              pageBreakAfter: 'always',
             }}
           >
-            {/* Header com Logo */}
+            {/* Header - Logo + Título */}
             <div style={{
-              backgroundColor: '#1E3A5F',
-              color: '#ffffff',
-              padding: '12px 16px',
-              borderRadius: '10px',
-              marginBottom: '10px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
+              marginBottom: '6px',
+              paddingBottom: '6px',
+              borderBottom: '2px solid #E67E50',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <img 
                   src={riosLogo} 
                   alt="Rios" 
-                  style={{ height: '40px', objectFit: 'contain' }} 
+                  style={{ height: '32px', objectFit: 'contain' }} 
                 />
                 <div>
                   <div style={{
-                    backgroundColor: '#E67E50',
-                    color: '#ffffff',
-                    padding: '3px 10px',
-                    borderRadius: '10px',
-                    fontSize: '11px',
+                    fontSize: '18px',
                     fontWeight: 'bold',
-                    display: 'inline-block',
-                    marginBottom: '4px',
+                    color: '#E67E50',
+                    lineHeight: 1.1,
                   }}>
-                    Dia {dayIndex + 1}
+                    Roteiro das Minhas Férias
                   </div>
-                  <div style={{ fontSize: '10px', opacity: 0.8 }}>Região dos Lagos • RJ</div>
+                  <div style={{ fontSize: '10px', color: '#6b7280' }}>
+                    Região dos Lagos • RJ
+                  </div>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '20px', textAlign: 'center' }}>
-                <div>
-                  <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{placesCount}</div>
-                  <div style={{ fontSize: '9px', opacity: 0.7 }}>lugares</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{
+                  backgroundColor: '#E67E50',
+                  color: '#ffffff',
+                  padding: '4px 12px',
+                  borderRadius: '12px',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                }}>
+                  Dia {dayIndex + 1}
                 </div>
-                <div>
-                  <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{formatDuration(totalTime)}</div>
-                  <div style={{ fontSize: '9px', opacity: 0.7 }}>total</div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F' }}>{placesCount}</div>
+                  <div style={{ fontSize: '8px', color: '#6b7280' }}>lugares</div>
+                </div>
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F' }}>{formatDuration(totalTime)}</div>
+                  <div style={{ fontSize: '8px', color: '#6b7280' }}>total</div>
                 </div>
               </div>
             </div>
 
             {origin && (
               <div style={{
-                fontSize: '10px',
-                padding: '6px 10px',
-                backgroundColor: '#f3f4f6',
-                borderRadius: '6px',
-                marginBottom: '10px',
+                fontSize: '9px',
+                padding: '4px 8px',
+                backgroundColor: '#f9fafb',
+                borderRadius: '4px',
+                marginBottom: '6px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '4px',
                 color: '#6b7280',
               }}>
-                <MapPin size={12} />
+                <MapPin size={10} />
                 <span>Partindo de: {origin}</span>
               </div>
             )}
@@ -161,20 +168,20 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                 if (block.length === 0) return null;
 
                 return (
-                  <div key={blockKey} style={{ marginBottom: '8px' }}>
+                  <div key={blockKey} style={{ marginBottom: '6px' }}>
                     {/* Block Header */}
                     <div style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '8px',
-                      padding: '6px 10px',
+                      gap: '6px',
+                      padding: '4px 8px',
                       backgroundColor: '#FEF3E8',
-                      borderRadius: '6px',
-                      marginBottom: '6px',
-                      borderLeft: '4px solid #E67E50',
+                      borderRadius: '4px',
+                      marginBottom: '4px',
+                      borderLeft: '3px solid #E67E50',
                     }}>
-                      <span style={{ fontSize: '14px' }}>{emoji}</span>
-                      <span style={{ fontSize: '13px', fontWeight: 'bold', color: '#1E3A5F' }}>{label}</span>
+                      <span style={{ fontSize: '12px' }}>{emoji}</span>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#1E3A5F' }}>{label}</span>
                     </div>
 
                     {/* Places */}
@@ -188,28 +195,30 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
 
                       return (
                         <div key={index}>
-                          {/* Travel Time */}
+                          {/* Travel Time - Centralizado e alinhado */}
                           {item.eta && item.eta > 0 && (
                             <div style={{
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              padding: '4px 0',
-                              marginLeft: '60px',
+                              padding: '2px 0',
                             }}>
                               <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '4px',
+                                justifyContent: 'center',
+                                gap: '6px',
                                 backgroundColor: '#FFF8E1',
                                 border: '1px dashed #E67E50',
-                                padding: '3px 10px',
-                                borderRadius: '12px',
+                                padding: '2px 10px',
+                                borderRadius: '10px',
                                 color: '#E67E50',
-                                fontSize: '10px',
+                                fontSize: '9px',
                                 fontWeight: 'bold',
                               }}>
-                                {mode === 'driving' ? <Car size={12} /> : <Footprints size={12} />}
+                                <span style={{ display: 'flex', alignItems: 'center' }}>
+                                  {mode === 'driving' ? <Car size={10} /> : <Footprints size={10} />}
+                                </span>
                                 <span>{item.isFallback && '~'}{item.eta} min de deslocamento</span>
                               </div>
                             </div>
@@ -219,54 +228,53 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                           <div style={{
                             display: 'flex',
                             alignItems: 'center',
-                            padding: '8px 10px',
+                            padding: '6px 8px',
                             backgroundColor: '#ffffff',
                             border: '1px solid #e5e7eb',
-                            borderRadius: '8px',
-                            marginBottom: '4px',
-                            marginLeft: '10px',
+                            borderRadius: '6px',
+                            marginBottom: '3px',
                           }}>
                             {/* Time */}
                             <div style={{
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '4px',
-                              fontSize: '11px',
+                              gap: '3px',
+                              fontSize: '10px',
                               color: '#1E3A5F',
                               fontWeight: 'bold',
-                              minWidth: '50px',
+                              minWidth: '42px',
                             }}>
-                              <Clock size={12} />
+                              <Clock size={10} />
                               {arrivalTime}
                             </div>
 
                             {/* Info */}
-                            <div style={{ flex: 1, marginLeft: '10px' }}>
+                            <div style={{ flex: 1, marginLeft: '8px' }}>
                               <div style={{
-                                fontSize: '12px',
+                                fontSize: '11px',
                                 fontWeight: 'bold',
                                 color: '#1E3A5F',
-                                marginBottom: '2px',
+                                marginBottom: '1px',
                               }}>
                                 {item.placeName}
                               </div>
                               <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '8px',
-                                fontSize: '9px',
+                                gap: '6px',
+                                fontSize: '8px',
                                 color: '#6b7280',
                               }}>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                                  <MapPin size={9} />
+                                  <MapPin size={8} />
                                   {item.bairro}, Cabo Frio
                                 </span>
                                 <span style={{
                                   backgroundColor: '#E67E50',
                                   color: '#ffffff',
-                                  padding: '2px 6px',
-                                  borderRadius: '8px',
-                                  fontSize: '8px',
+                                  padding: '1px 5px',
+                                  borderRadius: '6px',
+                                  fontSize: '7px',
                                 }}>
                                   {CATEGORY_LABELS[item.category] || item.category}
                                 </span>
@@ -274,23 +282,31 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                             </div>
 
                             {/* Duration */}
-                            <div style={{ textAlign: 'right', minWidth: '45px', marginRight: '10px' }}>
-                              <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#E67E50' }}>
+                            <div style={{ 
+                              textAlign: 'right', 
+                              minWidth: '40px', 
+                              marginRight: '8px',
+                              display: 'flex',
+                              alignItems: 'baseline',
+                              justifyContent: 'flex-end',
+                              gap: '1px',
+                            }}>
+                              <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#E67E50' }}>
                                 {item.duration}
                               </span>
-                              <span style={{ fontSize: '9px', color: '#6b7280' }}>min</span>
+                              <span style={{ fontSize: '8px', color: '#6b7280' }}>min</span>
                             </div>
 
-                            {/* QR Code - Bigger */}
+                            {/* QR Code */}
                             <div style={{
-                              padding: '4px',
+                              padding: '3px',
                               backgroundColor: '#ffffff',
                               border: '1px solid #e5e7eb',
-                              borderRadius: '6px',
+                              borderRadius: '4px',
                             }}>
                               <QRCodeSVG 
                                 value={mapsUrl}
-                                size={45}
+                                size={40}
                                 level="L"
                                 bgColor="#ffffff"
                                 fgColor="#1E3A5F"
@@ -307,15 +323,16 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
 
             {/* Footer */}
             <div style={{
-              marginTop: '12px',
-              padding: '8px 12px',
-              backgroundColor: '#1E3A5F',
-              borderRadius: '8px',
+              marginTop: 'auto',
+              padding: '6px 10px',
+              backgroundColor: '#FEF3E8',
+              borderRadius: '6px',
               textAlign: 'center',
-              color: '#ffffff',
-              fontSize: '10px',
+              color: '#1E3A5F',
+              fontSize: '9px',
+              borderTop: '2px solid #E67E50',
             }}>
-              Criado com <strong>Guia Rios</strong> • @rios.cabofrio • Escaneie os QR codes para abrir no Google Maps
+              Criado com <strong style={{ color: '#E67E50' }}>Guia Rios</strong> • @rios.cabofrio • Escaneie os QR codes para abrir no Google Maps
             </div>
           </div>
         );
