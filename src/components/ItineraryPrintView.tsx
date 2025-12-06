@@ -63,7 +63,7 @@ const formatDuration = (minutes: number): string => {
   return mins > 0 ? `${hours}h${mins}` : `${hours}h`;
 };
 
-const getGoogleMapsUrl = (lat: number, lng: number, name: string): string => {
+const getGoogleMapsUrl = (lat: number, lng: number): string => {
   return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 };
 
@@ -87,249 +87,218 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
               width: '210mm',
               minHeight: '297mm',
               backgroundColor: '#ffffff',
-              padding: '8mm 10mm',
+              padding: '6mm 8mm',
               fontFamily: 'Arial, sans-serif',
               boxSizing: 'border-box',
               pageBreakAfter: 'always',
             }}
           >
-            {/* Header - Logo + Título */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '6px',
-              paddingBottom: '6px',
-              borderBottom: '2px solid #E67E50',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <img 
-                  src={riosLogo} 
-                  alt="Rios" 
-                  style={{ height: '32px', objectFit: 'contain' }} 
-                />
-                <div>
-                  <div style={{
-                    fontSize: '18px',
-                    fontWeight: 'bold',
-                    color: '#E67E50',
-                    lineHeight: 1.1,
-                  }}>
-                    Roteiro das Minhas Férias
-                  </div>
-                  <div style={{ fontSize: '10px', color: '#6b7280' }}>
-                    Região dos Lagos • RJ
-                  </div>
-                </div>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{
-                  backgroundColor: '#E67E50',
-                  color: '#ffffff',
-                  padding: '4px 12px',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                }}>
-                  Dia {dayIndex + 1}
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F' }}>{placesCount}</div>
-                  <div style={{ fontSize: '8px', color: '#6b7280' }}>lugares</div>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F' }}>{formatDuration(totalTime)}</div>
-                  <div style={{ fontSize: '8px', color: '#6b7280' }}>total</div>
-                </div>
-              </div>
-            </div>
+            {/* Header */}
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '4px' }}>
+              <tbody>
+                <tr>
+                  <td style={{ verticalAlign: 'middle' }}>
+                    <img src={riosLogo} alt="Rios" style={{ height: '28px' }} />
+                  </td>
+                  <td style={{ verticalAlign: 'middle', paddingLeft: '10px' }}>
+                    <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#E67E50', lineHeight: 1.2 }}>
+                      Roteiro das Minhas Férias
+                    </div>
+                    <div style={{ fontSize: '9px', color: '#6b7280' }}>Região dos Lagos • RJ</div>
+                  </td>
+                  <td style={{ textAlign: 'right', verticalAlign: 'middle' }}>
+                    <span style={{
+                      backgroundColor: '#E67E50',
+                      color: '#fff',
+                      padding: '3px 10px',
+                      borderRadius: '10px',
+                      fontSize: '10px',
+                      fontWeight: 'bold',
+                    }}>Dia {dayIndex + 1}</span>
+                  </td>
+                  <td style={{ textAlign: 'center', verticalAlign: 'middle', width: '50px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F' }}>{placesCount}</div>
+                    <div style={{ fontSize: '7px', color: '#6b7280' }}>lugares</div>
+                  </td>
+                  <td style={{ textAlign: 'center', verticalAlign: 'middle', width: '50px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F' }}>{formatDuration(totalTime)}</div>
+                    <div style={{ fontSize: '7px', color: '#6b7280' }}>total</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div style={{ borderBottom: '2px solid #E67E50', marginBottom: '5px' }}></div>
 
             {origin && (
               <div style={{
-                fontSize: '9px',
-                padding: '4px 8px',
+                fontSize: '8px',
+                padding: '3px 6px',
                 backgroundColor: '#f9fafb',
-                borderRadius: '4px',
-                marginBottom: '6px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
+                borderRadius: '3px',
+                marginBottom: '5px',
                 color: '#6b7280',
               }}>
-                <MapPin size={10} />
-                <span>Partindo de: {origin}</span>
+                📍 Partindo de: {origin}
               </div>
             )}
 
-            {/* Timeline Content */}
-            <div>
-              {Object.entries(TIME_BLOCKS).map(([blockKey, { label, emoji }]) => {
-                const block = dayItinerary[blockKey as keyof DayItinerary];
-                if (block.length === 0) return null;
+            {/* Content - Using tables for perfect alignment */}
+            {Object.entries(TIME_BLOCKS).map(([blockKey, { label, emoji }]) => {
+              const block = dayItinerary[blockKey as keyof DayItinerary];
+              if (block.length === 0) return null;
 
-                return (
-                  <div key={blockKey} style={{ marginBottom: '6px' }}>
-                    {/* Block Header */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '4px 8px',
-                      backgroundColor: '#FEF3E8',
-                      borderRadius: '4px',
-                      marginBottom: '4px',
-                      borderLeft: '3px solid #E67E50',
-                    }}>
-                      <span style={{ fontSize: '12px' }}>{emoji}</span>
-                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#1E3A5F' }}>{label}</span>
-                    </div>
+              return (
+                <div key={blockKey} style={{ marginBottom: '4px' }}>
+                  {/* Section Header */}
+                  <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '3px' }}>
+                    <tbody>
+                      <tr>
+                        <td style={{
+                          backgroundColor: '#FEF3E8',
+                          padding: '3px 8px',
+                          borderLeft: '3px solid #E67E50',
+                          borderRadius: '0 4px 4px 0',
+                          fontSize: '10px',
+                          fontWeight: 'bold',
+                          color: '#1E3A5F',
+                        }}>
+                          {emoji} {label}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
 
-                    {/* Places */}
-                    {block.map((item, index) => {
-                      const arrivalHour = Math.floor(currentMinutes / 60);
-                      const arrivalMin = currentMinutes % 60;
-                      const arrivalTime = `${arrivalHour.toString().padStart(2, '0')}:${arrivalMin.toString().padStart(2, '0')}`;
-                      
-                      currentMinutes += (item.eta || 0) + item.duration;
-                      const mapsUrl = getGoogleMapsUrl(item.lat, item.lng, item.placeName);
+                  {/* Places */}
+                  {block.map((item, index) => {
+                    const arrivalHour = Math.floor(currentMinutes / 60);
+                    const arrivalMin = currentMinutes % 60;
+                    const arrivalTime = `${arrivalHour.toString().padStart(2, '0')}:${arrivalMin.toString().padStart(2, '0')}`;
+                    
+                    currentMinutes += (item.eta || 0) + item.duration;
+                    const mapsUrl = getGoogleMapsUrl(item.lat, item.lng);
 
-                      return (
-                        <div key={index}>
-                          {/* Travel Time - Centralizado e alinhado */}
-                          {item.eta && item.eta > 0 && (
-                            <div style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              padding: '2px 0',
-                            }}>
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '6px',
-                                backgroundColor: '#FFF8E1',
-                                border: '1px dashed #E67E50',
-                                padding: '2px 10px',
-                                borderRadius: '10px',
-                                color: '#E67E50',
+                    return (
+                      <div key={index}>
+                        {/* Travel Time */}
+                        {item.eta && item.eta > 0 && (
+                          <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '2px' }}>
+                            <tbody>
+                              <tr>
+                                <td style={{ textAlign: 'center', padding: '2px 0' }}>
+                                  <span style={{
+                                    display: 'inline-block',
+                                    backgroundColor: '#FFF8E1',
+                                    border: '1px dashed #E67E50',
+                                    padding: '2px 8px',
+                                    borderRadius: '8px',
+                                    color: '#E67E50',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                  }}>
+                                    {mode === 'driving' ? '🚗' : '🚶'} {item.isFallback && '~'}{item.eta} min de deslocamento
+                                  </span>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        )}
+
+                        {/* Place Card - Table for perfect alignment */}
+                        <table style={{
+                          width: '100%',
+                          borderCollapse: 'collapse',
+                          border: '1px solid #e5e7eb',
+                          borderRadius: '4px',
+                          marginBottom: '3px',
+                          backgroundColor: '#fff',
+                        }}>
+                          <tbody>
+                            <tr>
+                              {/* Time */}
+                              <td style={{
+                                width: '45px',
+                                padding: '5px 6px',
+                                verticalAlign: 'middle',
                                 fontSize: '9px',
                                 fontWeight: 'bold',
-                              }}>
-                                <span style={{ display: 'flex', alignItems: 'center' }}>
-                                  {mode === 'driving' ? <Car size={10} /> : <Footprints size={10} />}
-                                </span>
-                                <span>{item.isFallback && '~'}{item.eta} min de deslocamento</span>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Place Card */}
-                          <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: '6px 8px',
-                            backgroundColor: '#ffffff',
-                            border: '1px solid #e5e7eb',
-                            borderRadius: '6px',
-                            marginBottom: '3px',
-                          }}>
-                            {/* Time */}
-                            <div style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '3px',
-                              fontSize: '10px',
-                              color: '#1E3A5F',
-                              fontWeight: 'bold',
-                              minWidth: '42px',
-                            }}>
-                              <Clock size={10} />
-                              {arrivalTime}
-                            </div>
-
-                            {/* Info */}
-                            <div style={{ flex: 1, marginLeft: '8px' }}>
-                              <div style={{
-                                fontSize: '11px',
-                                fontWeight: 'bold',
                                 color: '#1E3A5F',
-                                marginBottom: '1px',
                               }}>
-                                {item.placeName}
-                              </div>
-                              <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px',
-                                fontSize: '8px',
-                                color: '#6b7280',
+                                🕐 {arrivalTime}
+                              </td>
+                              
+                              {/* Info */}
+                              <td style={{ padding: '5px 8px', verticalAlign: 'middle' }}>
+                                <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#1E3A5F', marginBottom: '1px' }}>
+                                  {item.placeName}
+                                </div>
+                                <div style={{ fontSize: '7px', color: '#6b7280' }}>
+                                  📍 {item.bairro}, Cabo Frio
+                                  <span style={{
+                                    backgroundColor: '#E67E50',
+                                    color: '#fff',
+                                    padding: '1px 4px',
+                                    borderRadius: '4px',
+                                    fontSize: '6px',
+                                    marginLeft: '6px',
+                                  }}>
+                                    {CATEGORY_LABELS[item.category] || item.category}
+                                  </span>
+                                </div>
+                              </td>
+                              
+                              {/* Duration */}
+                              <td style={{
+                                width: '50px',
+                                padding: '5px',
+                                verticalAlign: 'middle',
+                                textAlign: 'right',
                               }}>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                                  <MapPin size={8} />
-                                  {item.bairro}, Cabo Frio
-                                </span>
-                                <span style={{
-                                  backgroundColor: '#E67E50',
-                                  color: '#ffffff',
-                                  padding: '1px 5px',
-                                  borderRadius: '6px',
-                                  fontSize: '7px',
+                                <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#E67E50' }}>{item.duration}</span>
+                                <span style={{ fontSize: '7px', color: '#6b7280' }}>min</span>
+                              </td>
+                              
+                              {/* QR Code */}
+                              <td style={{
+                                width: '45px',
+                                padding: '4px',
+                                verticalAlign: 'middle',
+                              }}>
+                                <div style={{
+                                  border: '1px solid #e5e7eb',
+                                  borderRadius: '3px',
+                                  padding: '2px',
+                                  backgroundColor: '#fff',
+                                  display: 'inline-block',
                                 }}>
-                                  {CATEGORY_LABELS[item.category] || item.category}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* Duration */}
-                            <div style={{ 
-                              textAlign: 'right', 
-                              minWidth: '40px', 
-                              marginRight: '8px',
-                              display: 'flex',
-                              alignItems: 'baseline',
-                              justifyContent: 'flex-end',
-                              gap: '1px',
-                            }}>
-                              <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#E67E50' }}>
-                                {item.duration}
-                              </span>
-                              <span style={{ fontSize: '8px', color: '#6b7280' }}>min</span>
-                            </div>
-
-                            {/* QR Code */}
-                            <div style={{
-                              padding: '3px',
-                              backgroundColor: '#ffffff',
-                              border: '1px solid #e5e7eb',
-                              borderRadius: '4px',
-                            }}>
-                              <QRCodeSVG 
-                                value={mapsUrl}
-                                size={40}
-                                level="L"
-                                bgColor="#ffffff"
-                                fgColor="#1E3A5F"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
+                                  <QRCodeSVG 
+                                    value={mapsUrl}
+                                    size={36}
+                                    level="L"
+                                    bgColor="#ffffff"
+                                    fgColor="#1E3A5F"
+                                  />
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
 
             {/* Footer */}
             <div style={{
-              marginTop: 'auto',
-              padding: '6px 10px',
+              marginTop: '6px',
+              padding: '4px 8px',
               backgroundColor: '#FEF3E8',
-              borderRadius: '6px',
+              borderRadius: '4px',
               textAlign: 'center',
               color: '#1E3A5F',
-              fontSize: '9px',
+              fontSize: '8px',
               borderTop: '2px solid #E67E50',
             }}>
               Criado com <strong style={{ color: '#E67E50' }}>Guia Rios</strong> • @rios.cabofrio • Escaneie os QR codes para abrir no Google Maps
