@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { 
   MapPin, Clock, Trash2, ChevronUp, ChevronDown, X,
@@ -41,28 +40,6 @@ interface ItineraryItem {
   isFallback?: boolean;
 }
 
-interface DayItinerary {
-  cafe: ItineraryItem[];
-  manha: ItineraryItem[];
-  almoco: ItineraryItem[];
-  tarde: ItineraryItem[];
-  fimDeTarde: ItineraryItem[];
-  noite: ItineraryItem[];
-  jantar: ItineraryItem[];
-}
-
-type TimeBlock = 'cafe' | 'manha' | 'almoco' | 'tarde' | 'fimDeTarde' | 'noite' | 'jantar';
-
-const TIME_BLOCKS = {
-  cafe: { label: 'Café', start: '07:00', end: '09:00', maxMinutes: 120 },
-  manha: { label: 'Manhã', start: '09:00', end: '12:00', maxMinutes: 180 },
-  almoco: { label: 'Almoço', start: '12:00', end: '14:00', maxMinutes: 120 },
-  tarde: { label: 'Tarde', start: '14:00', end: '17:00', maxMinutes: 180 },
-  fimDeTarde: { label: 'Fim de tarde', start: '17:00', end: '19:00', maxMinutes: 120 },
-  noite: { label: 'Noite', start: '19:00', end: '21:00', maxMinutes: 120 },
-  jantar: { label: 'Jantar', start: '21:00', end: '23:00', maxMinutes: 120 },
-} as const;
-
 const DEFAULT_DURATIONS: { [key: string]: number } = {
   beach: 150,
   island: 120,
@@ -95,7 +72,7 @@ export const ItineraryBuilder = ({
   const [numDays, setNumDays] = useState(1);
   const [currentDay, setCurrentDay] = useState(1);
   const [currentTab, setCurrentTab] = useState<'itinerary' | 'places'>('itinerary');
-  const [itineraries, setItineraries] = useState<DayItinerary[]>([]);
+  const [itineraries, setItineraries] = useState<ItineraryItem[][]>([]);
   const [origin, setOrigin] = useState(currentOrigin?.address || '');
   const [originCoords, setOriginCoords] = useState<{ lat: number; lng: number } | null>(
     currentOrigin ? { lat: currentOrigin.lat, lng: currentOrigin.lng } : null
@@ -103,7 +80,6 @@ export const ItineraryBuilder = ({
   const [mode, setMode] = useState<'walking' | 'driving'>(currentMode);
   const [selectedPlaces, setSelectedPlaces] = useState<Set<string>>(new Set());
   const [targetDay, setTargetDay] = useState(1);
-  const [targetBlock, setTargetBlock] = useState<TimeBlock>('manha');
   const [searchQuery, setSearchQuery] = useState('');
   const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas' | 'fotospots' | 'rotas'>('cabo-frio');
   const [isPrinting, setIsPrinting] = useState(false);
@@ -111,17 +87,8 @@ export const ItineraryBuilder = ({
 
   // Inicializar itinerários
   useEffect(() => {
-    const emptyDay: DayItinerary = {
-      cafe: [],
-      manha: [],
-      almoco: [],
-      tarde: [],
-      fimDeTarde: [],
-      noite: [],
-      jantar: [],
-    };
-    const newItineraries = Array(numDays).fill(null).map(() => 
-      JSON.parse(JSON.stringify(emptyDay))
+    const newItineraries = Array(numDays).fill(null).map((_, i) => 
+      itineraries[i] || []
     );
     setItineraries(newItineraries);
   }, [numDays]);
@@ -161,15 +128,14 @@ export const ItineraryBuilder = ({
 
     const placesToAdd = allPlaces.filter(p => selectedPlaces.has(p.id));
     const newItineraries = [...itineraries];
-    const dayItinerary = newItineraries[targetDay - 1];
-    const block = dayItinerary[targetBlock];
+    const dayItems = newItineraries[targetDay - 1] || [];
 
     for (const place of placesToAdd) {
       let eta = 0;
       let prevPoint = originCoords;
       
-      if (block.length > 0) {
-        const lastItem = block[block.length - 1];
+      if (dayItems.length > 0) {
+        const lastItem = dayItems[dayItems.length - 1];
         prevPoint = { lat: lastItem.lat, lng: lastItem.lng };
       }
 
@@ -189,26 +155,26 @@ export const ItineraryBuilder = ({
         isFallback: currentEtas[place.id]?.isFallback,
       };
 
-      block.push(newItem);
+      dayItems.push(newItem);
     }
 
+    newItineraries[targetDay - 1] = dayItems;
     setItineraries(newItineraries);
     setSelectedPlaces(new Set());
     
-    toast.success(`${placesToAdd.length} lugar(es) adicionado(s) ao ${TIME_BLOCKS[targetBlock].label}`);
+    toast.success(`${placesToAdd.length} lugar(es) adicionado(s) ao Dia ${targetDay}`);
   };
 
   // Adicionar lugar individual
   const handleAddPlace = async (place: PlaceCoords) => {
     const newItineraries = [...itineraries];
-    const dayItinerary = newItineraries[targetDay - 1];
-    const block = dayItinerary[targetBlock];
+    const dayItems = newItineraries[targetDay - 1] || [];
 
     let eta = 0;
     let prevPoint = originCoords;
     
-    if (block.length > 0) {
-      const lastItem = block[block.length - 1];
+    if (dayItems.length > 0) {
+      const lastItem = dayItems[dayItems.length - 1];
       prevPoint = { lat: lastItem.lat, lng: lastItem.lng };
     }
 
@@ -228,118 +194,92 @@ export const ItineraryBuilder = ({
       isFallback: currentEtas[place.id]?.isFallback,
     };
 
-    block.push(newItem);
+    dayItems.push(newItem);
+    newItineraries[targetDay - 1] = dayItems;
     setItineraries(newItineraries);
     
-    toast.success(`${place.name} adicionado ao ${TIME_BLOCKS[targetBlock].label}`);
+    toast.success(`${place.name} adicionado ao Dia ${targetDay}`);
   };
 
   // Remover item
-  const handleRemoveItem = (dayIndex: number, blockKey: TimeBlock, itemIndex: number) => {
+  const handleRemoveItem = (dayIndex: number, itemIndex: number) => {
     const newItineraries = [...itineraries];
-    newItineraries[dayIndex][blockKey].splice(itemIndex, 1);
+    newItineraries[dayIndex].splice(itemIndex, 1);
     setItineraries(newItineraries);
     toast.success('Item removido');
   };
 
   // Mover item para cima
-  const handleMoveUp = async (dayIndex: number, blockKey: TimeBlock, itemIndex: number) => {
+  const handleMoveUp = async (dayIndex: number, itemIndex: number) => {
     if (itemIndex === 0) return;
     
     const newItineraries = [...itineraries];
-    const block = newItineraries[dayIndex][blockKey];
+    const items = newItineraries[dayIndex];
     
-    [block[itemIndex], block[itemIndex - 1]] = [block[itemIndex - 1], block[itemIndex]];
+    [items[itemIndex], items[itemIndex - 1]] = [items[itemIndex - 1], items[itemIndex]];
     
     setItineraries(newItineraries);
-    await recalculateBlockETAs(dayIndex, blockKey);
+    await recalculateDayETAs(dayIndex);
   };
 
   // Mover item para baixo
-  const handleMoveDown = async (dayIndex: number, blockKey: TimeBlock, itemIndex: number) => {
-    const block = itineraries[dayIndex][blockKey];
-    if (itemIndex === block.length - 1) return;
+  const handleMoveDown = async (dayIndex: number, itemIndex: number) => {
+    const items = itineraries[dayIndex];
+    if (itemIndex === items.length - 1) return;
     
     const newItineraries = [...itineraries];
-    const newBlock = newItineraries[dayIndex][blockKey];
+    const newItems = newItineraries[dayIndex];
     
-    [newBlock[itemIndex], newBlock[itemIndex + 1]] = [newBlock[itemIndex + 1], newBlock[itemIndex]];
+    [newItems[itemIndex], newItems[itemIndex + 1]] = [newItems[itemIndex + 1], newItems[itemIndex]];
     
     setItineraries(newItineraries);
-    await recalculateBlockETAs(dayIndex, blockKey);
+    await recalculateDayETAs(dayIndex);
   };
 
-  // Recalcular ETAs de um bloco
-  const recalculateBlockETAs = async (dayIndex: number, blockKey: TimeBlock) => {
+  // Recalcular ETAs do dia
+  const recalculateDayETAs = async (dayIndex: number) => {
+    if (!originCoords) return;
+    
     const newItineraries = [...itineraries];
-    const block = newItineraries[dayIndex][blockKey];
-    if (block.length === 0 || !originCoords) return;
-
-    for (let i = 0; i < block.length; i++) {
-      const prevPoint = i === 0 ? originCoords : { lat: block[i - 1].lat, lng: block[i - 1].lng };
-      const eta = await calculateETA(prevPoint, { lat: block[i].lat, lng: block[i].lng });
-      block[i].eta = eta;
+    const items = newItineraries[dayIndex];
+    
+    for (let i = 0; i < items.length; i++) {
+      const prevPoint = i === 0 ? originCoords : { lat: items[i - 1].lat, lng: items[i - 1].lng };
+      const eta = await calculateETA(prevPoint, { lat: items[i].lat, lng: items[i].lng });
+      items[i].eta = eta;
     }
 
     setItineraries(newItineraries);
-  };
-
-  // Recalcular TODAS as ETAs do dia inteiro - entre blocos consecutivos
-  const recalculateAllDayETAs = async (dayIndex: number) => {
-    if (!originCoords) {
-      toast.error('Defina uma origem primeiro');
-      return;
-    }
-
-    const newItineraries = [...itineraries];
-    const dayItinerary = newItineraries[dayIndex];
-    
-    // Flatten todos os itens do dia em ordem
-    const blockOrder: TimeBlock[] = ['cafe', 'manha', 'almoco', 'tarde', 'fimDeTarde', 'noite', 'jantar'];
-    let previousPoint: { lat: number; lng: number } | null = originCoords;
-    
-    toast.info('Calculando distâncias entre os lugares...');
-    
-    for (const blockKey of blockOrder) {
-      const block = dayItinerary[blockKey];
-      
-      for (let i = 0; i < block.length; i++) {
-        const item = block[i];
-        
-        if (previousPoint) {
-          const eta = await calculateETA(previousPoint, { lat: item.lat, lng: item.lng });
-          block[i].eta = eta;
-        }
-        
-        // O próximo ponto é este lugar atual
-        previousPoint = { lat: item.lat, lng: item.lng };
-      }
-    }
-
-    setItineraries(newItineraries);
-    toast.success('Roteiro gerado com sucesso! Distâncias calculadas.');
   };
 
   // Gerar roteiro - recalcula ETAs do dia atual
   const handleGenerateItinerary = async () => {
+    if (!originCoords) {
+      toast.error('Defina uma origem primeiro');
+      return;
+    }
+    
     setIsCalculating(true);
+    toast.info('Calculando distâncias...');
+    
     try {
-      await recalculateAllDayETAs(currentDay - 1);
+      await recalculateDayETAs(currentDay - 1);
+      toast.success('Roteiro gerado com sucesso!');
     } finally {
       setIsCalculating(false);
     }
   };
 
   // Atualizar duração
-  const handleUpdateDuration = (dayIndex: number, blockKey: TimeBlock, itemIndex: number, newDuration: number) => {
+  const handleUpdateDuration = (dayIndex: number, itemIndex: number, newDuration: number) => {
     const newItineraries = [...itineraries];
-    newItineraries[dayIndex][blockKey][itemIndex].duration = newDuration;
+    newItineraries[dayIndex][itemIndex].duration = newDuration;
     setItineraries(newItineraries);
   };
 
-  // Calcular tempo total do bloco
-  const calculateBlockTime = (block: ItineraryItem[]): number => {
-    return block.reduce((total, item) => total + (item.eta || 0) + item.duration, 0);
+  // Calcular tempo total do dia
+  const calculateDayTime = (items: ItineraryItem[]): number => {
+    return items.reduce((total, item) => total + (item.eta || 0) + item.duration, 0);
   };
 
   // Filtrar lugares
@@ -375,11 +315,9 @@ export const ItineraryBuilder = ({
     );
   };
 
-  // Exportar roteiro como PDF usando html2canvas + jsPDF
+  // Exportar PDF
   const handleExportPDF = async () => {
-    const hasContent = itineraries.some(day => 
-      Object.values(day).some(block => block.length > 0)
-    );
+    const hasContent = itineraries.some(day => day.length > 0);
 
     if (!hasContent) {
       toast.error('Adicione lugares ao roteiro antes de exportar');
@@ -395,7 +333,6 @@ export const ItineraryBuilder = ({
         throw new Error('Container de impressão não encontrado');
       }
 
-      // Make visible for rendering
       printContainer.style.display = 'block';
       printContainer.style.position = 'fixed';
       printContainer.style.left = '0';
@@ -405,13 +342,10 @@ export const ItineraryBuilder = ({
       printContainer.style.visibility = 'visible';
       printContainer.style.background = '#ffffff';
 
-      // Wait for images and QR codes to render
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pages = printContainer.querySelectorAll('.itinerary-page');
-      
-      console.log('Found pages:', pages.length);
       
       if (pages.length === 0) {
         throw new Error('Nenhuma página encontrada para exportar');
@@ -420,9 +354,8 @@ export const ItineraryBuilder = ({
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i] as HTMLElement;
         
-        // Force dimensions
-        page.style.width = '210mm';
-        page.style.minHeight = '297mm';
+        page.style.width = '794px';
+        page.style.minHeight = '1123px';
         page.style.backgroundColor = '#ffffff';
         
         const canvas = await html2canvas(page, {
@@ -430,7 +363,7 @@ export const ItineraryBuilder = ({
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          logging: true,
+          logging: false,
           width: page.scrollWidth,
           height: page.scrollHeight,
         });
@@ -446,7 +379,6 @@ export const ItineraryBuilder = ({
         pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, Math.min(imgHeight, 297));
       }
 
-      // Hide the container again
       printContainer.style.display = 'none';
       
       pdf.save(`roteiro-cabo-frio-${new Date().toISOString().split('T')[0]}.pdf`);
@@ -455,7 +387,6 @@ export const ItineraryBuilder = ({
       console.error('Erro ao gerar PDF:', error);
       toast.error('Erro ao gerar PDF. Tente novamente.');
       
-      // Ensure container is hidden on error
       const printContainer = document.getElementById('itinerary-print-target');
       if (printContainer) {
         printContainer.style.display = 'none';
@@ -471,7 +402,6 @@ export const ItineraryBuilder = ({
     
     return (
       <div className="space-y-4">
-        {/* Barra de ação com destino */}
         <div className="flex gap-3 items-center flex-wrap p-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent rounded-xl border border-secondary/20">
           <div className="flex-1 min-w-[200px] relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary" />
@@ -492,16 +422,6 @@ export const ItineraryBuilder = ({
               <SelectContent>
                 {Array.from({ length: numDays }, (_, i) => (
                   <SelectItem key={i + 1} value={(i + 1).toString()}>Dia {i + 1}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={targetBlock} onValueChange={(v) => setTargetBlock(v as TimeBlock)}>
-              <SelectTrigger className="w-36 border-secondary/30">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(TIME_BLOCKS).map(([key, { label }]) => (
-                  <SelectItem key={key} value={key}>{label}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -618,160 +538,137 @@ export const ItineraryBuilder = ({
     );
   };
 
-  // Renderizar roteiro do dia em layout de colunas
+  // Renderizar roteiro do dia - lista simples
   const renderItinerary = () => {
-    if (!itineraries[currentDay - 1]) return null;
-    
-    const dayItinerary = itineraries[currentDay - 1];
+    const dayItems = itineraries[currentDay - 1] || [];
+    const totalTime = calculateDayTime(dayItems);
+    const totalHours = Math.floor(totalTime / 60);
+    const totalMins = totalTime % 60;
     
     return (
-      <div className="flex gap-3 overflow-x-auto pb-4 pt-2">
-        {Object.entries(TIME_BLOCKS).map(([blockKey, { label, start, end, maxMinutes }]) => {
-          const block = dayItinerary[blockKey as TimeBlock];
-          const totalTime = calculateBlockTime(block);
-          const isOvertime = totalTime > maxMinutes;
-          const progressPercent = Math.min((totalTime / maxMinutes) * 100, 100);
-          
-          return (
-            <Card 
-              key={blockKey} 
-              className={`flex flex-col h-full min-w-[200px] flex-shrink-0 border-2 transition-all ${
-                isOvertime 
-                  ? 'border-destructive/50 bg-destructive/5' 
-                  : block.length > 0 
-                    ? 'border-secondary/30 bg-secondary/5' 
-                    : 'border-border/50 hover:border-secondary/20'
-              }`}
-            >
-              <CardContent className="p-0 flex flex-col h-full">
-                {/* Header do bloco */}
-                <div className="p-3 border-b border-border/50 bg-gradient-to-r from-muted/50 to-transparent">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-bold text-sm text-foreground">{label}</h3>
-                    <Badge 
-                      variant="outline" 
-                      className="text-[10px] font-medium bg-background/80 border-secondary/30"
-                    >
-                      {start} - {end}
-                    </Badge>
-                  </div>
-                  {/* Barra de progresso */}
-                  <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full transition-all duration-300 rounded-full ${
-                        isOvertime ? 'bg-destructive' : 'bg-secondary'
-                      }`}
-                      style={{ width: `${progressPercent}%` }}
-                    />
-                  </div>
-                  <div className={`flex items-center justify-between mt-1.5 text-[10px] ${
-                    isOvertime ? 'text-destructive font-medium' : 'text-muted-foreground'
-                  }`}>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {totalTime}min usados
-                    </span>
-                    <span>{maxMinutes}min max</span>
-                  </div>
-                </div>
+      <div className="space-y-4">
+        {/* Resumo do dia */}
+        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent rounded-xl border border-secondary/20">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+              <Calendar className="w-5 h-5 text-secondary-foreground" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg">Dia {currentDay}</h3>
+              <p className="text-sm text-muted-foreground">{dayItems.length} lugares</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-secondary">
+              {totalHours > 0 ? `${totalHours}h${totalMins > 0 ? totalMins : ''}` : `${totalMins}min`}
+            </p>
+            <p className="text-xs text-muted-foreground">tempo total</p>
+          </div>
+        </div>
 
-                {/* Conteúdo */}
-                <div className="flex-1 p-2 overflow-auto">
-                  {block.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground py-8">
-                      <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center mb-2">
-                        <MapPin className="w-5 h-5" />
+        {/* Lista de lugares */}
+        {dayItems.length === 0 ? (
+          <Card className="border-dashed border-2">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <MapPin className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground text-center">
+                Nenhum lugar adicionado ainda.<br />
+                Vá em "Selecionar lugares" para adicionar.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-2">
+            {dayItems.map((item, index) => (
+              <div key={index}>
+                {/* Conector de deslocamento */}
+                {item.eta && item.eta > 0 && (
+                  <div className="flex items-center gap-2 py-2 px-4">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                    <span className="flex items-center gap-1.5 text-xs text-secondary font-medium bg-secondary/10 px-3 py-1 rounded-full">
+                      {mode === 'driving' ? <Car className="w-3.5 h-3.5" /> : <Footprints className="w-3.5 h-3.5" />}
+                      {item.isFallback && '~'}{item.eta} min
+                    </span>
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                  </div>
+                )}
+                
+                {/* Card do lugar */}
+                <Card className="group hover:shadow-md hover:border-secondary/40 transition-all">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-4">
+                      {/* Número da ordem */}
+                      <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        {index + 1}
                       </div>
-                      <span className="text-xs">Nenhum lugar</span>
-                      <span className="text-[10px]">Adicione na aba "Selecionar"</span>
+                      
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-foreground">{item.placeName}</h4>
+                        <p className="text-sm text-muted-foreground">{item.bairro}</p>
+                      </div>
+                      
+                      {/* Duração */}
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-muted-foreground" />
+                        <Select
+                          value={item.duration.toString()}
+                          onValueChange={(v) => handleUpdateDuration(currentDay - 1, index, Number(v))}
+                        >
+                          <SelectTrigger className="w-24 h-8 text-sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="15">15min</SelectItem>
+                            <SelectItem value="30">30min</SelectItem>
+                            <SelectItem value="45">45min</SelectItem>
+                            <SelectItem value="60">1h</SelectItem>
+                            <SelectItem value="90">1h30</SelectItem>
+                            <SelectItem value="120">2h</SelectItem>
+                            <SelectItem value="150">2h30</SelectItem>
+                            <SelectItem value="180">3h</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      {/* Ações */}
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8"
+                          onClick={() => handleMoveUp(currentDay - 1, index)}
+                          disabled={index === 0}
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8"
+                          onClick={() => handleMoveDown(currentDay - 1, index)}
+                          disabled={index === dayItems.length - 1}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          onClick={() => handleRemoveItem(currentDay - 1, index)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="space-y-1">
-                      {block.map((item, index) => (
-                        <div key={index}>
-                          {/* Conector de deslocamento */}
-                          {item.eta && item.eta > 0 && (
-                            <div className="flex items-center gap-1.5 py-1.5 px-2">
-                              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
-                              <span className="flex items-center gap-1 text-[10px] text-secondary font-medium bg-secondary/10 px-2 py-0.5 rounded-full">
-                                {mode === 'driving' ? <Car className="w-3 h-3" /> : <Footprints className="w-3 h-3" />}
-                                {item.isFallback && '~'}{item.eta}min
-                              </span>
-                              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
-                            </div>
-                          )}
-                          
-                          {/* Card do lugar */}
-                          <div className="border border-secondary/20 rounded-lg p-2.5 bg-background shadow-sm text-xs group relative hover:shadow-md hover:border-secondary/40 transition-all">
-                            <div className="space-y-1.5">
-                              <div className="flex items-start gap-2">
-                                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                                  <MapPin className="w-3 h-3 text-secondary" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <h4 className="font-semibold leading-tight break-words text-foreground">{item.placeName}</h4>
-                                  <p className="text-muted-foreground text-[10px]">{item.bairro}</p>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2 text-[10px] text-muted-foreground pl-8">
-                                <span className="flex items-center gap-1 bg-accent/20 text-accent-foreground px-2 py-0.5 rounded-full font-medium">
-                                  <Clock className="w-2.5 h-2.5" />
-                                  <Select
-                                    value={item.duration.toString()}
-                                    onValueChange={(v) => handleUpdateDuration(currentDay - 1, blockKey as TimeBlock, index, Number(v))}
-                                  >
-                                    <SelectTrigger className="h-4 w-12 text-[10px] border-0 bg-transparent p-0 font-medium">
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="30">30min</SelectItem>
-                                      <SelectItem value="45">45min</SelectItem>
-                                      <SelectItem value="60">1h</SelectItem>
-                                      <SelectItem value="90">1h30</SelectItem>
-                                      <SelectItem value="120">2h</SelectItem>
-                                      <SelectItem value="180">3h</SelectItem>
-                                    </SelectContent>
-                                  </Select>
-                                  permanência
-                                </span>
-                              </div>
-                            </div>
-                              
-                            <div className="absolute -right-1 -top-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
-                              <Button
-                                size="sm"
-                                className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
-                                onClick={() => handleMoveUp(currentDay - 1, blockKey as TimeBlock, index)}
-                                disabled={index === 0}
-                              >
-                                <ChevronUp className="w-3 h-3" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                className="h-5 w-5 p-0 bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm"
-                                onClick={() => handleMoveDown(currentDay - 1, blockKey as TimeBlock, index)}
-                                disabled={index === block.length - 1}
-                              >
-                                <ChevronDown className="w-3 h-3" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                className="h-5 w-5 p-0 bg-destructive text-destructive-foreground hover:bg-destructive/80 shadow-sm"
-                                onClick={() => handleRemoveItem(currentDay - 1, blockKey as TimeBlock, index)}
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                  </CardContent>
+                </Card>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   };
@@ -779,7 +676,7 @@ export const ItineraryBuilder = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95vw] w-[95vw] max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-background via-background to-secondary/5 p-0">
-        {/* Header sofisticado */}
+        {/* Header */}
         <div className="bg-gradient-to-r from-primary via-primary to-primary/90 text-primary-foreground px-6 py-4">
           <DialogHeader className="p-0">
             <DialogTitle className="flex items-center justify-between text-primary-foreground">
@@ -901,7 +798,6 @@ export const ItineraryBuilder = ({
                 <TabsTrigger value="fotospots">Foto-spots</TabsTrigger>
                 <TabsTrigger value="rotas">Rotas</TabsTrigger>
               </TabsList>
-
               <TabsContent value="cabo-frio" className="mt-4">
                 {renderPlacesTable(touristPlaces)}
               </TabsContent>
@@ -964,7 +860,7 @@ export const ItineraryBuilder = ({
           </TabsContent>
         </Tabs>
 
-        {/* Rodapé sofisticado */}
+        {/* Rodapé */}
         <div className="flex gap-3 border-t border-secondary/20 px-6 py-4 bg-muted/30">
           <Button 
             variant="ghost" 
@@ -982,12 +878,12 @@ export const ItineraryBuilder = ({
             {isCalculating ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Calculando distâncias...
+                Calculando...
               </>
             ) : (
               <>
                 <Route className="w-4 h-4 mr-2" />
-                Gerar Roteiro
+                Calcular Distâncias
               </>
             )}
           </Button>
@@ -1005,11 +901,11 @@ export const ItineraryBuilder = ({
             className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md px-6"
           >
             <FileDown className="w-4 h-4 mr-2" />
-            {isPrinting ? 'Gerando roteiro...' : 'Exportar PDF'}
+            {isPrinting ? 'Gerando...' : 'Exportar PDF'}
           </Button>
         </div>
 
-        {/* Print View - Hidden container for PDF generation */}
+        {/* Print View */}
         <div id="itinerary-print-target" style={{ display: 'none' }}>
           <ItineraryPrintView 
             itineraries={itineraries}
