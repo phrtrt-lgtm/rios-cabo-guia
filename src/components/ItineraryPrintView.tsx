@@ -251,10 +251,10 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                       alignItems: 'center',
                       gap: '10px',
                     }}>
-                      {/* Número da ordem */}
+                      {/* Número da ordem - centralizado */}
                       <div style={{
-                        width: '26px',
-                        height: '26px',
+                        width: '28px',
+                        height: '28px',
                         borderRadius: '50%',
                         backgroundColor: '#E67E50',
                         color: '#ffffff',
@@ -262,8 +262,10 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         alignItems: 'center',
                         justifyContent: 'center',
                         fontWeight: 'bold',
-                        fontSize: '11px',
+                        fontSize: '13px',
                         flexShrink: 0,
+                        lineHeight: 1,
+                        textAlign: 'center',
                       }}>
                         {index + 1}
                       </div>
@@ -299,18 +301,19 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         </div>
                       </div>
 
-                      {/* Tempo de permanência - mais compacto */}
+                      {/* Tempo de permanência com label */}
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '4px',
                         backgroundColor: 'rgba(0, 0, 0, 0.03)',
                         borderRadius: '6px',
-                        padding: '4px 8px',
+                        padding: '5px 10px',
                         flexShrink: 0,
                       }}>
                         <Clock style={{ width: '12px', height: '12px', color: '#666666' }} />
-                        <span style={{ fontSize: '11px', fontWeight: '600', color: '#1E3A5F' }}>
+                        <span style={{ fontSize: '10px', color: '#666666' }}>Permanência:</span>
+                        <span style={{ fontSize: '12px', fontWeight: '600', color: '#1E3A5F' }}>
                           {item.duration}min
                         </span>
                       </div>
@@ -325,21 +328,21 @@ export const ItineraryPrintView = ({ itineraries, startTimes, origin, mode = 'dr
                         <div style={{
                           border: '1px solid #e0e0e0',
                           borderRadius: '6px',
-                          padding: '4px',
+                          padding: '5px',
                           backgroundColor: '#ffffff',
                         }}>
                           <QRCodeSVG 
                             value={mapsUrl}
-                            size={58}
+                            size={70}
                             level="L"
                             bgColor="#ffffff"
                             fgColor="#1E3A5F"
                           />
                         </div>
                         <span style={{ 
-                          fontSize: '8px', 
-                          color: '#888888',
-                          marginTop: '2px',
+                          fontSize: '9px', 
+                          color: '#666666',
+                          marginTop: '3px',
                         }}>
                           Maps
                         </span>
