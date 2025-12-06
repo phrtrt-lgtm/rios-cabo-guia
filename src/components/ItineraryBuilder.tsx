@@ -672,188 +672,219 @@ export const ItineraryBuilder = ({
     const startTime = startTimes[dayIndex] || '08:00';
     const endTime = dayItems.length > 0 ? itemTimes[itemTimes.length - 1]?.endTime : startTime;
     
-    if (dayItems.length === 0) {
-      return (
-        <Card className="border-dashed border-2">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-              <MapPin className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <p className="text-muted-foreground text-center">
-              Nenhum lugar adicionado ainda.<br />
-              Vá em "Selecionar lugares" para adicionar.
-            </p>
-          </CardContent>
-        </Card>
-      );
-    }
-    
     return (
       <div className="space-y-3 md:space-y-4">
-        {/* Header do dia - Mobile optimized */}
-        <div className="p-3 md:p-4 rounded-xl border bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-secondary/20">
-          {/* Linha 1: Título + Tempo total */}
-          <div className="flex items-center justify-between mb-2 md:mb-3">
-            <div className="flex items-center gap-2 md:gap-4">
-              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-secondary flex items-center justify-center">
-                <Calendar className="w-4 h-4 md:w-5 md:h-5 text-secondary-foreground" />
-              </div>
-              <div>
-                <h3 className="font-bold text-base md:text-lg">Dia {dayIndex + 1}</h3>
-                <p className="text-xs md:text-sm text-muted-foreground">{dayItems.length} lugares</p>
-              </div>
+        {/* Instruções de uso */}
+        <div className="p-3 md:p-4 rounded-xl border bg-gradient-to-r from-primary/5 via-primary/3 to-transparent border-primary/20">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Route className="w-4 h-4 text-primary" />
             </div>
-            
-            <div className="text-right">
-              <p className="text-xl md:text-2xl font-bold text-secondary">
-                {totalHours > 0 ? `${totalHours}h${totalMins > 0 ? totalMins : ''}` : `${totalMins}min`}
-              </p>
-              <p className="text-[10px] md:text-xs text-muted-foreground">tempo total</p>
+            <div className="space-y-1">
+              <h4 className="font-semibold text-sm text-foreground">Como usar o roteiro</h4>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li>• Adicione lugares na aba "Selecionar lugares"</li>
+                <li>• Use as setas ↑↓ para reordenar a sequência</li>
+                <li>• Ajuste o tempo de permanência de cada local</li>
+                <li>• Clique em "Calcular" para atualizar as distâncias</li>
+                <li>• Exporte o PDF para ter seu roteiro em mãos</li>
+              </ul>
             </div>
-          </div>
-          
-          {/* Linha 2: Horário início + Range */}
-          <div className="flex flex-wrap items-center gap-2 md:gap-4">
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Início:</span>
-              <Input
-                type="time"
-                value={startTime}
-                onChange={(e) => {
-                  const newStartTimes = [...startTimes];
-                  newStartTimes[dayIndex] = e.target.value;
-                  setStartTimes(newStartTimes);
-                }}
-                className="w-20 h-7 text-xs"
-              />
-            </div>
-            
-            {dayItems.length > 0 && (
-              <div className="flex items-center gap-1.5 text-xs md:text-sm">
-                <span className="font-medium text-primary">{startTime}</span>
-                <span className="text-muted-foreground">→</span>
-                <span className="font-medium text-primary">{endTime}</span>
-              </div>
-            )}
           </div>
         </div>
 
-        {/* Lista de lugares */}
-        <div className="space-y-2">
-          {dayItems.map((item, index) => {
-            const times = itemTimes[index];
-            
-            return (
-              <div key={index}>
-                {/* Conector de deslocamento */}
-                {item.eta && item.eta > 0 && (
-                  <div className="flex items-center gap-2 py-2 px-4">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
-                    <span className="flex items-center gap-1.5 text-xs text-secondary font-medium bg-secondary/10 px-3 py-1 rounded-full">
-                      {mode === 'driving' ? <Car className="w-3.5 h-3.5" /> : <Footprints className="w-3.5 h-3.5" />}
-                      {item.isFallback && '~'}{item.eta} min
-                    </span>
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+        {dayItems.length === 0 ? (
+          <Card className="border-dashed border-2">
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <MapPin className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <p className="text-muted-foreground text-center">
+                Nenhum lugar adicionado ainda.<br />
+                Vá em "Selecionar lugares" para adicionar.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <>
+            {/* Header do dia - Mobile optimized */}
+            <div className="p-3 md:p-4 rounded-xl border bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-secondary/20">
+              {/* Linha 1: Título + Tempo total */}
+              <div className="flex items-center justify-between mb-2 md:mb-3">
+                <div className="flex items-center gap-2 md:gap-4">
+                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-secondary flex items-center justify-center">
+                    <Calendar className="w-4 h-4 md:w-5 md:h-5 text-secondary-foreground" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-base md:text-lg">Dia {dayIndex + 1}</h3>
+                    <p className="text-xs md:text-sm text-muted-foreground">{dayItems.length} lugares</p>
+                  </div>
+                </div>
+                
+                <div className="text-right">
+                  <p className="text-xl md:text-2xl font-bold text-secondary">
+                    {totalHours > 0 ? `${totalHours}h${totalMins > 0 ? totalMins : ''}` : `${totalMins}min`}
+                  </p>
+                  <p className="text-[10px] md:text-xs text-muted-foreground">tempo total</p>
+                </div>
+              </div>
+              
+              {/* Linha 2: Horário início + Range */}
+              <div className="flex flex-wrap items-center gap-2 md:gap-4">
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Início:</span>
+                  <Input
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => {
+                      const newStartTimes = [...startTimes];
+                      newStartTimes[dayIndex] = e.target.value;
+                      setStartTimes(newStartTimes);
+                    }}
+                    className="w-20 h-7 text-xs"
+                  />
+                </div>
+                
+                {dayItems.length > 0 && (
+                  <div className="flex items-center gap-1.5 text-xs md:text-sm">
+                    <span className="font-medium text-primary">{startTime}</span>
+                    <span className="text-muted-foreground">→</span>
+                    <span className="font-medium text-primary">{endTime}</span>
                   </div>
                 )}
-                
-                {/* Card do lugar - Mobile optimized */}
-                <Card className="hover:shadow-md hover:border-secondary/40 transition-all">
-                  <CardContent className="p-3 md:p-4">
-                    {/* Mobile: Layout vertical | Desktop: Layout horizontal */}
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                      {/* Linha 1 mobile: Número + Nome + Remover */}
-                      <div className="flex items-center gap-2 md:gap-4">
-                        {/* Número da ordem */}
-                        <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-xs md:text-sm flex-shrink-0">
-                          {index + 1}
-                        </div>
-                        
-                        {/* Horário - Desktop only inline */}
-                        <div className="hidden md:flex flex-col items-center min-w-[70px]">
-                          <span className="text-lg font-bold text-primary">{times?.startActivityTime}</span>
-                          <span className="text-[10px] text-muted-foreground">até {times?.endTime}</span>
-                        </div>
-                        
-                        {/* Info */}
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-sm md:text-base text-foreground truncate">{item.placeName}</h4>
-                          <p className="text-xs md:text-sm text-muted-foreground">{item.bairro}</p>
-                        </div>
-                        
-                        {/* Remover - Always visible */}
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="h-7 w-7 md:h-8 md:w-8 text-destructive hover:text-destructive flex-shrink-0"
-                          onClick={() => handleRemoveItem(dayIndex, index)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                      
-                      {/* Linha 2 mobile: Horário + Duração + Mover */}
-                      <div className="flex items-center gap-2 md:gap-4 pl-9 md:pl-0">
-                        {/* Horário - Mobile only */}
-                        <div className="md:hidden flex items-center gap-1 text-xs">
-                          <span className="font-medium text-primary">{times?.startActivityTime}</span>
-                          <span className="text-muted-foreground">-</span>
-                          <span className="text-muted-foreground">{times?.endTime}</span>
-                        </div>
-                        
-                        {/* Duração */}
-                        <div className="flex items-center gap-1.5 ml-auto md:ml-0">
-                          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                          <Select
-                            value={item.duration.toString()}
-                            onValueChange={(v) => handleUpdateDuration(dayIndex, index, Number(v))}
-                          >
-                            <SelectTrigger className="w-20 md:w-24 h-7 md:h-8 text-xs md:text-sm">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="15">15min</SelectItem>
-                              <SelectItem value="30">30min</SelectItem>
-                              <SelectItem value="45">45min</SelectItem>
-                              <SelectItem value="60">1h</SelectItem>
-                              <SelectItem value="90">1h30</SelectItem>
-                              <SelectItem value="120">2h</SelectItem>
-                              <SelectItem value="150">2h30</SelectItem>
-                              <SelectItem value="180">3h</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        {/* Mover - Always visible */}
-                        <div className="flex gap-0.5">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 md:h-8 md:w-8"
-                            onClick={() => handleMoveUp(dayIndex, index)}
-                            disabled={index === 0}
-                          >
-                            <ChevronUp className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 md:h-8 md:w-8"
-                            onClick={() => handleMoveDown(dayIndex, index)}
-                            disabled={index === dayItems.length - 1}
-                          >
-                            <ChevronDown className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
               </div>
-            );
-          })}
-        </div>
+            </div>
+
+            {/* Lista de lugares */}
+            <div className="space-y-2">
+              {dayItems.map((item, index) => {
+                const times = itemTimes[index];
+                const prevItem = index > 0 ? dayItems[index - 1] : null;
+                
+                return (
+                  <div key={index}>
+                    {/* Conector de deslocamento com label descritivo */}
+                    {item.eta && item.eta > 0 && (
+                      <div className="py-2 px-2 md:px-4">
+                        <div className="flex flex-col items-center gap-1.5 bg-secondary/5 border border-secondary/20 rounded-lg py-2 px-3">
+                          <div className="flex items-center gap-2 text-xs text-secondary font-medium">
+                            {mode === 'driving' ? <Car className="w-4 h-4" /> : <Footprints className="w-4 h-4" />}
+                            <span>Deslocamento</span>
+                          </div>
+                          <p className="text-xs md:text-sm text-center text-muted-foreground">
+                            <span className="font-medium text-foreground">
+                              {prevItem ? prevItem.placeName : origin || 'Origem'}
+                            </span>
+                            <span className="mx-2">→</span>
+                            <span className="font-medium text-foreground">{item.placeName}</span>
+                          </p>
+                          <span className="text-sm font-bold text-secondary">
+                            {item.isFallback && '~'}{item.eta} min
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Card do lugar - Mobile optimized */}
+                    <Card className="hover:shadow-md hover:border-secondary/40 transition-all">
+                      <CardContent className="p-3 md:p-4">
+                        {/* Mobile: Layout vertical | Desktop: Layout horizontal */}
+                        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+                          {/* Linha 1 mobile: Número + Nome + Remover */}
+                          <div className="flex items-center gap-2 md:gap-4">
+                            {/* Número da ordem */}
+                            <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-xs md:text-sm flex-shrink-0">
+                              {index + 1}
+                            </div>
+                            
+                            {/* Horário - Desktop only inline */}
+                            <div className="hidden md:flex flex-col items-center min-w-[70px]">
+                              <span className="text-lg font-bold text-primary">{times?.startActivityTime}</span>
+                              <span className="text-[10px] text-muted-foreground">até {times?.endTime}</span>
+                            </div>
+                            
+                            {/* Info */}
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-semibold text-sm md:text-base text-foreground truncate">{item.placeName}</h4>
+                              <p className="text-xs md:text-sm text-muted-foreground">{item.bairro}</p>
+                            </div>
+                            
+                            {/* Remover - Always visible */}
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7 md:h-8 md:w-8 text-destructive hover:text-destructive flex-shrink-0"
+                              onClick={() => handleRemoveItem(dayIndex, index)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          
+                          {/* Linha 2 mobile: Horário + Duração + Mover */}
+                          <div className="flex items-center gap-2 md:gap-4 pl-9 md:pl-0">
+                            {/* Horário - Mobile only */}
+                            <div className="md:hidden flex items-center gap-1 text-xs">
+                              <span className="font-medium text-primary">{times?.startActivityTime}</span>
+                              <span className="text-muted-foreground">-</span>
+                              <span className="text-muted-foreground">{times?.endTime}</span>
+                            </div>
+                            
+                            {/* Tempo de permanência com label */}
+                            <div className="flex items-center gap-1.5 ml-auto md:ml-0 bg-muted/50 rounded-lg px-2 py-1">
+                              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                              <span className="text-[10px] text-muted-foreground hidden sm:inline">Permanência:</span>
+                              <Select
+                                value={item.duration.toString()}
+                                onValueChange={(v) => handleUpdateDuration(dayIndex, index, Number(v))}
+                              >
+                                <SelectTrigger className="w-20 md:w-24 h-7 md:h-8 text-xs md:text-sm border-0 bg-transparent p-0 focus:ring-0">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="15">15min</SelectItem>
+                                  <SelectItem value="30">30min</SelectItem>
+                                  <SelectItem value="45">45min</SelectItem>
+                                  <SelectItem value="60">1h</SelectItem>
+                                  <SelectItem value="90">1h30</SelectItem>
+                                  <SelectItem value="120">2h</SelectItem>
+                                  <SelectItem value="150">2h30</SelectItem>
+                                  <SelectItem value="180">3h</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            
+                            {/* Mover - Always visible */}
+                            <div className="flex gap-0.5">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-7 w-7 md:h-8 md:w-8"
+                                onClick={() => handleMoveUp(dayIndex, index)}
+                                disabled={index === 0}
+                              >
+                                <ChevronUp className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-7 w-7 md:h-8 md:w-8"
+                                onClick={() => handleMoveDown(dayIndex, index)}
+                                disabled={index === dayItems.length - 1}
+                              >
+                                <ChevronDown className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
     );
   };
