@@ -395,38 +395,55 @@ export const ItineraryBuilder = ({
         throw new Error('Container de impressão não encontrado');
       }
 
-      // Temporarily show the print container for capture
+      // Make visible for rendering
       printContainer.style.display = 'block';
-      printContainer.style.position = 'absolute';
-      printContainer.style.left = '-9999px';
+      printContainer.style.position = 'fixed';
+      printContainer.style.left = '0';
       printContainer.style.top = '0';
+      printContainer.style.zIndex = '-9999';
+      printContainer.style.opacity = '1';
+      printContainer.style.visibility = 'visible';
+      printContainer.style.background = '#ffffff';
 
-      // Wait for images to load
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Wait for images and QR codes to render
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pages = printContainer.querySelectorAll('.itinerary-page');
       
+      console.log('Found pages:', pages.length);
+      
+      if (pages.length === 0) {
+        throw new Error('Nenhuma página encontrada para exportar');
+      }
+      
       for (let i = 0; i < pages.length; i++) {
         const page = pages[i] as HTMLElement;
+        
+        // Force dimensions
+        page.style.width = '210mm';
+        page.style.minHeight = '297mm';
+        page.style.backgroundColor = '#ffffff';
         
         const canvas = await html2canvas(page, {
           scale: 2,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          logging: false,
+          logging: true,
+          width: page.scrollWidth,
+          height: page.scrollHeight,
         });
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
-        const imgWidth = 210; // A4 width in mm
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        const imgWidth = 210;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         
         if (i > 0) {
           pdf.addPage();
         }
         
-        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, Math.min(imgHeight, 297));
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, Math.min(imgHeight, 297));
       }
 
       // Hide the container again
@@ -437,6 +454,12 @@ export const ItineraryBuilder = ({
     } catch (error) {
       console.error('Erro ao gerar PDF:', error);
       toast.error('Erro ao gerar PDF. Tente novamente.');
+      
+      // Ensure container is hidden on error
+      const printContainer = document.getElementById('itinerary-print-target');
+      if (printContainer) {
+        printContainer.style.display = 'none';
+      }
     } finally {
       setIsPrinting(false);
     }

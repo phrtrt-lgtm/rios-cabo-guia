@@ -68,7 +68,7 @@ const getGoogleMapsUrl = (lat: number, lng: number): string => {
 
 export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: ItineraryPrintViewProps) => {
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#ffffff' }}>
       {itineraries.map((dayItinerary, dayIndex) => {
         const hasContent = Object.values(dayItinerary).some(block => block.length > 0);
         if (!hasContent) return null;
@@ -81,11 +81,12 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
         return (
           <div 
             key={dayIndex} 
+            className="itinerary-page"
             style={{
-              width: '210mm',
-              minHeight: '297mm',
+              width: '794px',
+              minHeight: '1123px',
               backgroundColor: '#ffffff',
-              padding: '8mm',
+              padding: '30px',
               boxSizing: 'border-box',
               pageBreakAfter: 'always',
             }}
@@ -94,48 +95,46 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
-              justifyContent: 'space-between',
-              marginBottom: '8px',
-              borderBottom: '2px solid #E67E50',
-              paddingBottom: '8px',
+              marginBottom: '15px',
+              paddingBottom: '10px',
+              borderBottom: '3px solid #E67E50',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <img src={riosLogo} alt="Rios" style={{ height: '30px' }} />
-                <div>
-                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#E67E50' }}>
-                    Roteiro das Minhas Férias
-                  </div>
-                  <div style={{ fontSize: '10px', color: '#666' }}>Região dos Lagos • RJ</div>
+              <img src={riosLogo} alt="Rios" style={{ height: '36px', marginRight: '15px' }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: '22px', fontWeight: 'bold', color: '#E67E50', marginBottom: '2px' }}>
+                  Roteiro das Minhas Férias
                 </div>
+                <div style={{ fontSize: '12px', color: '#666666' }}>Região dos Lagos • RJ</div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <span style={{
-                  backgroundColor: '#E67E50',
-                  color: '#fff',
-                  padding: '4px 12px',
-                  borderRadius: '12px',
-                  fontSize: '11px',
-                  fontWeight: 'bold',
-                }}>Dia {dayIndex + 1}</span>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F' }}>{placesCount}</div>
-                  <div style={{ fontSize: '8px', color: '#666' }}>lugares</div>
-                </div>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#1E3A5F' }}>{formatDuration(totalTime)}</div>
-                  <div style={{ fontSize: '8px', color: '#666' }}>total</div>
-                </div>
+              <div style={{ 
+                backgroundColor: '#E67E50', 
+                color: '#ffffff', 
+                padding: '6px 16px', 
+                borderRadius: '15px',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                marginRight: '20px',
+              }}>
+                Dia {dayIndex + 1}
+              </div>
+              <div style={{ textAlign: 'center', marginRight: '15px' }}>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1E3A5F' }}>{placesCount}</div>
+                <div style={{ fontSize: '10px', color: '#666666' }}>lugares</div>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1E3A5F' }}>{formatDuration(totalTime)}</div>
+                <div style={{ fontSize: '10px', color: '#666666' }}>total</div>
               </div>
             </div>
 
             {origin && (
               <div style={{
-                fontSize: '9px',
-                padding: '4px 8px',
+                fontSize: '11px',
+                padding: '6px 12px',
                 backgroundColor: '#f5f5f5',
-                borderRadius: '4px',
-                marginBottom: '8px',
-                color: '#666',
+                borderRadius: '6px',
+                marginBottom: '12px',
+                color: '#666666',
               }}>
                 📍 Partindo de: {origin}
               </div>
@@ -147,19 +146,19 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
               if (block.length === 0) return null;
 
               return (
-                <div key={blockKey} style={{ marginBottom: '8px' }}>
+                <div key={blockKey} style={{ marginBottom: '12px' }}>
                   {/* Section Header */}
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '8px',
                     backgroundColor: '#FEF3E8',
-                    padding: '5px 10px',
-                    borderLeft: '3px solid #E67E50',
-                    marginBottom: '6px',
+                    padding: '8px 12px',
+                    borderLeft: '4px solid #E67E50',
+                    marginBottom: '8px',
+                    borderRadius: '0 6px 6px 0',
                   }}>
-                    <span style={{ fontSize: '14px' }}>{emoji}</span>
-                    <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#1E3A5F' }}>{label}</span>
+                    <span style={{ fontSize: '16px', marginRight: '8px' }}>{emoji}</span>
+                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F' }}>{label}</span>
                   </div>
 
                   {/* Places */}
@@ -175,15 +174,18 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                       <div key={index}>
                         {/* Travel Time */}
                         {item.eta && item.eta > 0 && (
-                          <div style={{ textAlign: 'center', padding: '3px 0' }}>
+                          <div style={{ 
+                            textAlign: 'center', 
+                            padding: '4px 0',
+                          }}>
                             <span style={{
                               display: 'inline-block',
                               backgroundColor: '#FFF8E1',
                               border: '1px dashed #E67E50',
-                              padding: '3px 12px',
-                              borderRadius: '12px',
+                              padding: '4px 14px',
+                              borderRadius: '15px',
                               color: '#E67E50',
-                              fontSize: '9px',
+                              fontSize: '11px',
                               fontWeight: 'bold',
                             }}>
                               {mode === 'driving' ? '🚗' : '🚶'} {item.isFallback && '~'}{item.eta} min de deslocamento
@@ -196,40 +198,40 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                           display: 'flex',
                           alignItems: 'center',
                           border: '1px solid #e0e0e0',
-                          borderRadius: '6px',
-                          padding: '8px',
-                          marginBottom: '4px',
-                          backgroundColor: '#fff',
-                          gap: '10px',
+                          borderRadius: '8px',
+                          padding: '10px 12px',
+                          marginBottom: '6px',
+                          backgroundColor: '#ffffff',
                         }}>
                           {/* QR Code - Left side */}
                           <div style={{ 
                             display: 'flex', 
                             flexDirection: 'column', 
                             alignItems: 'center',
-                            minWidth: '55px',
+                            marginRight: '12px',
+                            minWidth: '60px',
                           }}>
                             <div style={{
                               border: '1px solid #e0e0e0',
-                              borderRadius: '4px',
-                              padding: '3px',
-                              backgroundColor: '#fff',
+                              borderRadius: '6px',
+                              padding: '4px',
+                              backgroundColor: '#ffffff',
                             }}>
                               <QRCodeSVG 
                                 value={mapsUrl}
-                                size={45}
+                                size={50}
                                 level="L"
                                 bgColor="#ffffff"
                                 fgColor="#1E3A5F"
                               />
                             </div>
                             <span style={{ 
-                              fontSize: '6px', 
-                              color: '#888',
-                              marginTop: '2px',
+                              fontSize: '8px', 
+                              color: '#888888',
+                              marginTop: '3px',
                               textAlign: 'center',
                             }}>
-                              📍 Maps
+                              📍 Ver no Maps
                             </span>
                           </div>
 
@@ -238,10 +240,11 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                            minWidth: '40px',
+                            marginRight: '12px',
+                            minWidth: '50px',
                           }}>
-                            <span style={{ fontSize: '8px', color: '#888' }}>🕐</span>
-                            <span style={{ fontSize: '11px', fontWeight: 'bold', color: '#1E3A5F' }}>
+                            <span style={{ fontSize: '10px', color: '#888888' }}>🕐</span>
+                            <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#1E3A5F' }}>
                               {arrivalTime}
                             </span>
                           </div>
@@ -249,27 +252,26 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                           {/* Info */}
                           <div style={{ flex: 1 }}>
                             <div style={{ 
-                              fontSize: '12px', 
+                              fontSize: '14px', 
                               fontWeight: 'bold', 
                               color: '#1E3A5F',
-                              marginBottom: '2px',
+                              marginBottom: '3px',
                             }}>
                               {item.placeName}
                             </div>
                             <div style={{ 
                               display: 'flex', 
                               alignItems: 'center', 
-                              gap: '8px',
-                              fontSize: '9px',
-                              color: '#666',
+                              fontSize: '11px',
+                              color: '#666666',
                             }}>
-                              <span>📍 {item.bairro}, Cabo Frio</span>
+                              <span style={{ marginRight: '10px' }}>📍 {item.bairro}, Cabo Frio</span>
                               <span style={{
                                 backgroundColor: '#E67E50',
-                                color: '#fff',
-                                padding: '2px 6px',
-                                borderRadius: '6px',
-                                fontSize: '7px',
+                                color: '#ffffff',
+                                padding: '2px 8px',
+                                borderRadius: '8px',
+                                fontSize: '9px',
                               }}>
                                 {CATEGORY_LABELS[item.category] || item.category}
                               </span>
@@ -279,12 +281,12 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
                           {/* Duration */}
                           <div style={{ 
                             textAlign: 'right',
-                            minWidth: '45px',
+                            minWidth: '55px',
                           }}>
-                            <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#E67E50' }}>
+                            <span style={{ fontSize: '20px', fontWeight: 'bold', color: '#E67E50' }}>
                               {item.duration}
                             </span>
-                            <span style={{ fontSize: '9px', color: '#666' }}>min</span>
+                            <span style={{ fontSize: '11px', color: '#666666' }}>min</span>
                           </div>
                         </div>
                       </div>
@@ -296,14 +298,14 @@ export const ItineraryPrintView = ({ itineraries, origin, mode = 'driving' }: It
 
             {/* Footer */}
             <div style={{
-              marginTop: '10px',
-              padding: '6px 10px',
+              marginTop: '15px',
+              padding: '10px 15px',
               backgroundColor: '#FEF3E8',
-              borderRadius: '6px',
+              borderRadius: '8px',
               textAlign: 'center',
               color: '#1E3A5F',
-              fontSize: '9px',
-              borderTop: '2px solid #E67E50',
+              fontSize: '11px',
+              borderTop: '3px solid #E67E50',
             }}>
               Criado com <strong style={{ color: '#E67E50' }}>Guia Rios</strong> • @rios.cabofrio • Escaneie os QR codes para abrir no Google Maps
             </div>
