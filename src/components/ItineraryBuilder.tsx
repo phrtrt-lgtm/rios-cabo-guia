@@ -16,7 +16,7 @@ import { trails } from '@/data/trails';
 import { photospots } from '@/data/photospots';
 import { runningRoutes, extensionRoutes } from '@/data/routes';
 import { distanceService, PlaceCoords } from '@/services/distance.service';
-
+import { ItineraryPrintView } from './ItineraryPrintView';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -575,7 +575,8 @@ export const ItineraryBuilder = ({
   };
 
   // Renderizar roteiro do dia - lista simples
-  const renderItineraryDay = (dayIndex: number, forPrint: boolean = false) => {
+  const renderItinerary = () => {
+    const dayIndex = currentDay - 1;
     const dayItems = itineraries[dayIndex] || [];
     const itemTimes = calculateItemTimes(dayIndex);
     const totalTime = calculateDayTime(dayItems);
@@ -585,7 +586,6 @@ export const ItineraryBuilder = ({
     const endTime = dayItems.length > 0 ? itemTimes[itemTimes.length - 1]?.endTime : startTime;
     
     if (dayItems.length === 0) {
-      if (forPrint) return null;
       return (
         <Card className="border-dashed border-2">
           <CardContent className="flex flex-col items-center justify-center py-12">
@@ -602,9 +602,9 @@ export const ItineraryBuilder = ({
     }
     
     return (
-      <div className={`space-y-4 ${forPrint ? 'itinerary-page p-6 bg-white' : ''}`} style={forPrint ? { width: '794px', minHeight: '1123px', pageBreakAfter: 'always' } : undefined}>
+      <div className="space-y-4">
         {/* Header do dia */}
-        <div className={`flex items-center justify-between p-4 rounded-xl border ${forPrint ? 'bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-secondary' : 'bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-secondary/20'}`}>
+        <div className="flex items-center justify-between p-4 rounded-xl border bg-gradient-to-r from-secondary/10 via-secondary/5 to-transparent border-secondary/20">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
               <Calendar className="w-5 h-5 text-secondary-foreground" />
@@ -615,28 +615,20 @@ export const ItineraryBuilder = ({
             </div>
             
             {/* Horário inicial */}
-            {!forPrint && (
-              <div className="flex items-center gap-2 ml-4">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Início:</span>
-                <Input
-                  type="time"
-                  value={startTime}
-                  onChange={(e) => {
-                    const newStartTimes = [...startTimes];
-                    newStartTimes[dayIndex] = e.target.value;
-                    setStartTimes(newStartTimes);
-                  }}
-                  className="w-24 h-8 text-sm"
-                />
-              </div>
-            )}
-            {forPrint && (
-              <div className="flex items-center gap-2 ml-4 text-sm text-muted-foreground">
-                <Clock className="w-4 h-4" />
-                <span>Início: <strong className="text-primary">{startTime}</strong></span>
-              </div>
-            )}
+            <div className="flex items-center gap-2 ml-4">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Início:</span>
+              <Input
+                type="time"
+                value={startTime}
+                onChange={(e) => {
+                  const newStartTimes = [...startTimes];
+                  newStartTimes[dayIndex] = e.target.value;
+                  setStartTimes(newStartTimes);
+                }}
+                className="w-24 h-8 text-sm"
+              />
+            </div>
           </div>
           
           <div className="flex items-center gap-6">
@@ -654,18 +646,6 @@ export const ItineraryBuilder = ({
             </div>
           </div>
         </div>
-
-        {/* Origem */}
-        {forPrint && origin && (
-          <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg text-sm text-muted-foreground">
-            <MapPin className="w-4 h-4 text-secondary" />
-            <span>Partindo de: <strong>{origin}</strong></span>
-            <span className="ml-auto flex items-center gap-1">
-              {mode === 'driving' ? <Car className="w-4 h-4" /> : <Footprints className="w-4 h-4" />}
-              {mode === 'driving' ? 'De carro' : 'A pé'}
-            </span>
-          </div>
-        )}
 
         {/* Lista de lugares */}
         <div className="space-y-2">
@@ -687,7 +667,7 @@ export const ItineraryBuilder = ({
                 )}
                 
                 {/* Card do lugar */}
-                <Card className={`group transition-all ${forPrint ? 'shadow-sm' : 'hover:shadow-md hover:border-secondary/40'}`}>
+                <Card className="group hover:shadow-md hover:border-secondary/40 transition-all">
                   <CardContent className="p-4">
                     <div className="flex items-center gap-4">
                       {/* Horário */}
@@ -710,61 +690,55 @@ export const ItineraryBuilder = ({
                       {/* Duração */}
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-muted-foreground" />
-                        {forPrint ? (
-                          <span className="text-sm font-medium">{item.duration}min</span>
-                        ) : (
-                          <Select
-                            value={item.duration.toString()}
-                            onValueChange={(v) => handleUpdateDuration(dayIndex, index, Number(v))}
-                          >
-                            <SelectTrigger className="w-24 h-8 text-sm">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="15">15min</SelectItem>
-                              <SelectItem value="30">30min</SelectItem>
-                              <SelectItem value="45">45min</SelectItem>
-                              <SelectItem value="60">1h</SelectItem>
-                              <SelectItem value="90">1h30</SelectItem>
-                              <SelectItem value="120">2h</SelectItem>
-                              <SelectItem value="150">2h30</SelectItem>
-                              <SelectItem value="180">3h</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        )}
+                        <Select
+                          value={item.duration.toString()}
+                          onValueChange={(v) => handleUpdateDuration(dayIndex, index, Number(v))}
+                        >
+                          <SelectTrigger className="w-24 h-8 text-sm">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="15">15min</SelectItem>
+                            <SelectItem value="30">30min</SelectItem>
+                            <SelectItem value="45">45min</SelectItem>
+                            <SelectItem value="60">1h</SelectItem>
+                            <SelectItem value="90">1h30</SelectItem>
+                            <SelectItem value="120">2h</SelectItem>
+                            <SelectItem value="150">2h30</SelectItem>
+                            <SelectItem value="180">3h</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       
-                      {/* Ações (só no modo edição) */}
-                      {!forPrint && (
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8"
-                            onClick={() => handleMoveUp(dayIndex, index)}
-                            disabled={index === 0}
-                          >
-                            <ChevronUp className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8"
-                            onClick={() => handleMoveDown(dayIndex, index)}
-                            disabled={index === dayItems.length - 1}
-                          >
-                            <ChevronDown className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 text-destructive hover:text-destructive"
-                            onClick={() => handleRemoveItem(dayIndex, index)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      )}
+                      {/* Ações */}
+                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8"
+                          onClick={() => handleMoveUp(dayIndex, index)}
+                          disabled={index === 0}
+                        >
+                          <ChevronUp className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8"
+                          onClick={() => handleMoveDown(dayIndex, index)}
+                          disabled={index === dayItems.length - 1}
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          onClick={() => handleRemoveItem(dayIndex, index)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -772,27 +746,9 @@ export const ItineraryBuilder = ({
             );
           })}
         </div>
-
-        {/* Footer do print */}
-        {forPrint && (
-          <div className="mt-6 p-4 bg-secondary/10 rounded-xl text-center text-sm text-muted-foreground border border-secondary/20">
-            Criado com <strong className="text-secondary">Guia Rios</strong> • @rios.cabofrio
-          </div>
-        )}
       </div>
     );
   };
-
-  // Wrapper para modo normal
-  const renderItinerary = () => renderItineraryDay(currentDay - 1, false);
-
-  // Renderizar todos os dias para print
-  const renderAllDaysForPrint = () => (
-    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#ffffff' }}>
-      {itineraries.map((_, dayIndex) => renderItineraryDay(dayIndex, true))}
-    </div>
-  );
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95vw] w-[95vw] max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-background via-background to-secondary/5 p-0">
@@ -1025,9 +981,14 @@ export const ItineraryBuilder = ({
           </Button>
         </div>
 
-        {/* Print View - réplica do roteiro construído */}
+        {/* Print View */}
         <div id="itinerary-print-target" style={{ display: 'none' }}>
-          {renderAllDaysForPrint()}
+          <ItineraryPrintView 
+            itineraries={itineraries}
+            startTimes={startTimes}
+            origin={origin}
+            mode={mode}
+          />
         </div>
       </DialogContent>
     </Dialog>
