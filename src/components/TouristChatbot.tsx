@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, X, Send, Loader2, Bot, User, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 type Message = {
   role: "user" | "assistant";
@@ -12,14 +13,29 @@ type Message = {
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tourist-chat`;
 
-const SUGGESTIONS = [
-  "Quais as melhores praias de Cabo Frio?",
-  "Como chegar na Ilha do Japonês?",
-  "Melhores restaurantes da região",
-  "O que fazer em Arraial do Cabo?",
-];
+const SUGGESTIONS: Record<Language, string[]> = {
+  pt: [
+    "Quais as melhores praias de Cabo Frio?",
+    "Como chegar na Ilha do Japonês?",
+    "Melhores restaurantes da região",
+    "O que fazer em Arraial do Cabo?",
+  ],
+  en: [
+    "What are the best beaches in Cabo Frio?",
+    "How to get to Ilha do Japonês?",
+    "Best restaurants in the region",
+    "What to do in Arraial do Cabo?",
+  ],
+  es: [
+    "¿Cuáles son las mejores playas de Cabo Frio?",
+    "¿Cómo llegar a Ilha do Japonês?",
+    "Mejores restaurantes de la región",
+    "¿Qué hacer en Arraial do Cabo?",
+  ],
+};
 
 export function TouristChatbot() {
+  const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -54,7 +70,7 @@ export function TouristChatbot() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, language }),
       });
 
       if (!response.ok || !response.body) {
@@ -163,8 +179,8 @@ export function TouristChatbot() {
             <Bot className="h-5 w-5 text-primary-foreground" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-primary-foreground">Guia Rios</h3>
-            <p className="text-xs text-primary-foreground/80">Seu assistente turístico</p>
+            <h3 className="font-semibold text-primary-foreground">{t("chatbot.title")}</h3>
+            <p className="text-xs text-primary-foreground/80">{t("chatbot.subtitle")}</p>
           </div>
           <Button
             variant="ghost"
@@ -186,20 +202,20 @@ export function TouristChatbot() {
                 </div>
                 <div className="bg-muted p-3 rounded-2xl rounded-tl-none">
                   <p className="text-sm">
-                    Olá! 👋 Sou o <strong>Guia Rios</strong>, seu assistente turístico de Cabo Frio e região.
+                    {t("chatbot.greeting")}
                   </p>
                   <p className="text-sm mt-2">
-                    Pergunte sobre praias, restaurantes, passeios, trilhas ou qualquer dica da região!
+                    {t("chatbot.help")}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <p className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Sparkles className="h-3 w-3" /> Sugestões
+                  <Sparkles className="h-3 w-3" /> {t("chatbot.suggestions")}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {SUGGESTIONS.map((suggestion) => (
+                  {SUGGESTIONS[language].map((suggestion) => (
                     <button
                       key={suggestion}
                       onClick={() => handleSuggestion(suggestion)}
@@ -263,7 +279,7 @@ export function TouristChatbot() {
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Digite sua pergunta..."
+              placeholder={t("chatbot.placeholder")}
               disabled={isLoading}
               className="flex-1"
             />
