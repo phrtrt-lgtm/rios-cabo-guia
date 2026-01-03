@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Calendar, MapPin, Clock, Music, Palette, Ship, Utensils, PartyPopper, ChevronDown, ChevronUp } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calendar, MapPin, Music, Palette, Ship, Utensils, PartyPopper } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 type EventCategory = "festival" | "music" | "gastronomy" | "culture" | "sports" | "religious";
 
@@ -218,96 +216,69 @@ const formatDate = (dateStr: string, endDateStr?: string, lang: string = "pt"): 
 
 export function LocalEvents() {
   const { t, language } = useLanguage();
-  const [showAll, setShowAll] = useState(false);
 
-  // Sort events by date
-  const sortedEvents = [...localEvents].sort((a, b) => 
-    new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  // Get current month events only
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  
+  const monthEvents = localEvents.filter(event => {
+    const eventDate = new Date(event.date + "T12:00:00");
+    return eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear;
+  }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const displayedEvents = showAll ? sortedEvents : sortedEvents.slice(0, 4);
+  const monthNames: Record<string, string[]> = {
+    pt: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+    en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    es: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+  };
 
   return (
     <Card className="bg-gradient-to-br from-purple-500/10 via-pink-400/5 to-orange-500/10 border-purple-200/50">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <Calendar className="h-5 w-5 text-purple-500" />
-          {t("events.title", "Eventos & Festivais")}
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          {t("events.subtitle", "Calendário de eventos da região")}
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {displayedEvents.map((event) => (
-          <div
-            key={event.id}
-            className="p-4 bg-background/80 rounded-lg border border-border/50 hover:border-purple-200 transition-colors"
-          >
-            <div className="flex items-start justify-between gap-3 mb-2">
-              <div className="flex-1">
-                <h4 className="font-semibold text-foreground">
-                  {event.title[language] || event.title.pt}
-                </h4>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {event.description[language] || event.description.pt}
-                </p>
-              </div>
-              <Badge className={`${categoryConfig[event.category].color} gap-1 shrink-0`}>
-                {categoryConfig[event.category].icon}
-                {categoryNames[language]?.[event.category] || categoryNames.pt[event.category]}
-              </Badge>
-            </div>
-            
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mt-3">
-              <div className="flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5" />
-                <span>{formatDate(event.date, event.endDate, language)}</span>
-              </div>
-              {event.time && (
-                <div className="flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>{event.time}</span>
-                </div>
-              )}
-              <div className="flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5" />
-                <span>{event.location}</span>
-              </div>
-              {event.recurring && (
-                <Badge variant="outline" className="text-xs">
-                  {t("events.recurring", "Anual")}
-                </Badge>
-              )}
-            </div>
-          </div>
-        ))}
-
-        {localEvents.length > 4 && (
-          <Button
-            variant="ghost"
-            className="w-full gap-2"
-            onClick={() => setShowAll(!showAll)}
-          >
-            {showAll ? (
-              <>
-                <ChevronUp className="h-4 w-4" />
-                {t("events.showLess", "Ver menos")}
-              </>
-            ) : (
-              <>
-                <ChevronDown className="h-4 w-4" />
-                {t("events.showMore", `Ver todos (${localEvents.length})`)}
-              </>
-            )}
-          </Button>
-        )}
-
-        <div className="mt-4 p-3 bg-purple-50/50 rounded-lg border border-purple-100">
-          <p className="text-sm text-muted-foreground">
-            {t("events.tip", "💡 Dica: Reserve hospedagem com antecedência para eventos grandes como Carnaval e Réveillon!")}
-          </p>
+      <CardContent className="p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Calendar className="h-4 w-4 text-purple-500" />
+          <span className="font-semibold text-sm">
+            {t("events.title", "Eventos")} - {monthNames[language]?.[currentMonth] || monthNames.pt[currentMonth]}
+          </span>
         </div>
+
+        {monthEvents.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            {t("events.noEvents", "Nenhum evento programado para este mês.")}
+          </p>
+        ) : (
+          <div className="space-y-2">
+            {monthEvents.map((event) => (
+              <div
+                key={event.id}
+                className="flex items-center gap-3 p-2 bg-background/80 rounded-lg border border-border/50"
+              >
+                <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-lg text-center shrink-0">
+                  <div>
+                    <div className="text-xs font-bold text-purple-700">
+                      {new Date(event.date + "T12:00:00").getDate()}
+                    </div>
+                    <div className="text-[9px] text-purple-600 uppercase">
+                      {new Date(event.date + "T12:00:00").toLocaleDateString(language === "pt" ? "pt-BR" : language === "es" ? "es-ES" : "en-US", { month: "short" })}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-medium text-sm truncate">
+                    {event.title[language] || event.title.pt}
+                  </h4>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3 shrink-0" />
+                    <span className="truncate">{event.location}</span>
+                  </div>
+                </div>
+                <Badge className={`${categoryConfig[event.category].color} text-[10px] px-1.5 py-0.5 shrink-0`}>
+                  {categoryConfig[event.category].icon}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

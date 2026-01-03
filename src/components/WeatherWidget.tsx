@@ -183,77 +183,55 @@ export function WeatherWidget() {
   }
 
   return (
-    <Card className="bg-gradient-to-br from-sky-500/10 via-blue-400/5 to-cyan-500/10 border-sky-200/50 overflow-hidden">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <Cloud className="h-5 w-5 text-sky-500" />
-          {t("weather.title", "Clima em Cabo Frio")}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {/* Current Weather */}
-        <div className="flex items-center gap-6 mb-6 pb-4 border-b border-sky-200/30">
+    <Card className="bg-gradient-to-br from-sky-500/10 via-blue-400/5 to-cyan-500/10 border-sky-200/50">
+      <CardContent className="p-4">
+        <div className="flex items-center gap-4">
+          {/* Current Weather - Compact */}
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-sky-100 rounded-full">
+            <div className="p-2 bg-sky-100 rounded-full">
               {weatherCodeToIcon(weather.current.weatherCode)}
             </div>
             <div>
-              <div className="text-4xl font-bold text-foreground">
+              <div className="text-2xl font-bold text-foreground">
                 {weather.current.temperature}°C
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-xs text-muted-foreground">
                 {weatherCodeToDescription(weather.current.weatherCode, language)}
               </div>
             </div>
           </div>
           
-          <div className="flex-1 grid grid-cols-2 gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <Droplets className="h-4 w-4 text-blue-400" />
-              <span>{t("weather.humidity", "Umidade")}: {weather.current.humidity}%</span>
+          {/* Mini stats */}
+          <div className="hidden sm:flex flex-col gap-1 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Droplets className="h-3 w-3 text-blue-400" />
+              <span>{weather.current.humidity}%</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Wind className="h-4 w-4 text-gray-400" />
-              <span>{t("weather.wind", "Vento")}: {weather.current.windSpeed} km/h</span>
+            <div className="flex items-center gap-1">
+              <Wind className="h-3 w-3 text-gray-400" />
+              <span>{weather.current.windSpeed} km/h</span>
             </div>
           </div>
-        </div>
 
-        {/* 5-Day Forecast */}
-        <div>
-          <h4 className="text-sm font-medium text-muted-foreground mb-3">
-            {t("weather.forecast", "Previsão 5 dias")}
-          </h4>
-          <div className="grid grid-cols-5 gap-2">
-            {weather.daily.map((day, i) => (
+          {/* 5-Day Forecast - Compact */}
+          <div className="flex-1 flex gap-1 justify-end">
+            {weather.daily.slice(0, 5).map((day, i) => (
               <div
                 key={day.date}
-                className={`text-center p-2 rounded-lg ${i === 0 ? "bg-sky-100/50" : "bg-muted/30"}`}
+                className={`text-center p-1.5 rounded ${i === 0 ? "bg-sky-100/50" : ""}`}
               >
-                <div className="text-xs font-medium mb-1">
+                <div className="text-[10px] font-medium text-muted-foreground">
                   {getDayName(day.date, language)}
                 </div>
-                <div className="flex justify-center mb-1">
+                <div className="flex justify-center my-0.5 scale-75">
                   {weatherCodeToIcon(day.weatherCode)}
                 </div>
-                <div className="text-xs">
+                <div className="text-[10px]">
                   <span className="font-semibold">{day.tempMax}°</span>
-                  <span className="text-muted-foreground"> / {day.tempMin}°</span>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Weather Tips */}
-        <div className="mt-4 p-3 bg-sky-50/50 rounded-lg border border-sky-100">
-          <p className="text-sm text-muted-foreground">
-            {weather.current.weatherCode >= 61 
-              ? t("weather.tipRain", "☔ Leve guarda-chuva! Bom dia para museus e restaurantes.")
-              : weather.current.temperature > 30
-              ? t("weather.tipHot", "🌡️ Dia quente! Hidrate-se e use protetor solar.")
-              : t("weather.tipNice", "☀️ Tempo agradável para passeios ao ar livre!")}
-          </p>
         </div>
       </CardContent>
     </Card>
