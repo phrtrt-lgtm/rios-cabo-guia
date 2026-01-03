@@ -95,6 +95,24 @@ const translations: Record<Language, Record<string, string>> = {
     "distance.sortByTime": "Ordenar por tempo",
     "distance.calculating": "Calculando distâncias...",
     
+    // Weather
+    "weather.title": "Clima em Cabo Frio",
+    "weather.humidity": "Umidade",
+    "weather.wind": "Vento",
+    "weather.forecast": "Previsão 5 dias",
+    "weather.error": "Erro ao carregar clima",
+    "weather.tipRain": "☔ Leve guarda-chuva! Bom dia para museus e restaurantes.",
+    "weather.tipHot": "🌡️ Dia quente! Hidrate-se e use protetor solar.",
+    "weather.tipNice": "☀️ Tempo agradável para passeios ao ar livre!",
+    
+    // Events
+    "events.title": "Eventos & Festivais",
+    "events.subtitle": "Calendário de eventos da região",
+    "events.recurring": "Anual",
+    "events.showMore": "Ver todos",
+    "events.showLess": "Ver menos",
+    "events.tip": "💡 Dica: Reserve hospedagem com antecedência para eventos grandes como Carnaval e Réveillon!",
+    
     // Footer
     "footer.copyright": "© 2025 Rios • Cabo Frio, RJ • Feito com carinho para nossos hóspedes",
   },
@@ -180,6 +198,24 @@ const translations: Record<Language, Record<string, string>> = {
     "distance.sortByTime": "Sort by time",
     "distance.calculating": "Calculating distances...",
     
+    // Weather
+    "weather.title": "Weather in Cabo Frio",
+    "weather.humidity": "Humidity",
+    "weather.wind": "Wind",
+    "weather.forecast": "5-day forecast",
+    "weather.error": "Failed to load weather",
+    "weather.tipRain": "☔ Bring an umbrella! Good day for museums and restaurants.",
+    "weather.tipHot": "🌡️ Hot day! Stay hydrated and use sunscreen.",
+    "weather.tipNice": "☀️ Nice weather for outdoor activities!",
+    
+    // Events
+    "events.title": "Events & Festivals",
+    "events.subtitle": "Regional events calendar",
+    "events.recurring": "Annual",
+    "events.showMore": "Show all",
+    "events.showLess": "Show less",
+    "events.tip": "💡 Tip: Book accommodations in advance for major events like Carnival and New Year's Eve!",
+    
     // Footer
     "footer.copyright": "© 2025 Rios • Cabo Frio, RJ • Made with love for our guests",
   },
@@ -264,6 +300,24 @@ const translations: Record<Language, Record<string, string>> = {
     "distance.enterAddress": "Ingresa una dirección",
     "distance.sortByTime": "Ordenar por tiempo",
     "distance.calculating": "Calculando distancias...",
+    
+    // Weather
+    "weather.title": "Clima en Cabo Frio",
+    "weather.humidity": "Humedad",
+    "weather.wind": "Viento",
+    "weather.forecast": "Pronóstico 5 días",
+    "weather.error": "Error al cargar clima",
+    "weather.tipRain": "☔ ¡Lleva paraguas! Buen día para museos y restaurantes.",
+    "weather.tipHot": "🌡️ ¡Día caluroso! Hidrátate y usa protector solar.",
+    "weather.tipNice": "☀️ ¡Clima agradable para actividades al aire libre!",
+    
+    // Events
+    "events.title": "Eventos y Festivales",
+    "events.subtitle": "Calendario de eventos de la región",
+    "events.recurring": "Anual",
+    "events.showMore": "Ver todos",
+    "events.showLess": "Ver menos",
+    "events.tip": "💡 Consejo: ¡Reserva hospedaje con anticipación para eventos grandes como Carnaval y Año Nuevo!",
     
     // Footer
     "footer.copyright": "© 2025 Rios • Cabo Frio, RJ • Hecho con cariño para nuestros huéspedes",
