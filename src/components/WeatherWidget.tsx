@@ -164,76 +164,33 @@ export function WeatherWidget() {
 
   if (loading) {
     return (
-      <Card className="bg-gradient-to-br from-sky-500/10 to-blue-600/10 border-sky-200/50">
-        <CardContent className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-sky-500" />
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-2 px-3 py-2 bg-sky-100/50 rounded-full border border-sky-200/50">
+        <Loader2 className="h-4 w-4 animate-spin text-sky-500" />
+        <span className="text-xs text-muted-foreground">...</span>
+      </div>
     );
   }
 
   if (error || !weather) {
     return (
-      <Card className="bg-gradient-to-br from-red-500/10 to-orange-500/10 border-red-200/50">
-        <CardContent className="py-6 text-center">
-          <p className="text-red-600">{error || t("weather.error", "Erro ao carregar")}</p>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-2 px-3 py-2 bg-red-100/50 rounded-full border border-red-200/50">
+        <Cloud className="h-4 w-4 text-red-400" />
+        <span className="text-xs text-red-600">--°C</span>
+      </div>
     );
   }
 
   return (
-    <Card className="bg-gradient-to-br from-sky-500/10 via-blue-400/5 to-cyan-500/10 border-sky-200/50">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-4">
-          {/* Current Weather - Compact */}
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-sky-100 rounded-full">
-              {weatherCodeToIcon(weather.current.weatherCode)}
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-foreground">
-                {weather.current.temperature}°C
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {weatherCodeToDescription(weather.current.weatherCode, language)}
-              </div>
-            </div>
-          </div>
-          
-          {/* Mini stats */}
-          <div className="hidden sm:flex flex-col gap-1 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Droplets className="h-3 w-3 text-blue-400" />
-              <span>{weather.current.humidity}%</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <Wind className="h-3 w-3 text-gray-400" />
-              <span>{weather.current.windSpeed} km/h</span>
-            </div>
-          </div>
-
-          {/* 5-Day Forecast - Compact */}
-          <div className="flex-1 flex gap-1 justify-end">
-            {weather.daily.slice(0, 5).map((day, i) => (
-              <div
-                key={day.date}
-                className={`text-center p-1.5 rounded ${i === 0 ? "bg-sky-100/50" : ""}`}
-              >
-                <div className="text-[10px] font-medium text-muted-foreground">
-                  {getDayName(day.date, language)}
-                </div>
-                <div className="flex justify-center my-0.5 scale-75">
-                  {weatherCodeToIcon(day.weatherCode)}
-                </div>
-                <div className="text-[10px]">
-                  <span className="font-semibold">{day.tempMax}°</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-sky-100/80 to-cyan-100/80 rounded-full border border-sky-200/50 shadow-sm">
+      <div className="scale-75 -my-1">
+        {weatherCodeToIcon(weather.current.weatherCode)}
+      </div>
+      <span className="text-sm font-semibold text-foreground">
+        {weather.current.temperature}°C
+      </span>
+      <span className="text-xs text-muted-foreground hidden sm:inline">
+        {weatherCodeToDescription(weather.current.weatherCode, language)}
+      </span>
+    </div>
   );
 }
