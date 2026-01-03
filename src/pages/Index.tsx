@@ -7,6 +7,7 @@ import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
 import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { RiosIntro } from "@/components/RiosIntro";
+import { TouristChatbot } from "@/components/TouristChatbot";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
@@ -1693,6 +1694,9 @@ const Index = () => {
           </div>
         </div>
       </GuideSection>
+
+      {/* Chatbot */}
+      <TouristChatbot />
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 mt-12">
