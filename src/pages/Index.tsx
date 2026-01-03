@@ -21,6 +21,8 @@ import { PhotoSpotCard } from "@/components/PhotoSpotCard";
 import { PhotoSpotsMap } from "@/components/PhotoSpotsMap";
 import { runningRoutes, extensionRoutes } from "@/data/routes";
 import { RouteCard } from "@/components/RouteCard";
+import { WeatherWidget } from "@/components/WeatherWidget";
+import { LocalEvents } from "@/components/LocalEvents";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
@@ -308,6 +310,14 @@ const Index = () => {
 
       {/* Rios Introduction */}
       <RiosIntro />
+
+      {/* Weather and Events Section */}
+      <section className="container mx-auto px-4 py-8 no-print">
+        <div className="grid md:grid-cols-2 gap-6">
+          <WeatherWidget />
+          <LocalEvents />
+        </div>
+      </section>
 
       {/* Boas-vindas */}
       <GuideSection id="boas-vindas" title="Boas-vindas & Como Usar Este Guia">
