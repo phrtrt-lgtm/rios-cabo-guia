@@ -8,6 +8,8 @@ import { DistanceBadge } from "@/components/DistanceBadge";
 import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { RiosIntro } from "@/components/RiosIntro";
 import { TouristChatbot } from "@/components/TouristChatbot";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
 import { distanceService, ETAResult } from "@/services/distance.service";
@@ -149,6 +151,7 @@ const placeInfo: Record<string, { description: string; tips?: string }> = {
 };
 
 const Index = () => {
+  const { t } = useLanguage();
   const [origin, setOrigin] = useState<{ lat: number; lng: number; address: string } | null>(null);
   const [etas, setEtas] = useState<ETAResult[]>([]);
   const [currentMode, setCurrentMode] = useState<'walking' | 'driving'>('driving');
@@ -243,9 +246,14 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="bg-background border-b border-border pt-6 pb-3">
-        <div className="container mx-auto px-4 flex flex-col items-center gap-2">
-          <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-16 object-contain" />
-          <p className="text-[#D2691E] text-base md:text-lg font-montserrat font-bold tracking-wider uppercase">Guia Turístico de Cabo Frio</p>
+        <div className="container mx-auto px-4">
+          <div className="flex justify-end mb-2">
+            <LanguageSelector />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-16 object-contain" />
+            <p className="text-[#D2691E] text-base md:text-lg font-montserrat font-bold tracking-wider uppercase">{t("header.subtitle")}</p>
+          </div>
         </div>
       </header>
 
@@ -254,34 +262,34 @@ const Index = () => {
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-wrap gap-2 justify-center">
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('boas-vindas')} className="gap-2">
-              <Home className="h-4 w-4" /> Início
+              <Home className="h-4 w-4" /> {t("nav.home")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="gap-2">
-              <MapPin className="h-4 w-4" /> Praias
+              <MapPin className="h-4 w-4" /> {t("nav.beaches")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="gap-2">
-              <ShoppingBag className="h-4 w-4" /> Utilidades
+              <ShoppingBag className="h-4 w-4" /> {t("nav.utilities")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="gap-2">
-              <Utensils className="h-4 w-4" /> Gastronomia
+              <Utensils className="h-4 w-4" /> {t("nav.gastronomy")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="gap-2">
-              <Waves className="h-4 w-4" /> Arraial
+              <Waves className="h-4 w-4" /> {t("nav.arraial")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="gap-2">
-              <Palmtree className="h-4 w-4" /> Búzios
+              <Palmtree className="h-4 w-4" /> {t("nav.buzios")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="gap-2">
-              <Mountain className="h-4 w-4" /> Trilhas
+              <Mountain className="h-4 w-4" /> {t("nav.trails")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="gap-2">
-              <Camera className="h-4 w-4" /> Foto-spots
+              <Camera className="h-4 w-4" /> {t("nav.photospots")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="gap-2">
-              <Route className="h-4 w-4" /> Rotas
+              <Route className="h-4 w-4" /> {t("nav.routes")}
             </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="gap-2">
-              <Info className="h-4 w-4" /> Sobre
+              <Info className="h-4 w-4" /> {t("nav.about")}
             </Button>
           </div>
         </div>
@@ -1702,7 +1710,7 @@ const Index = () => {
       <footer className="bg-primary text-primary-foreground py-8 mt-12">
         <div className="container mx-auto px-4 text-center">
           <p className="text-sm opacity-80">
-            © 2025 Rios • Cabo Frio, RJ • Feito com carinho para nossos hóspedes
+            {t("footer.copyright")}
           </p>
         </div>
       </footer>
