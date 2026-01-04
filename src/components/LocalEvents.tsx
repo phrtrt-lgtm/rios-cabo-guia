@@ -166,13 +166,19 @@ const formatDate = (dateStr: string, endDateStr?: string, lang: string = "pt"): 
 export function LocalEvents() {
   const { t, language } = useLanguage();
 
-  // Get current month events only
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
+  // Show January 2026 events (summer high season)
+  const targetMonth = 0; // Janeiro
+  const targetYear = 2026;
   
   const monthEvents = localEvents.filter(event => {
     const eventDate = new Date(event.date + "T12:00:00");
-    return eventDate.getMonth() === currentMonth && eventDate.getFullYear() === currentYear;
+    const eventEndDate = event.endDate ? new Date(event.endDate + "T12:00:00") : eventDate;
+    
+    // Show if event starts in January OR spans through January
+    const startsInJan = eventDate.getMonth() === targetMonth && eventDate.getFullYear() === targetYear;
+    const spansJan = eventDate <= new Date("2026-01-31T23:59:59") && eventEndDate >= new Date("2026-01-01T00:00:00");
+    
+    return startsInJan || spansJan;
   }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   const monthNames: Record<string, string[]> = {
@@ -187,7 +193,7 @@ export function LocalEvents() {
         <div className="flex items-center gap-2 mb-3">
           <Calendar className="h-4 w-4 text-purple-500" />
           <span className="font-semibold text-sm">
-            {t("events.title", "Eventos")} - {monthNames[language]?.[currentMonth] || monthNames.pt[currentMonth]}
+            {t("events.title", "Eventos")} - {monthNames[language]?.[targetMonth] || monthNames.pt[targetMonth]} {targetYear}
           </span>
         </div>
 
