@@ -53,10 +53,28 @@ const categoryNames: Record<string, Record<EventCategory, string>> = {
   },
 };
 
-// Eventos locais da região - apenas eventos verificados/recorrentes
+// Eventos locais da região - eventos verificados
 const localEvents: LocalEvent[] = [
   {
     id: "1",
+    title: {
+      pt: "Festival de Verão 2026",
+      en: "Summer Festival 2026",
+      es: "Festival de Verano 2026",
+    },
+    description: {
+      pt: "Gusttavo Lima, Wesley Safadão, Luan Santana, Ana Castela, Simone Mendes e mais!",
+      en: "Gusttavo Lima, Wesley Safadão, Luan Santana, Ana Castela, Simone Mendes and more!",
+      es: "Gusttavo Lima, Wesley Safadão, Luan Santana, Ana Castela, Simone Mendes y más!",
+    },
+    date: "2026-01-16",
+    endDate: "2026-01-18",
+    time: "18h-00h",
+    location: "Cabo Frio",
+    category: "festival",
+  },
+  {
+    id: "2",
     title: {
       pt: "Feira de Artesanato do Canal",
       en: "Canal Craft Fair",
@@ -74,7 +92,7 @@ const localEvents: LocalEvent[] = [
     recurring: true,
   },
   {
-    id: "2",
+    id: "3",
     title: {
       pt: "Rua das Pedras - Vida Noturna",
       en: "Rua das Pedras - Nightlife",
@@ -93,7 +111,7 @@ const localEvents: LocalEvent[] = [
     recurring: true,
   },
   {
-    id: "3",
+    id: "4",
     title: {
       pt: "Passeios de Barco - Arraial do Cabo",
       en: "Boat Tours - Arraial do Cabo",
@@ -112,7 +130,7 @@ const localEvents: LocalEvent[] = [
     recurring: true,
   },
   {
-    id: "4",
+    id: "5",
     title: {
       pt: "Carnaval de Cabo Frio",
       en: "Cabo Frio Carnival",
@@ -129,7 +147,7 @@ const localEvents: LocalEvent[] = [
     category: "festival",
   },
   {
-    id: "5",
+    id: "6",
     title: {
       pt: "Festa de Nossa Senhora da Assunção",
       en: "Our Lady of the Assumption Festival",
