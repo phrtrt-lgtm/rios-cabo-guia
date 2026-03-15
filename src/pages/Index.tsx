@@ -397,7 +397,7 @@ const Index = () => {
         size="lg"
       >
         <Plus className="h-5 w-5" />
-        Montar meu roteiro
+        {t("common.buildItinerary")}
       </Button>
 
       {/* Itinerary Builder Modal */}
