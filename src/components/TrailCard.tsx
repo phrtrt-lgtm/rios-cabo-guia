@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DistanceBadge } from '@/components/DistanceBadge';
 import { Trail } from '@/data/trails';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface TrailCardProps {
   trail: Trail;
@@ -28,13 +29,20 @@ export const TrailCard = ({
   isFallback = false,
   originAddress,
 }: TrailCardProps) => {
+  const { t, language } = useLanguage();
+
+  const description = trail.descriptions?.[language] || trail.description;
+  const reward = trail.rewards?.[language] || trail.reward;
+  const bestTime = trail.bestTimes?.[language] || trail.bestTime;
+  const alerts = trail.alertsI18n?.[language] || trail.alerts;
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       {trail.imageUrl && (
         <div className="aspect-[3/2] overflow-hidden bg-muted">
           <img
             src={trail.imageUrl}
-            alt={`Vista da trilha ${trail.name} em ${trail.cidade}`}
+            alt={`${trail.name} - ${trail.cidade}`}
             className="w-full h-full object-cover"
           />
           {trail.imageCredit && (
@@ -56,7 +64,7 @@ export const TrailCard = ({
         </div>
 
         <p className="text-sm text-foreground/80 leading-relaxed">
-          {trail.description}
+          {description}
         </p>
 
         <div className="flex flex-wrap gap-2">
@@ -76,16 +84,16 @@ export const TrailCard = ({
 
         <div className="space-y-2 text-sm">
           <div>
-            <span className="font-medium text-foreground">🎁 Recompensa: </span>
-            <span className="text-muted-foreground">{trail.reward}</span>
+            <span className="font-medium text-foreground">🎁 {t("common.reward")}: </span>
+            <span className="text-muted-foreground">{reward}</span>
           </div>
           <div>
-            <span className="font-medium text-foreground">⏰ Melhor horário: </span>
-            <span className="text-muted-foreground">{trail.bestTime}</span>
+            <span className="font-medium text-foreground">⏰ {t("common.bestTime")}: </span>
+            <span className="text-muted-foreground">{bestTime}</span>
           </div>
           <div className="flex items-start gap-2">
             <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500 mt-0.5 shrink-0" />
-            <span className="text-muted-foreground">{trail.alerts}</span>
+            <span className="text-muted-foreground">{alerts}</span>
           </div>
         </div>
 
@@ -115,7 +123,7 @@ export const TrailCard = ({
               className="gap-2"
             >
               <MapPin className="h-4 w-4" />
-              Como chegar
+              {t("common.howToGet")}
               <ExternalLink className="h-3 w-3" />
             </a>
           </Button>
