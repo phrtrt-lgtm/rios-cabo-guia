@@ -31,10 +31,10 @@ export const TrailCard = ({
 }: TrailCardProps) => {
   const { t, language } = useLanguage();
 
-  const description = trail.descriptions?.[language] || trail.description;
-  const reward = trail.rewards?.[language] || trail.reward;
-  const bestTime = trail.bestTimes?.[language] || trail.bestTime;
-  const alerts = trail.alertsI18n?.[language] || trail.alerts;
+  const description = trail.description;
+  const reward = trail.reward;
+  const bestTime = trail.bestTime;
+  const alerts = trail.alerts;
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
