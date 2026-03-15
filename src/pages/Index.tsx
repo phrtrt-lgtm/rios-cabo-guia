@@ -840,7 +840,7 @@ const Index = () => {
 
         {/* Brasileiro */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Brasileiro / Churrasco</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.brazilian")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Picanha do Zé"
