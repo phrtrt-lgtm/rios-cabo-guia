@@ -1037,7 +1037,7 @@ const Index = () => {
 
         {/* Buffet */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Buffet de Café</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.buffet")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Nova Onda"
