@@ -702,10 +702,10 @@ const Index = () => {
       </GuideSection>
 
       {/* Shopping Park Lagos */}
-      <GuideSection id="shopping" title="Shopping Park Lagos" printBreak>
+      <GuideSection id="shopping" title={t("section.shopping")} printBreak>
         <div className="bg-card p-8 rounded-lg border border-border">
           <p className="text-lg text-muted-foreground mb-6">
-            O principal shopping de Cabo Frio, com lojas, restaurantes, cinema e serviços essenciais para o visitante.
+            {t("shopping.intro")}
           </p>
           
           <div className="grid md:grid-cols-2 gap-6 mb-6">
