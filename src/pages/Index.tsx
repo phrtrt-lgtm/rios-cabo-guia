@@ -445,14 +445,14 @@ const Index = () => {
       </GuideSection>
 
       {/* Utilidades */}
-      <GuideSection id="utilidades" title="Essenciais por Bairro — Utilidades" className="bg-muted/30" printBreak>
+      <GuideSection id="utilidades" title={t("section.utilities")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
-          Estabelecimentos selecionados nos bairros principais. Sempre confirme horários antes de ir.
+          {t("utilities.intro")}
         </p>
 
         {/* Farmácias */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Farmácias</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.pharmacies")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <UtilityCard 
               name="Droga Raia"
