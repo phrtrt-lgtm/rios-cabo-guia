@@ -145,46 +145,6 @@ const annualEvents: LocalEvent[] = [
     location: "Cabo Frio",
     category: "festival",
   },
-  {
-    id: "rua-das-pedras",
-    title: {
-      pt: "Rua das Pedras - Vida Noturna",
-      en: "Rua das Pedras - Nightlife",
-      es: "Rua das Pedras - Vida Nocturna",
-    },
-    description: {
-      pt: "Bares, restaurantes e música ao vivo na famosa rua de Búzios. Todas as noites do ano.",
-      en: "Bars, restaurants and live music on Búzios' famous street. Every night of the year.",
-      es: "Bares, restaurantes y música en vivo en la famosa calle de Búzios. Todas las noches del año.",
-    },
-    month: 0,
-    day: 1,
-    endMonth: 11,
-    endDay: 31,
-    time: "19h–03h",
-    location: "Rua das Pedras - Búzios",
-    category: "music",
-  },
-  {
-    id: "passeios-barco",
-    title: {
-      pt: "Passeios de Escuna - Arraial do Cabo",
-      en: "Schooner Tours - Arraial do Cabo",
-      es: "Paseos en Goleta - Arraial do Cabo",
-    },
-    description: {
-      pt: "Escunas saem diariamente da Praia dos Anjos para as praias paradisíacas de Arraial.",
-      en: "Schooners depart daily from Praia dos Anjos to Arraial's paradise beaches.",
-      es: "Goletas salen diariamente de Praia dos Anjos a las playas paradisíacas de Arraial.",
-    },
-    month: 0,
-    day: 1,
-    endMonth: 11,
-    endDay: 31,
-    time: "10h–16h",
-    location: "Praia dos Anjos - Arraial do Cabo",
-    category: "sports",
-  },
 ];
 
 // Resolve an annual event to actual dates for a given year
