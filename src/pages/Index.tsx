@@ -320,7 +320,7 @@ const Index = () => {
       </section>
 
       {/* Boas-vindas */}
-      <GuideSection id="boas-vindas" title="Boas-vindas & Como Usar Este Guia">
+      <GuideSection id="boas-vindas" title={t("section.welcome")}>
         <div className="prose max-w-none">
           
           <div className="mb-4 not-prose">
