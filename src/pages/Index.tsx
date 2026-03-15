@@ -1473,7 +1473,7 @@ const Index = () => {
               className="gap-2"
             >
               <MapIcon className="h-5 w-5" />
-              {showPhotoSpotsMap ? 'Ocultar mapa' : 'Mostrar mapa'}
+              {showPhotoSpotsMap ? t("common.hideMap") : t("common.showMap")}
             </Button>
           </div>
         </div>
