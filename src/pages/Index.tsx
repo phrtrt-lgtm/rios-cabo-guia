@@ -1616,17 +1616,16 @@ const Index = () => {
       </GuideSection>
 
       {/* Rotas para correr/pedalar */}
-      <GuideSection id="rotas" title="Rotas para Correr/Pedalar" printBreak>
+      <GuideSection id="rotas" title={t("section.routes")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
-          Circuitos seguros para corrida e ciclismo em Cabo Frio, com extensões para Arraial e Búzios. 
-          Explore a orla, lagoas e paisagens da região de forma ativa e saudável.
+          {t("routes.intro")}
         </p>
 
         {/* Cabo Frio - Rotas principais */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
             <Route className="h-6 w-6" />
-            Cabo Frio — Rotas Principais
+            {t("routes.mainRoutes")}
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {runningRoutes.map(route => {
