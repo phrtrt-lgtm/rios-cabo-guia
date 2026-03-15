@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DistanceBadge } from './DistanceBadge';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PhotoSpotCardProps {
   name: string;
@@ -19,13 +20,6 @@ interface PhotoSpotCardProps {
   originAddress?: string;
 }
 
-const windowLabels: Record<string, string> = {
-  'golden-sunrise': 'Golden Hour — Amanhecer',
-  'golden-sunset': 'Golden Hour — Entardecer',
-  'blue-hour': 'Blue Hour',
-  'golden-morning': 'Golden Hour — Manhã',
-};
-
 export const PhotoSpotCard = ({
   name,
   city,
@@ -40,6 +34,15 @@ export const PhotoSpotCard = ({
   isFallback,
   originAddress,
 }: PhotoSpotCardProps) => {
+  const { t } = useLanguage();
+
+  const windowLabels: Record<string, string> = {
+    'golden-sunrise': t("photospots.goldenSunrise"),
+    'golden-sunset': t("photospots.goldenSunset"),
+    'blue-hour': t("photospots.blueHour"),
+    'golden-morning': t("photospots.goldenMorning"),
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <CardContent className="p-6">
@@ -68,14 +71,14 @@ export const PhotoSpotCard = ({
           <div className="flex gap-2 text-sm">
             <Camera className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <div>
-              <span className="font-medium">Ângulo:</span> {angle}
+              <span className="font-medium">{t("common.angle")}:</span> {angle}
             </div>
           </div>
 
           <div className="flex gap-2 text-sm">
             <Lightbulb className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
             <div>
-              <span className="font-medium">Dica:</span> {tip}
+              <span className="font-medium">{t("common.tip")}:</span> {tip}
             </div>
           </div>
         </div>
@@ -87,7 +90,7 @@ export const PhotoSpotCard = ({
           onClick={() => window.open(mapsUrl, '_blank')}
         >
           <MapPin className="h-4 w-4 mr-2" />
-          Como chegar
+          {t("common.howToGet")}
         </Button>
       </CardContent>
     </Card>

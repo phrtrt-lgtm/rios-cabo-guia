@@ -320,71 +320,62 @@ const Index = () => {
       </section>
 
       {/* Boas-vindas */}
-      <GuideSection id="boas-vindas" title="Boas-vindas & Como Usar Este Guia">
+      <GuideSection id="boas-vindas" title={t("section.welcome")}>
         <div className="prose max-w-none">
-          
           <div className="mb-4 not-prose">
             <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 p-6 rounded-lg border-2 border-primary/30">
-              <h3 className="font-bold text-xl text-primary mb-3 text-center">📍 O que você encontra neste guia</h3>
-              <p className="text-sm text-foreground/80 text-center mb-2">
-                Além de <strong>praias, restaurantes, utilidades, Arraial do Cabo e Búzios</strong>, preparamos seções especiais para você explorar a região:
-              </p>
+              <h3 className="font-bold text-xl text-primary mb-3 text-center">{t("welcome.whatYouFind")}</h3>
+              <p className="text-sm text-foreground/80 text-center mb-2">{t("welcome.whatYouFindDesc")}</p>
               <ul className="text-sm space-y-1 max-w-2xl mx-auto">
                 <li className="flex items-center gap-2">
                   <span className="text-primary">🥾</span>
-                  <span><strong>Trilhas:</strong> Percursos com níveis de dificuldade, tempo estimado e dicas práticas</span>
+                  <span><strong>{t("nav.trails")}:</strong> {t("welcome.trailsDesc")}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-primary">📸</span>
-                  <span><strong>Foto-spots:</strong> Melhores locais e horários para fotos incríveis da região</span>
+                  <span><strong>{t("nav.photospots")}:</strong> {t("welcome.photospotsDesc")}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-primary">🏃‍♂️</span>
-                  <span><strong>Rotas para corrida e ciclismo:</strong> Circuitos mapeados com distâncias, altimetria e pontos de hidratação</span>
+                  <span><strong>{t("nav.routes")}:</strong> {t("welcome.routesDesc")}</span>
                 </li>
               </ul>
             </div>
           </div>
-          
           <div className="grid md:grid-cols-2 gap-4 not-prose">
             <div className="bg-secondary/10 p-4 rounded-lg border border-secondary/30">
               <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Plus className="h-5 w-5" /> Montar meu roteiro
+                <Plus className="h-5 w-5" /> {t("welcome.buildItinerary")}
               </h3>
-              <p className="text-sm">Clique no botão flutuante no canto inferior direito para criar seu roteiro personalizado. Selecione lugares, organize por blocos do dia e veja os tempos de deslocamento.</p>
+              <p className="text-sm">{t("welcome.buildItineraryDesc")}</p>
             </div>
-
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
               <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Navigation className="h-5 w-5" /> Calcular distâncias
+                <Navigation className="h-5 w-5" /> {t("welcome.calcDistances")}
               </h3>
-              <p className="text-sm">Digite um endereço ou use "Minha localização" para ver o tempo estimado a pé e de carro até cada lugar.</p>
+              <p className="text-sm">{t("welcome.calcDistancesDesc")}</p>
             </div>
-
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
               <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Clock className="h-5 w-5" /> Melhor horário
+                <Clock className="h-5 w-5" /> {t("welcome.bestTimeTitle")}
               </h3>
-              <p className="text-sm">Praias ficam mais tranquilas pela manhã (até 11h). Evite o sol forte entre 11h-15h.</p>
+              <p className="text-sm">{t("welcome.bestTimeDesc")}</p>
             </div>
-            
             <div className="bg-secondary/5 p-4 rounded-lg border border-secondary/20">
               <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Phone className="h-5 w-5" /> Contatos
+                <Phone className="h-5 w-5" /> {t("welcome.contactsTitle")}
               </h3>
-              <p className="text-sm">Links com ☎️ abrem WhatsApp. 📍 levam ao Google Maps.</p>
+              <p className="text-sm">{t("welcome.contactsDesc")}</p>
             </div>
-            
             <div className="bg-accent/5 p-4 rounded-lg border border-accent/20">
               <h3 className="font-semibold text-accent mb-2 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Offline
+                <MapPin className="h-5 w-5" /> {t("welcome.offlineTitle")}
               </h3>
-              <p className="text-sm">Salve este guia no celular para consultar sem internet.</p>
+              <p className="text-sm">{t("welcome.offlineDesc")}</p>
             </div>
-            
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2">💵 Custo</h3>
-              <p className="text-sm">$ = econômico, $$ = médio, $$$ = alto</p>
+              <h3 className="font-semibold text-primary mb-2">{t("welcome.costTitle")}</h3>
+              <p className="text-sm">{t("welcome.costDesc")}</p>
             </div>
           </div>
         </div>
@@ -397,7 +388,7 @@ const Index = () => {
         size="lg"
       >
         <Plus className="h-5 w-5" />
-        Montar meu roteiro
+        {t("common.buildItinerary")}
       </Button>
 
       {/* Itinerary Builder Modal */}
@@ -417,7 +408,7 @@ const Index = () => {
       />
 
       {/* Praias */}
-      <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
+      <GuideSection id="praias" title={t("section.beaches")} printBreak>
         <div className="grid md:grid-cols-2 gap-6">
           {sortedTouristPlaces.map((place) => {
             const eta = getETA(place.id);
@@ -445,14 +436,14 @@ const Index = () => {
       </GuideSection>
 
       {/* Utilidades */}
-      <GuideSection id="utilidades" title="Essenciais por Bairro — Utilidades" className="bg-muted/30" printBreak>
+      <GuideSection id="utilidades" title={t("section.utilities")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
-          Estabelecimentos selecionados nos bairros principais. Sempre confirme horários antes de ir.
+          {t("utilities.intro")}
         </p>
 
         {/* Farmácias */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Farmácias</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.pharmacies")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <UtilityCard 
               name="Droga Raia"
@@ -702,10 +693,10 @@ const Index = () => {
       </GuideSection>
 
       {/* Shopping Park Lagos */}
-      <GuideSection id="shopping" title="Shopping Park Lagos" printBreak>
+      <GuideSection id="shopping" title={t("section.shopping")} printBreak>
         <div className="bg-card p-8 rounded-lg border border-border">
           <p className="text-lg text-muted-foreground mb-6">
-            O principal shopping de Cabo Frio, com lojas, restaurantes, cinema e serviços essenciais para o visitante.
+            {t("shopping.intro")}
           </p>
           
           <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -747,14 +738,14 @@ const Index = () => {
       </GuideSection>
 
       {/* Gastronomia */}
-      <GuideSection id="gastronomia" title="Gastronomia — Curadoria Rios" className="bg-muted/30" printBreak>
+      <GuideSection id="gastronomia" title={t("section.gastronomy")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
-          Nossas indicações favoritas, testadas e aprovadas. Horários podem variar — sempre confirme no link ou telefone.
+          {t("gastronomy.intro")}
         </p>
 
         {/* Italiano */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Italiano</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.italian")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Leña Casa Italiana"
@@ -793,7 +784,7 @@ const Index = () => {
 
         {/* Asiático */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Asiático / Japonês</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.asian")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Fixi Kaiseki"
@@ -849,7 +840,7 @@ const Index = () => {
 
         {/* Brasileiro */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Brasileiro / Churrasco</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.brazilian")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Picanha do Zé"
@@ -888,7 +879,7 @@ const Index = () => {
 
         {/* Hamburguerias */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Hamburguerias</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.burgers")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Paelo Hamburgueria"
@@ -928,7 +919,7 @@ const Index = () => {
 
         {/* Saudável */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Saudável / Leve</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.healthy")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Bem Fresh"
@@ -1046,7 +1037,7 @@ const Index = () => {
 
         {/* Buffet */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Buffet de Café</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.buffet")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Nova Onda"
@@ -1069,19 +1060,18 @@ const Index = () => {
       </GuideSection>
 
       {/* Arraial do Cabo */}
-      <GuideSection id="arraial" title="Arraial do Cabo" className="bg-muted/30" printBreak>
+      <GuideSection id="arraial" title={t("section.arraial")} className="bg-muted/30" printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
-          Águas claras, trilhas e mirantes — o Caribe brasileiro na nossa vizinhança
+          {t("arraial.subtitle")}
         </p>
         <p className="text-muted-foreground mb-8">
-          A apenas 30 minutos de Cabo Frio, Arraial do Cabo é famoso por suas águas cristalinas 
-          e praias paradisíacas. Confira os principais pontos turísticos.
+          {t("arraial.intro")}
         </p>
 
         {/* Praias & Pontos - Arraial */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <Waves className="h-6 w-6" /> Praias & Pontos Turísticos
+            <Waves className="h-6 w-6" /> {t("arraial.beachesTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             {arraialPlaces.map((place) => {
@@ -1112,7 +1102,7 @@ const Index = () => {
         {/* Gastronomia Arraial */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <Utensils className="h-6 w-6" /> Destaque Gastronômico
+            <Utensils className="h-6 w-6" /> {t("arraial.gastroTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
@@ -1120,13 +1110,12 @@ const Index = () => {
               description="Cozinha do mar com proposta autoral. Peixes frescos, frutos do mar e ingredientes sazonais em pratos criativos."
               address="Arraial do Cabo"
               priceRange="$$$"
-              category="Frutos do Mar"
+              category={t("category.seafood")}
               hours="Consultar horários"
             />
             <div className="bg-accent/10 p-6 rounded-lg border border-accent/20 flex items-center">
               <p className="text-sm text-muted-foreground">
-                <strong className="text-accent">Nota:</strong> Existe também o Fixi Kaiseki na Passagem (Cabo Frio) — 
-                veja mais na seção de Gastronomia de Cabo Frio acima.
+                <strong className="text-accent">{t("common.note")}:</strong> {t("arraial.fixiNote")}
               </p>
             </div>
           </div>
@@ -1135,50 +1124,28 @@ const Index = () => {
         {/* Roteiros Arraial */}
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <MapPin className="h-6 w-6" /> Roteiros em 1 Clique
+            <MapPin className="h-6 w-6" /> {t("arraial.itinerariesTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
-                <Mountain className="h-5 w-5" /> Clássico Visual
+                <Mountain className="h-5 w-5" /> {t("arraial.classicVisual")}
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">☀️</span>
-                  <span><strong>Manhã:</strong> Mirante Pontal do Atalaia</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🏖️</span>
-                  <span><strong>Tarde:</strong> Prainhas do Atalaia</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🌅</span>
-                  <span><strong>Fim de tarde:</strong> Pôr do sol na Praia Grande</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🍽️</span>
-                  <span><strong>Noite:</strong> Jantar no centro</span>
-                </li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">☀️</span><span>{t("arraial.cv.morning")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🏖️</span><span>{t("arraial.cv.afternoon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🌅</span><span>{t("arraial.cv.lateAfternoon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🍽️</span><span>{t("arraial.cv.night")}</span></li>
               </ul>
             </div>
-
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
-                <Waves className="h-5 w-5" /> Mar & Trilha
+                <Waves className="h-5 w-5" /> {t("arraial.seaTrail")}
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🥾</span>
-                  <span><strong>Manhã:</strong> Trilha para Praia do Forno</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🤿</span>
-                  <span><strong>Meio-dia:</strong> Snorkel na Praia do Forno</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">⛵</span>
-                  <span><strong>Tarde:</strong> Passeio de barco (Gruta Azul + Ilha do Farol)</span>
-                </li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🥾</span><span>{t("arraial.st.morning")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🤿</span><span>{t("arraial.st.noon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">⛵</span><span>{t("arraial.st.afternoon")}</span></li>
               </ul>
             </div>
           </div>
@@ -1186,13 +1153,12 @@ const Index = () => {
       </GuideSection>
 
       {/* Búzios */}
-      <GuideSection id="buzios" title="Búzios" printBreak>
+      <GuideSection id="buzios" title={t("section.buzios")} printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
-          Mais de 20 praias, noites animadas e pôr do sol inesquecível
+          {t("buzios.subtitle")}
         </p>
         <p className="text-muted-foreground mb-8">
-          A cerca de 40km de Cabo Frio, Búzios é o destino sofisticado da Região dos Lagos, 
-          com praias paradisíacas, gastronomia internacional e vida noturna vibrante.
+          {t("buzios.intro")}
         </p>
 
         {/* Praias & Pontos - Búzios */}
@@ -1229,44 +1195,27 @@ const Index = () => {
         {/* Gastronomia Búzios */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <Utensils className="h-6 w-6" /> Centros Gastronômicos
+            <Utensils className="h-6 w-6" /> {t("buzios.gastroTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Porto da Barra
               </h4>
-              <p className="text-muted-foreground mb-4">
-                Complexo à beira-mar em Manguinhos com vários restaurantes. Famoso pelo pôr do sol com vista para a Praia de Geribá.
-              </p>
+              <p className="text-muted-foreground mb-4">{t("buzios.portoBarra")}</p>
               <div className="space-y-2 text-sm">
-                <p className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <span>Chegue 1h antes do pôr do sol</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-primary" />
-                  <span>Reserve com antecedência aos finais de semana</span>
-                </p>
+                <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /><span>{t("buzios.portoBarra.arrive")}</span></p>
+                <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /><span>{t("buzios.portoBarra.reserve")}</span></p>
               </div>
             </div>
-
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Rua das Pedras
               </h4>
-              <p className="text-muted-foreground mb-4">
-                Principal eixo gastronômico de Búzios. Restaurantes, bares e lojas em rua de pedras charmosa. Noite movimentada e animada.
-              </p>
+              <p className="text-muted-foreground mb-4">{t("buzios.ruaDasPedras")}</p>
               <div className="space-y-2 text-sm">
-                <p className="flex items-center gap-2">
-                  <span className="text-primary">🍽️</span>
-                  <span>3 perfis: rápido/econômico ($$), família ($$), autoral ($$$)</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <span className="text-primary">🌙</span>
-                  <span>Fica lotada à noite — reserve mesa</span>
-                </p>
+                <p className="flex items-center gap-2"><span className="text-primary">🍽️</span><span>{t("buzios.rdp.profiles")}</span></p>
+                <p className="flex items-center gap-2"><span className="text-primary">🌙</span><span>{t("buzios.rdp.crowded")}</span></p>
               </div>
             </div>
           </div>
@@ -1275,18 +1224,19 @@ const Index = () => {
         {/* Roteiros Búzios */}
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <MapPin className="h-6 w-6" /> Roteiros em 1 Clique
+            <MapPin className="h-6 w-6" /> {t("buzios.itinerariesTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
-                <Mountain className="h-5 w-5" /> Clássico de Cartões-Postais
+                <Mountain className="h-5 w-5" /> {t("buzios.classicPostcard")}
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">☀️</span>
-                  <span><strong>Manhã:</strong> Praia Azeda & Azedinha (escadaria)</span>
-                </li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">☀️</span><span>{t("buzios.cp.morning")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🚶</span><span>{t("buzios.cp.afternoon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🌙</span><span>{t("buzios.cp.night")}</span></li>
+              </ul>
+            </div>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">🚶</span>
                   <span><strong>Tarde:</strong> Passeio pela Orla Bardot</span>
@@ -1322,17 +1272,16 @@ const Index = () => {
       </GuideSection>
 
       {/* Trilhas */}
-      <GuideSection id="trilhas" title="Trilhas da Região dos Lagos" printBreak>
+      <GuideSection id="trilhas" title={t("section.trails")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
-          Descubra as melhores trilhas de Cabo Frio, Arraial do Cabo e Búzios. 
-          Mirantes, dunas, costões e praias selvagens esperam por você.
+          {t("trails.intro")}
         </p>
 
         {/* Filtros de trilhas */}
         <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="h-5 w-5 text-secondary" />
-            <h3 className="font-semibold text-secondary">Filtrar trilhas</h3>
+            <h3 className="font-semibold text-secondary">{t("common.filterTrails")}</h3>
           </div>
           <div className="flex flex-wrap gap-3">
             <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
@@ -1493,11 +1442,10 @@ const Index = () => {
       </GuideSection>
 
       {/* Foto-spots */}
-      <GuideSection id="fotospots" title="Foto-spots & Horário da Luz" printBreak>
+      <GuideSection id="fotospots" title={t("section.photospots")} printBreak>
         <div className="flex flex-col gap-6 mb-8">
           <p className="text-lg text-muted-foreground">
-            Capture os melhores momentos da Região dos Lagos. Descubra pontos fotogênicos, 
-            janelas de luz ideais e dicas de composição para fotos incríveis.
+            {t("photospots.intro")}
           </p>
           
           {/* Botões do mapa */}
@@ -1509,7 +1457,7 @@ const Index = () => {
               className="gap-2"
             >
               <MapIcon className="h-5 w-5" />
-              {showPhotoSpotsMap ? 'Ocultar mapa' : 'Mostrar mapa'}
+              {showPhotoSpotsMap ? t("common.hideMap") : t("common.showMap")}
             </Button>
           </div>
         </div>
@@ -1620,17 +1568,16 @@ const Index = () => {
       </GuideSection>
 
       {/* Rotas para correr/pedalar */}
-      <GuideSection id="rotas" title="Rotas para Correr/Pedalar" printBreak>
+      <GuideSection id="rotas" title={t("section.routes")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
-          Circuitos seguros para corrida e ciclismo em Cabo Frio, com extensões para Arraial e Búzios. 
-          Explore a orla, lagoas e paisagens da região de forma ativa e saudável.
+          {t("routes.intro")}
         </p>
 
         {/* Cabo Frio - Rotas principais */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-primary mb-6 flex items-center gap-2">
             <Route className="h-6 w-6" />
-            Cabo Frio — Rotas Principais
+            {t("routes.mainRoutes")}
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {runningRoutes.map(route => {
@@ -1696,17 +1643,16 @@ const Index = () => {
       </GuideSection>
 
       {/* Sobre Nós */}
-      <GuideSection id="sobre" title="Sobre Nós" printBreak>
+      <GuideSection id="sobre" title={t("section.about")} printBreak>
         <div className="bg-card p-8 rounded-lg border border-border text-center max-w-3xl mx-auto">
           <img src={riosLogoFooter} alt="Rios Logo" className="mx-auto mb-6 h-16 object-contain" />
           <p className="text-lg text-muted-foreground mb-6">
-            A Rios cuida de imóveis e pessoas em Cabo Frio e Região dos Lagos. 
-            Oferecemos hospedagens exclusivas com todo o conforto e charme que você merece.
+            {t("about.description")}
           </p>
           <div className="flex justify-center">
             <Button asChild variant="outline" size="lg">
               <a href="https://www.airbnb.com.br" target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-5 w-5" /> Ver Imóveis no Airbnb
+                <ExternalLink className="mr-2 h-5 w-5" /> {t("common.seeOnAirbnb")}
               </a>
             </Button>
           </div>
