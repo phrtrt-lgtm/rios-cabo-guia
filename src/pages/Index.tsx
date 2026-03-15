@@ -747,14 +747,14 @@ const Index = () => {
       </GuideSection>
 
       {/* Gastronomia */}
-      <GuideSection id="gastronomia" title="Gastronomia — Curadoria Rios" className="bg-muted/30" printBreak>
+      <GuideSection id="gastronomia" title={t("section.gastronomy")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
-          Nossas indicações favoritas, testadas e aprovadas. Horários podem variar — sempre confirme no link ou telefone.
+          {t("gastronomy.intro")}
         </p>
 
         {/* Italiano */}
         <div className="mb-12">
-          <h3 className="text-2xl font-semibold text-secondary mb-6">Italiano</h3>
+          <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.italian")}</h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
               name="Leña Casa Italiana"
