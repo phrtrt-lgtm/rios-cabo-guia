@@ -1069,19 +1069,18 @@ const Index = () => {
       </GuideSection>
 
       {/* Arraial do Cabo */}
-      <GuideSection id="arraial" title="Arraial do Cabo" className="bg-muted/30" printBreak>
+      <GuideSection id="arraial" title={t("section.arraial")} className="bg-muted/30" printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
-          Águas claras, trilhas e mirantes — o Caribe brasileiro na nossa vizinhança
+          {t("arraial.subtitle")}
         </p>
         <p className="text-muted-foreground mb-8">
-          A apenas 30 minutos de Cabo Frio, Arraial do Cabo é famoso por suas águas cristalinas 
-          e praias paradisíacas. Confira os principais pontos turísticos.
+          {t("arraial.intro")}
         </p>
 
         {/* Praias & Pontos - Arraial */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <Waves className="h-6 w-6" /> Praias & Pontos Turísticos
+            <Waves className="h-6 w-6" /> {t("arraial.beachesTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             {arraialPlaces.map((place) => {
