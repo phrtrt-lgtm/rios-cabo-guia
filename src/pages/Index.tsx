@@ -1195,44 +1195,27 @@ const Index = () => {
         {/* Gastronomia Búzios */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <Utensils className="h-6 w-6" /> Centros Gastronômicos
+            <Utensils className="h-6 w-6" /> {t("buzios.gastroTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Porto da Barra
               </h4>
-              <p className="text-muted-foreground mb-4">
-                Complexo à beira-mar em Manguinhos com vários restaurantes. Famoso pelo pôr do sol com vista para a Praia de Geribá.
-              </p>
+              <p className="text-muted-foreground mb-4">{t("buzios.portoBarra")}</p>
               <div className="space-y-2 text-sm">
-                <p className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-primary" />
-                  <span>Chegue 1h antes do pôr do sol</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <Phone className="h-4 w-4 text-primary" />
-                  <span>Reserve com antecedência aos finais de semana</span>
-                </p>
+                <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /><span>{t("buzios.portoBarra.arrive")}</span></p>
+                <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-primary" /><span>{t("buzios.portoBarra.reserve")}</span></p>
               </div>
             </div>
-
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Rua das Pedras
               </h4>
-              <p className="text-muted-foreground mb-4">
-                Principal eixo gastronômico de Búzios. Restaurantes, bares e lojas em rua de pedras charmosa. Noite movimentada e animada.
-              </p>
+              <p className="text-muted-foreground mb-4">{t("buzios.ruaDasPedras")}</p>
               <div className="space-y-2 text-sm">
-                <p className="flex items-center gap-2">
-                  <span className="text-primary">🍽️</span>
-                  <span>3 perfis: rápido/econômico ($$), família ($$), autoral ($$$)</span>
-                </p>
-                <p className="flex items-center gap-2">
-                  <span className="text-primary">🌙</span>
-                  <span>Fica lotada à noite — reserve mesa</span>
-                </p>
+                <p className="flex items-center gap-2"><span className="text-primary">🍽️</span><span>{t("buzios.rdp.profiles")}</span></p>
+                <p className="flex items-center gap-2"><span className="text-primary">🌙</span><span>{t("buzios.rdp.crowded")}</span></p>
               </div>
             </div>
           </div>
@@ -1241,18 +1224,19 @@ const Index = () => {
         {/* Roteiros Búzios */}
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <MapPin className="h-6 w-6" /> Roteiros em 1 Clique
+            <MapPin className="h-6 w-6" /> {t("buzios.itinerariesTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
-                <Mountain className="h-5 w-5" /> Clássico de Cartões-Postais
+                <Mountain className="h-5 w-5" /> {t("buzios.classicPostcard")}
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">☀️</span>
-                  <span><strong>Manhã:</strong> Praia Azeda & Azedinha (escadaria)</span>
-                </li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">☀️</span><span>{t("buzios.cp.morning")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🚶</span><span>{t("buzios.cp.afternoon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🌙</span><span>{t("buzios.cp.night")}</span></li>
+              </ul>
+            </div>
                 <li className="flex items-start gap-2">
                   <span className="text-primary mt-1">🚶</span>
                   <span><strong>Tarde:</strong> Passeio pela Orla Bardot</span>
