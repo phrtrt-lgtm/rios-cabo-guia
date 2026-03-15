@@ -1185,13 +1185,12 @@ const Index = () => {
       </GuideSection>
 
       {/* Búzios */}
-      <GuideSection id="buzios" title="Búzios" printBreak>
+      <GuideSection id="buzios" title={t("section.buzios")} printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
-          Mais de 20 praias, noites animadas e pôr do sol inesquecível
+          {t("buzios.subtitle")}
         </p>
         <p className="text-muted-foreground mb-8">
-          A cerca de 40km de Cabo Frio, Búzios é o destino sofisticado da Região dos Lagos, 
-          com praias paradisíacas, gastronomia internacional e vida noturna vibrante.
+          {t("buzios.intro")}
         </p>
 
         {/* Praias & Pontos - Búzios */}
