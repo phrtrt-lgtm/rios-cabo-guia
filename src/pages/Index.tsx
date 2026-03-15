@@ -1237,16 +1237,6 @@ const Index = () => {
                 <li className="flex items-start gap-2"><span className="text-primary mt-1">🌙</span><span>{t("buzios.cp.night")}</span></li>
               </ul>
             </div>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🚶</span>
-                  <span><strong>Tarde:</strong> Passeio pela Orla Bardot</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🌙</span>
-                  <span><strong>Noite:</strong> Jantar na Rua das Pedras</span>
-                </li>
-              </ul>
-            </div>
 
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
