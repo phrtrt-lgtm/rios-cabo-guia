@@ -1490,11 +1490,10 @@ const Index = () => {
       </GuideSection>
 
       {/* Foto-spots */}
-      <GuideSection id="fotospots" title="Foto-spots & Horário da Luz" printBreak>
+      <GuideSection id="fotospots" title={t("section.photospots")} printBreak>
         <div className="flex flex-col gap-6 mb-8">
           <p className="text-lg text-muted-foreground">
-            Capture os melhores momentos da Região dos Lagos. Descubra pontos fotogênicos, 
-            janelas de luz ideais e dicas de composição para fotos incríveis.
+            {t("photospots.intro")}
           </p>
           
           {/* Botões do mapa */}
