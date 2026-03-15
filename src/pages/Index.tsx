@@ -417,7 +417,7 @@ const Index = () => {
       />
 
       {/* Praias */}
-      <GuideSection id="praias" title="Praias & Pontos Clássicos" printBreak>
+      <GuideSection id="praias" title={t("section.beaches")} printBreak>
         <div className="grid md:grid-cols-2 gap-6">
           {sortedTouristPlaces.map((place) => {
             const eta = getETA(place.id);
