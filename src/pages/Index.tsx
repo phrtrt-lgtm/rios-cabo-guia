@@ -322,69 +322,60 @@ const Index = () => {
       {/* Boas-vindas */}
       <GuideSection id="boas-vindas" title={t("section.welcome")}>
         <div className="prose max-w-none">
-          
           <div className="mb-4 not-prose">
             <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 p-6 rounded-lg border-2 border-primary/30">
-              <h3 className="font-bold text-xl text-primary mb-3 text-center">📍 O que você encontra neste guia</h3>
-              <p className="text-sm text-foreground/80 text-center mb-2">
-                Além de <strong>praias, restaurantes, utilidades, Arraial do Cabo e Búzios</strong>, preparamos seções especiais para você explorar a região:
-              </p>
+              <h3 className="font-bold text-xl text-primary mb-3 text-center">{t("welcome.whatYouFind")}</h3>
+              <p className="text-sm text-foreground/80 text-center mb-2">{t("welcome.whatYouFindDesc")}</p>
               <ul className="text-sm space-y-1 max-w-2xl mx-auto">
                 <li className="flex items-center gap-2">
                   <span className="text-primary">🥾</span>
-                  <span><strong>Trilhas:</strong> Percursos com níveis de dificuldade, tempo estimado e dicas práticas</span>
+                  <span><strong>{t("nav.trails")}:</strong> {t("welcome.trailsDesc")}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-primary">📸</span>
-                  <span><strong>Foto-spots:</strong> Melhores locais e horários para fotos incríveis da região</span>
+                  <span><strong>{t("nav.photospots")}:</strong> {t("welcome.photospotsDesc")}</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-primary">🏃‍♂️</span>
-                  <span><strong>Rotas para corrida e ciclismo:</strong> Circuitos mapeados com distâncias, altimetria e pontos de hidratação</span>
+                  <span><strong>{t("nav.routes")}:</strong> {t("welcome.routesDesc")}</span>
                 </li>
               </ul>
             </div>
           </div>
-          
           <div className="grid md:grid-cols-2 gap-4 not-prose">
             <div className="bg-secondary/10 p-4 rounded-lg border border-secondary/30">
               <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Plus className="h-5 w-5" /> Montar meu roteiro
+                <Plus className="h-5 w-5" /> {t("welcome.buildItinerary")}
               </h3>
-              <p className="text-sm">Clique no botão flutuante no canto inferior direito para criar seu roteiro personalizado. Selecione lugares, organize por blocos do dia e veja os tempos de deslocamento.</p>
+              <p className="text-sm">{t("welcome.buildItineraryDesc")}</p>
             </div>
-
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
               <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Navigation className="h-5 w-5" /> Calcular distâncias
+                <Navigation className="h-5 w-5" /> {t("welcome.calcDistances")}
               </h3>
-              <p className="text-sm">Digite um endereço ou use "Minha localização" para ver o tempo estimado a pé e de carro até cada lugar.</p>
+              <p className="text-sm">{t("welcome.calcDistancesDesc")}</p>
             </div>
-
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
               <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Clock className="h-5 w-5" /> Melhor horário
+                <Clock className="h-5 w-5" /> {t("welcome.bestTimeTitle")}
               </h3>
-              <p className="text-sm">Praias ficam mais tranquilas pela manhã (até 11h). Evite o sol forte entre 11h-15h.</p>
+              <p className="text-sm">{t("welcome.bestTimeDesc")}</p>
             </div>
-            
             <div className="bg-secondary/5 p-4 rounded-lg border border-secondary/20">
               <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Phone className="h-5 w-5" /> Contatos
+                <Phone className="h-5 w-5" /> {t("welcome.contactsTitle")}
               </h3>
-              <p className="text-sm">Links com ☎️ abrem WhatsApp. 📍 levam ao Google Maps.</p>
+              <p className="text-sm">{t("welcome.contactsDesc")}</p>
             </div>
-            
             <div className="bg-accent/5 p-4 rounded-lg border border-accent/20">
               <h3 className="font-semibold text-accent mb-2 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> Offline
+                <MapPin className="h-5 w-5" /> {t("welcome.offlineTitle")}
               </h3>
-              <p className="text-sm">Salve este guia no celular para consultar sem internet.</p>
+              <p className="text-sm">{t("welcome.offlineDesc")}</p>
             </div>
-            
             <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2">💵 Custo</h3>
-              <p className="text-sm">$ = econômico, $$ = médio, $$$ = alto</p>
+              <h3 className="font-semibold text-primary mb-2">{t("welcome.costTitle")}</h3>
+              <p className="text-sm">{t("welcome.costDesc")}</p>
             </div>
           </div>
         </div>
