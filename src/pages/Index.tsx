@@ -1102,7 +1102,7 @@ const Index = () => {
         {/* Gastronomia Arraial */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <Utensils className="h-6 w-6" /> Destaque Gastronômico
+            <Utensils className="h-6 w-6" /> {t("arraial.gastroTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <RestaurantCard 
@@ -1110,13 +1110,12 @@ const Index = () => {
               description="Cozinha do mar com proposta autoral. Peixes frescos, frutos do mar e ingredientes sazonais em pratos criativos."
               address="Arraial do Cabo"
               priceRange="$$$"
-              category="Frutos do Mar"
+              category={t("category.seafood")}
               hours="Consultar horários"
             />
             <div className="bg-accent/10 p-6 rounded-lg border border-accent/20 flex items-center">
               <p className="text-sm text-muted-foreground">
-                <strong className="text-accent">Nota:</strong> Existe também o Fixi Kaiseki na Passagem (Cabo Frio) — 
-                veja mais na seção de Gastronomia de Cabo Frio acima.
+                <strong className="text-accent">{t("common.note")}:</strong> {t("arraial.fixiNote")}
               </p>
             </div>
           </div>
@@ -1125,50 +1124,28 @@ const Index = () => {
         {/* Roteiros Arraial */}
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
-            <MapPin className="h-6 w-6" /> Roteiros em 1 Clique
+            <MapPin className="h-6 w-6" /> {t("arraial.itinerariesTitle")}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
-                <Mountain className="h-5 w-5" /> Clássico Visual
+                <Mountain className="h-5 w-5" /> {t("arraial.classicVisual")}
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">☀️</span>
-                  <span><strong>Manhã:</strong> Mirante Pontal do Atalaia</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🏖️</span>
-                  <span><strong>Tarde:</strong> Prainhas do Atalaia</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🌅</span>
-                  <span><strong>Fim de tarde:</strong> Pôr do sol na Praia Grande</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🍽️</span>
-                  <span><strong>Noite:</strong> Jantar no centro</span>
-                </li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">☀️</span><span>{t("arraial.cv.morning")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🏖️</span><span>{t("arraial.cv.afternoon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🌅</span><span>{t("arraial.cv.lateAfternoon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🍽️</span><span>{t("arraial.cv.night")}</span></li>
               </ul>
             </div>
-
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
-                <Waves className="h-5 w-5" /> Mar & Trilha
+                <Waves className="h-5 w-5" /> {t("arraial.seaTrail")}
               </h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🥾</span>
-                  <span><strong>Manhã:</strong> Trilha para Praia do Forno</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">🤿</span>
-                  <span><strong>Meio-dia:</strong> Snorkel na Praia do Forno</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-primary mt-1">⛵</span>
-                  <span><strong>Tarde:</strong> Passeio de barco (Gruta Azul + Ilha do Farol)</span>
-                </li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🥾</span><span>{t("arraial.st.morning")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">🤿</span><span>{t("arraial.st.noon")}</span></li>
+                <li className="flex items-start gap-2"><span className="text-primary mt-1">⛵</span><span>{t("arraial.st.afternoon")}</span></li>
               </ul>
             </div>
           </div>
