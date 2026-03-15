@@ -1320,17 +1320,16 @@ const Index = () => {
       </GuideSection>
 
       {/* Trilhas */}
-      <GuideSection id="trilhas" title="Trilhas da Região dos Lagos" printBreak>
+      <GuideSection id="trilhas" title={t("section.trails")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
-          Descubra as melhores trilhas de Cabo Frio, Arraial do Cabo e Búzios. 
-          Mirantes, dunas, costões e praias selvagens esperam por você.
+          {t("trails.intro")}
         </p>
 
         {/* Filtros de trilhas */}
         <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="h-5 w-5 text-secondary" />
-            <h3 className="font-semibold text-secondary">Filtrar trilhas</h3>
+            <h3 className="font-semibold text-secondary">{t("common.filterTrails")}</h3>
           </div>
           <div className="flex flex-wrap gap-3">
             <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
