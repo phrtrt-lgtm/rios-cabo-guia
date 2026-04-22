@@ -247,14 +247,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background border-b border-border pt-6 pb-3">
+      <header className="bg-background border-b border-border/60 pt-6 pb-5">
         <div className="container mx-auto px-4">
           <div className="flex justify-end mb-2">
             <LanguageSelector />
           </div>
           <div className="flex flex-col items-center gap-2">
-            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-16 object-contain" />
-            <p className="text-[#D2691E] text-base md:text-lg font-montserrat font-bold tracking-wider uppercase">{t("header.subtitle")}</p>
+            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-14 md:h-16 object-contain" />
+            <p className="kicker !text-secondary">{t("header.subtitle")}</p>
           </div>
         </div>
       </header>
@@ -384,7 +384,7 @@ const Index = () => {
       {/* Floating Itinerary Builder Button */}
       <Button
         onClick={() => setItineraryBuilderOpen(true)}
-        className="fixed bottom-8 right-8 rounded-full shadow-lg h-14 px-6 gap-2 z-50 bg-secondary hover:bg-secondary/90 text-secondary-foreground no-print"
+        className="fixed bottom-8 right-8 rounded-full shadow-lg h-14 px-6 gap-2 z-50 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-display no-print"
         size="lg"
       >
         <Plus className="h-5 w-5" />
