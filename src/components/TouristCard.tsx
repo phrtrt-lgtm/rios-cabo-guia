@@ -1,4 +1,4 @@
-import { MapPin, ExternalLink, Info, Waves, Landmark, Mountain, Palmtree } from "lucide-react";
+import { MapPin, ExternalLink, Info, Waves, Landmark, Mountain, Palmtree, Star } from "lucide-react";
 import { ReactNode } from "react";
 
 interface TouristCardProps {
@@ -33,53 +33,58 @@ export const TouristCard = ({
   const Icon = getIconForType(type);
 
   return (
-    <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-      <div className="p-6">
-        <div className="flex gap-4 mb-4">
-          {/* Icon */}
-          <div className="flex-shrink-0">
-            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-              <Icon className="w-7 h-7 text-primary" />
-            </div>
-          </div>
-          
-          {/* Header */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <h4 className="text-xl font-semibold text-primary">{name}</h4>
-              {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
-            </div>
+    <div className="group bg-card rounded-3xl border border-border overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-primary/40 transition-all duration-300">
+      {/* Visual header com gradient sutil + ETA badge no canto */}
+      <div className="relative h-40 bg-gradient-to-br from-primary/10 via-muted to-accent/10 overflow-hidden">
+        <div className="absolute inset-0 flex items-center justify-center opacity-30">
+          <Icon className="w-20 h-20 text-primary" />
+        </div>
+        {/* Pílula com ícone tipo */}
+        <div className="absolute top-4 left-4">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-md border border-border/50 text-xs font-display font-medium text-primary">
+            <Icon className="w-3.5 h-3.5" />
+            <span className="capitalize">{type || 'praia'}</span>
           </div>
         </div>
-        
-        <p className="text-sm text-muted-foreground mb-4">{description}</p>
-        
-        <div className="space-y-2 text-sm mb-4">
-          <div className="flex items-start gap-2">
-            <MapPin className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
-            <span className="text-muted-foreground">{location}</span>
+        {/* ETA no canto inferior direito */}
+        {distanceBadge && (
+          <div className="absolute bottom-4 right-4">
+            {distanceBadge}
           </div>
+        )}
+      </div>
+
+      <div className="p-6">
+        <h4 className="font-display text-2xl font-semibold text-primary mb-3 leading-tight">{name}</h4>
+        
+        <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{description}</p>
+        
+        <div className="flex items-start gap-2 text-sm mb-4">
+          <MapPin className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
+          <span className="text-muted-foreground">{location}</span>
         </div>
 
         {tips && (
-          <div className="bg-accent/10 p-3 rounded-lg border border-accent/20 mb-4">
+          <div className="host-tip mb-4">
             <div className="flex items-start gap-2">
-              <Info className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-muted-foreground">{tips}</p>
+              <Star className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0 fill-secondary" />
+              <p className="text-sm text-foreground/80 leading-relaxed">
+                <span className="host-tip-label mr-2">Dica do anfitrião</span>
+                {tips}
+              </p>
             </div>
           </div>
         )}
         
-        <div className="flex gap-2">
-          <a 
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs bg-secondary text-secondary-foreground px-3 py-1.5 rounded-md hover:bg-secondary/90 transition-colors"
-          >
-            <MapPin className="w-3 h-3" /> Ver no Google Maps
-          </a>
-        </div>
+        <a 
+          href={mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-xs font-display font-medium bg-secondary text-secondary-foreground px-4 py-2 rounded-full hover:bg-secondary/90 transition-colors"
+        >
+          <MapPin className="w-3 h-3" /> Ver no Google Maps
+          <ExternalLink className="w-3 h-3" />
+        </a>
       </div>
     </div>
   );
