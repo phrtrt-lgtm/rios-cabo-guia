@@ -260,38 +260,38 @@ const Index = () => {
       </header>
 
       {/* Navigation Menu */}
-      <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border shadow-sm">
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-border/60">
         <div className="container mx-auto px-4 py-3">
-          <div className="flex flex-wrap gap-2 justify-center">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('boas-vindas')} className="gap-2">
-              <Home className="h-4 w-4" /> {t("nav.home")}
+          <div className="flex flex-nowrap gap-1 justify-start md:justify-center overflow-x-auto scrollbar-none">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('boas-vindas')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.home")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="gap-2">
-              <MapPin className="h-4 w-4" /> {t("nav.beaches")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.beaches")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="gap-2">
-              <ShoppingBag className="h-4 w-4" /> {t("nav.utilities")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.utilities")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="gap-2">
-              <Utensils className="h-4 w-4" /> {t("nav.gastronomy")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.gastronomy")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="gap-2">
-              <Waves className="h-4 w-4" /> {t("nav.arraial")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.arraial")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="gap-2">
-              <Palmtree className="h-4 w-4" /> {t("nav.buzios")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.buzios")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="gap-2">
-              <Mountain className="h-4 w-4" /> {t("nav.trails")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.trails")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="gap-2">
-              <Camera className="h-4 w-4" /> {t("nav.photospots")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.photospots")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="gap-2">
-              <Route className="h-4 w-4" /> {t("nav.routes")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.routes")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="gap-2">
-              <Info className="h-4 w-4" /> {t("nav.about")}
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="rounded-full font-display text-sm shrink-0">
+              {t("nav.about")}
             </Button>
           </div>
         </div>

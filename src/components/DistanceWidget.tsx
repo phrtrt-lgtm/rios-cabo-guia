@@ -216,7 +216,7 @@ export const DistanceWidget = ({
 
   return (
     <>
-      <div className="sticky top-[73px] z-40 bg-background/95 backdrop-blur border-b border-border shadow-sm">
+      <div className="sticky top-[57px] z-40 bg-background/90 backdrop-blur-xl border-b border-border/60">
         <div className="container mx-auto px-4 py-4 max-w-5xl">
           <div className="flex flex-col gap-3">
             {/* Input e botões principais */}
@@ -229,7 +229,7 @@ export const DistanceWidget = ({
                   onChange={(e) => setAddress(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSetOrigin()}
                   disabled={isLoading}
-                  className="w-full"
+                  className="w-full rounded-full px-5 h-11"
                 />
               </div>
               <Button
@@ -237,6 +237,7 @@ export const DistanceWidget = ({
                 disabled={isLoading}
                 variant="default"
                 size="sm"
+                className="rounded-full h-11 px-5 font-display"
               >
                 <MapPin className="h-4 w-4 mr-2" />
                 Definir base
@@ -246,63 +247,77 @@ export const DistanceWidget = ({
                 disabled={isLoading}
                 variant="outline"
                 size="sm"
+                className="rounded-full h-11 px-5 font-display"
               >
                 <Navigation className="h-4 w-4 mr-2" />
                 Usar minha localização
               </Button>
             </div>
 
-            {/* Status e controles */}
+            {/* Origin card — gradient ocean com radius grande */}
             {currentOrigin && (
-              <div className="flex flex-wrap gap-2 items-center justify-between bg-accent/10 px-3 py-2 rounded-md">
-                <div className="flex items-center gap-2 flex-1">
-                  <span className="text-sm text-muted-foreground">
-                    Base: <span className="font-medium text-foreground">{currentOrigin}</span>
-                  </span>
-                  <Button
-                    onClick={handleClearOrigin}
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2"
-                  >
-                    <X className="h-3 w-3 mr-1" />
-                    Limpar
-                  </Button>
-                </div>
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-5 md:p-6 shadow-lg">
+                {/* Glow coral decorativo */}
+                <div className="pointer-events-none absolute -top-20 -right-10 w-72 h-72 rounded-full bg-secondary/25 blur-3xl" />
 
-                <div className="flex gap-2 items-center">
-                  {/* Toggle de modo */}
-                  <div className="flex gap-1 bg-muted p-1 rounded-md">
+                <div className="relative flex flex-wrap gap-4 items-center justify-between">
+                  <div className="flex items-center gap-4 flex-1 min-w-[220px]">
+                    <div className="w-11 h-11 rounded-2xl bg-white/15 grid place-items-center flex-shrink-0">
+                      <MapPin className="h-5 w-5" style={{ color: 'hsl(var(--accent))' }} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-display text-[11px] font-medium uppercase tracking-[0.14em] opacity-70 mb-0.5">
+                        Sua origem
+                      </div>
+                      <div className="font-display text-base font-medium truncate">{currentOrigin}</div>
+                    </div>
                     <Button
-                      onClick={() => onModeChange('walking')}
-                      variant={currentMode === 'walking' ? 'default' : 'ghost'}
+                      onClick={handleClearOrigin}
+                      variant="ghost"
                       size="sm"
-                      className="h-7 px-3"
+                      className="rounded-full h-8 px-3 text-primary-foreground/80 hover:text-primary-foreground hover:bg-white/15"
                     >
-                      <Footprints className="h-4 w-4 mr-1" />
-                      A pé
-                    </Button>
-                    <Button
-                      onClick={() => onModeChange('driving')}
-                      variant={currentMode === 'driving' ? 'default' : 'ghost'}
-                      size="sm"
-                      className="h-7 px-3"
-                    >
-                      <Car className="h-4 w-4 mr-1" />
-                      Carro
+                      <X className="h-3.5 w-3.5" />
                     </Button>
                   </div>
 
-                  {/* Ordenar */}
-                  <Button
-                    onClick={onSortByTime}
-                    variant="outline"
-                    size="sm"
-                    className="h-7 px-3"
-                  >
-                    <ArrowUpDown className="h-4 w-4 mr-1" />
-                    Ordenar
-                  </Button>
+                  <div className="flex gap-2 items-center">
+                    <div className="flex gap-1 bg-white/10 p-1 rounded-full">
+                      <Button
+                        onClick={() => onModeChange('walking')}
+                        size="sm"
+                        className={`rounded-full h-8 px-4 font-display text-xs border-0 ${
+                          currentMode === 'walking'
+                            ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+                            : 'bg-transparent text-primary-foreground hover:bg-white/15'
+                        }`}
+                      >
+                        <Footprints className="h-3.5 w-3.5 mr-1" />
+                        A pé
+                      </Button>
+                      <Button
+                        onClick={() => onModeChange('driving')}
+                        size="sm"
+                        className={`rounded-full h-8 px-4 font-display text-xs border-0 ${
+                          currentMode === 'driving'
+                            ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+                            : 'bg-transparent text-primary-foreground hover:bg-white/15'
+                        }`}
+                      >
+                        <Car className="h-3.5 w-3.5 mr-1" />
+                        Carro
+                      </Button>
+                    </div>
+
+                    <Button
+                      onClick={onSortByTime}
+                      size="sm"
+                      className="rounded-full h-8 px-4 font-display text-xs bg-white/10 text-primary-foreground hover:bg-white/20 border-0"
+                    >
+                      <ArrowUpDown className="h-3.5 w-3.5 mr-1" />
+                      Ordenar
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}
