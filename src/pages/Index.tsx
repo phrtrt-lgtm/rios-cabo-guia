@@ -1101,6 +1101,7 @@ const Index = () => {
           <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {buziosPlaces.map((place) => {
               const eta = getETA(place.id);
+              const photo = getPlaceImage(place.id);
               return (
                 <TouristCard 
                   key={place.id}
@@ -1109,6 +1110,8 @@ const Index = () => {
                   location={place.bairro || 'Búzios'}
                   tips={getPlaceTips(place.id)}
                   type={place.category as any}
+                  imageUrl={photo?.src}
+                  imageCredit={photo?.credit}
                   distanceBadge={eta && origin ? (
                     <DistanceBadge 
                       walkingMinutes={eta.walkingMinutes}
