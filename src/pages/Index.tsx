@@ -1282,10 +1282,12 @@ const Index = () => {
               .filter(trail => trail.cidade === 'Cabo Frio')
               .map(trail => {
                 const eta = getETA(trail.id);
+                const photo = getPlaceImage(trail.id);
+                const enriched = photo ? { ...trail, imageUrl: trail.imageUrl ?? photo.src, imageCredit: trail.imageCredit ?? photo.credit } : trail;
                 return (
                   <TrailCard
                     key={trail.id}
-                    trail={trail}
+                    trail={enriched}
                     walkingMinutes={eta?.walkingMinutes || null}
                     drivingMinutes={eta?.drivingMinutes || null}
                     currentMode={currentMode}
