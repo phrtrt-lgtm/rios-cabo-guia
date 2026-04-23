@@ -20,6 +20,7 @@ import { photospots } from "@/data/photospots";
 import { PhotoSpotCard } from "@/components/PhotoSpotCard";
 import { PhotoSpotsMap } from "@/components/PhotoSpotsMap";
 import { runningRoutes, extensionRoutes } from "@/data/routes";
+import { getPlaceImage } from "@/data/placeImages";
 import { RouteCard } from "@/components/RouteCard";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
@@ -337,6 +338,7 @@ const Index = () => {
         <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
           {sortedTouristPlaces.map((place) => {
             const eta = getETA(place.id);
+            const photo = getPlaceImage(place.id);
             return (
               <TouristCard 
                 key={place.id}
@@ -345,6 +347,8 @@ const Index = () => {
                 location={place.bairro || 'Cabo Frio'}
                 tips={getPlaceTips(place.id)}
                 type={place.category as any}
+                imageUrl={photo?.src}
+                imageCredit={photo?.credit}
                 distanceBadge={eta && origin ? (
                   <DistanceBadge 
                     walkingMinutes={eta.walkingMinutes}
@@ -1001,6 +1005,7 @@ const Index = () => {
           <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {arraialPlaces.map((place) => {
               const eta = getETA(place.id);
+              const photo = getPlaceImage(place.id);
               return (
                 <TouristCard 
                   key={place.id}
@@ -1009,6 +1014,8 @@ const Index = () => {
                   location={place.bairro || 'Arraial do Cabo'}
                   tips={getPlaceTips(place.id)}
                   type={place.category as any}
+                  imageUrl={photo?.src}
+                  imageCredit={photo?.credit}
                   distanceBadge={eta && origin ? (
                     <DistanceBadge 
                       walkingMinutes={eta.walkingMinutes}
@@ -1094,6 +1101,7 @@ const Index = () => {
           <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {buziosPlaces.map((place) => {
               const eta = getETA(place.id);
+              const photo = getPlaceImage(place.id);
               return (
                 <TouristCard 
                   key={place.id}
@@ -1102,6 +1110,8 @@ const Index = () => {
                   location={place.bairro || 'Búzios'}
                   tips={getPlaceTips(place.id)}
                   type={place.category as any}
+                  imageUrl={photo?.src}
+                  imageCredit={photo?.credit}
                   distanceBadge={eta && origin ? (
                     <DistanceBadge 
                       walkingMinutes={eta.walkingMinutes}
@@ -1272,10 +1282,12 @@ const Index = () => {
               .filter(trail => trail.cidade === 'Cabo Frio')
               .map(trail => {
                 const eta = getETA(trail.id);
+                const photo = getPlaceImage(trail.id);
+                const enriched = photo ? { ...trail, imageUrl: trail.imageUrl ?? photo.src, imageCredit: trail.imageCredit ?? photo.credit } : trail;
                 return (
                   <TrailCard
                     key={trail.id}
-                    trail={trail}
+                    trail={enriched}
                     walkingMinutes={eta?.walkingMinutes || null}
                     drivingMinutes={eta?.drivingMinutes || null}
                     currentMode={currentMode}
@@ -1298,10 +1310,12 @@ const Index = () => {
               .filter(trail => trail.cidade === 'Arraial do Cabo')
               .map(trail => {
                 const eta = getETA(trail.id);
+                const photo = getPlaceImage(trail.id);
+                const enriched = photo ? { ...trail, imageUrl: trail.imageUrl ?? photo.src, imageCredit: trail.imageCredit ?? photo.credit } : trail;
                 return (
                   <TrailCard
                     key={trail.id}
-                    trail={trail}
+                    trail={enriched}
                     walkingMinutes={eta?.walkingMinutes || null}
                     drivingMinutes={eta?.drivingMinutes || null}
                     currentMode={currentMode}
@@ -1324,10 +1338,12 @@ const Index = () => {
               .filter(trail => trail.cidade === 'Armação dos Búzios')
               .map(trail => {
                 const eta = getETA(trail.id);
+                const photo = getPlaceImage(trail.id);
+                const enriched = photo ? { ...trail, imageUrl: trail.imageUrl ?? photo.src, imageCredit: trail.imageCredit ?? photo.credit } : trail;
                 return (
                   <TrailCard
                     key={trail.id}
-                    trail={trail}
+                    trail={enriched}
                     walkingMinutes={eta?.walkingMinutes || null}
                     drivingMinutes={eta?.drivingMinutes || null}
                     currentMode={currentMode}
