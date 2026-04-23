@@ -246,15 +246,17 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background border-b border-border/60 pt-6 pb-5">
+      <header className="bg-background border-b border-border/60 pt-5 pb-4">
         <div className="container mx-auto px-4">
-          <div className="flex justify-end mb-2">
-            <LanguageSelector />
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-10 md:h-12 object-contain" />
+            <div className="flex items-center gap-2">
+              <WeatherWidget />
+              <HeaderEvents />
+              <LanguageSelector />
+            </div>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-14 md:h-16 object-contain" />
-            <p className="kicker !text-secondary">{t("header.subtitle")}</p>
-          </div>
+          <p className="kicker !text-secondary text-center">{t("header.subtitle")}</p>
         </div>
       </header>
 
@@ -262,9 +264,6 @@ const Index = () => {
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-border/60">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-nowrap gap-1 justify-start md:justify-center overflow-x-auto scrollbar-none">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('boas-vindas')} className="rounded-full font-display text-sm shrink-0">
-              {t("nav.home")}
-            </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-display text-sm shrink-0">
               {t("nav.beaches")}
             </Button>
@@ -306,79 +305,6 @@ const Index = () => {
           isLoading={isLoading}
         />
       </div>
-
-      {/* Rios Introduction */}
-      <RiosIntro />
-
-      {/* Weather and Events Section */}
-      <section className="container mx-auto px-4 py-8 no-print">
-        <div className="grid md:grid-cols-2 gap-6">
-          <WeatherWidget />
-          <LocalEvents />
-        </div>
-      </section>
-
-      {/* Boas-vindas */}
-      <GuideSection id="boas-vindas" title={t("section.welcome")}>
-        <div className="prose max-w-none">
-          <div className="mb-4 not-prose">
-            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 p-6 rounded-lg border-2 border-primary/30">
-              <h3 className="font-bold text-xl text-primary mb-3 text-center">{t("welcome.whatYouFind")}</h3>
-              <p className="text-sm text-foreground/80 text-center mb-2">{t("welcome.whatYouFindDesc")}</p>
-              <ul className="text-sm space-y-1 max-w-2xl mx-auto">
-                <li className="flex items-center gap-2">
-                  <span className="text-primary">🥾</span>
-                  <span><strong>{t("nav.trails")}:</strong> {t("welcome.trailsDesc")}</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-primary">📸</span>
-                  <span><strong>{t("nav.photospots")}:</strong> {t("welcome.photospotsDesc")}</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-primary">🏃‍♂️</span>
-                  <span><strong>{t("nav.routes")}:</strong> {t("welcome.routesDesc")}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4 not-prose">
-            <div className="bg-secondary/10 p-4 rounded-lg border border-secondary/30">
-              <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Plus className="h-5 w-5" /> {t("welcome.buildItinerary")}
-              </h3>
-              <p className="text-sm">{t("welcome.buildItineraryDesc")}</p>
-            </div>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Navigation className="h-5 w-5" /> {t("welcome.calcDistances")}
-              </h3>
-              <p className="text-sm">{t("welcome.calcDistancesDesc")}</p>
-            </div>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Clock className="h-5 w-5" /> {t("welcome.bestTimeTitle")}
-              </h3>
-              <p className="text-sm">{t("welcome.bestTimeDesc")}</p>
-            </div>
-            <div className="bg-secondary/5 p-4 rounded-lg border border-secondary/20">
-              <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Phone className="h-5 w-5" /> {t("welcome.contactsTitle")}
-              </h3>
-              <p className="text-sm">{t("welcome.contactsDesc")}</p>
-            </div>
-            <div className="bg-accent/5 p-4 rounded-lg border border-accent/20">
-              <h3 className="font-semibold text-accent mb-2 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> {t("welcome.offlineTitle")}
-              </h3>
-              <p className="text-sm">{t("welcome.offlineDesc")}</p>
-            </div>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2">{t("welcome.costTitle")}</h3>
-              <p className="text-sm">{t("welcome.costDesc")}</p>
-            </div>
-          </div>
-        </div>
-      </GuideSection>
 
       {/* Floating Itinerary Builder Button */}
       <Button
