@@ -1310,10 +1310,12 @@ const Index = () => {
               .filter(trail => trail.cidade === 'Arraial do Cabo')
               .map(trail => {
                 const eta = getETA(trail.id);
+                const photo = getPlaceImage(trail.id);
+                const enriched = photo ? { ...trail, imageUrl: trail.imageUrl ?? photo.src, imageCredit: trail.imageCredit ?? photo.credit } : trail;
                 return (
                   <TrailCard
                     key={trail.id}
-                    trail={trail}
+                    trail={enriched}
                     walkingMinutes={eta?.walkingMinutes || null}
                     drivingMinutes={eta?.drivingMinutes || null}
                     currentMode={currentMode}
@@ -1336,10 +1338,12 @@ const Index = () => {
               .filter(trail => trail.cidade === 'Armação dos Búzios')
               .map(trail => {
                 const eta = getETA(trail.id);
+                const photo = getPlaceImage(trail.id);
+                const enriched = photo ? { ...trail, imageUrl: trail.imageUrl ?? photo.src, imageCredit: trail.imageCredit ?? photo.credit } : trail;
                 return (
                   <TrailCard
                     key={trail.id}
-                    trail={trail}
+                    trail={enriched}
                     walkingMinutes={eta?.walkingMinutes || null}
                     drivingMinutes={eta?.drivingMinutes || null}
                     currentMode={currentMode}
