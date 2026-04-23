@@ -6,8 +6,8 @@ import { TouristCard } from "@/components/TouristCard";
 import { DistanceWidget } from "@/components/DistanceWidget";
 import { DistanceBadge } from "@/components/DistanceBadge";
 import { ItineraryBuilder } from "@/components/ItineraryBuilder";
-import { RiosIntro } from "@/components/RiosIntro";
 import { TouristChatbot } from "@/components/TouristChatbot";
+import { HeaderEvents } from "@/components/HeaderEvents";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ import { PhotoSpotsMap } from "@/components/PhotoSpotsMap";
 import { runningRoutes, extensionRoutes } from "@/data/routes";
 import { RouteCard } from "@/components/RouteCard";
 import { WeatherWidget } from "@/components/WeatherWidget";
-import { LocalEvents } from "@/components/LocalEvents";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
 import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
@@ -247,15 +246,17 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background border-b border-border/60 pt-6 pb-5">
+      <header className="bg-background border-b border-border/60 pt-5 pb-4">
         <div className="container mx-auto px-4">
-          <div className="flex justify-end mb-2">
-            <LanguageSelector />
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-10 md:h-12 object-contain" />
+            <div className="flex items-center gap-2">
+              <WeatherWidget />
+              <HeaderEvents />
+              <LanguageSelector />
+            </div>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-14 md:h-16 object-contain" />
-            <p className="kicker !text-secondary">{t("header.subtitle")}</p>
-          </div>
+          <p className="kicker !text-secondary text-center">{t("header.subtitle")}</p>
         </div>
       </header>
 
@@ -263,9 +264,6 @@ const Index = () => {
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-border/60">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-nowrap gap-1 justify-start md:justify-center overflow-x-auto scrollbar-none">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('boas-vindas')} className="rounded-full font-display text-sm shrink-0">
-              {t("nav.home")}
-            </Button>
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-display text-sm shrink-0">
               {t("nav.beaches")}
             </Button>
@@ -308,79 +306,6 @@ const Index = () => {
         />
       </div>
 
-      {/* Rios Introduction */}
-      <RiosIntro />
-
-      {/* Weather and Events Section */}
-      <section className="container mx-auto px-4 py-8 no-print">
-        <div className="grid md:grid-cols-2 gap-6">
-          <WeatherWidget />
-          <LocalEvents />
-        </div>
-      </section>
-
-      {/* Boas-vindas */}
-      <GuideSection id="boas-vindas" title={t("section.welcome")}>
-        <div className="prose max-w-none">
-          <div className="mb-4 not-prose">
-            <div className="bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 p-6 rounded-lg border-2 border-primary/30">
-              <h3 className="font-bold text-xl text-primary mb-3 text-center">{t("welcome.whatYouFind")}</h3>
-              <p className="text-sm text-foreground/80 text-center mb-2">{t("welcome.whatYouFindDesc")}</p>
-              <ul className="text-sm space-y-1 max-w-2xl mx-auto">
-                <li className="flex items-center gap-2">
-                  <span className="text-primary">🥾</span>
-                  <span><strong>{t("nav.trails")}:</strong> {t("welcome.trailsDesc")}</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-primary">📸</span>
-                  <span><strong>{t("nav.photospots")}:</strong> {t("welcome.photospotsDesc")}</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-primary">🏃‍♂️</span>
-                  <span><strong>{t("nav.routes")}:</strong> {t("welcome.routesDesc")}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4 not-prose">
-            <div className="bg-secondary/10 p-4 rounded-lg border border-secondary/30">
-              <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Plus className="h-5 w-5" /> {t("welcome.buildItinerary")}
-              </h3>
-              <p className="text-sm">{t("welcome.buildItineraryDesc")}</p>
-            </div>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Navigation className="h-5 w-5" /> {t("welcome.calcDistances")}
-              </h3>
-              <p className="text-sm">{t("welcome.calcDistancesDesc")}</p>
-            </div>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
-                <Clock className="h-5 w-5" /> {t("welcome.bestTimeTitle")}
-              </h3>
-              <p className="text-sm">{t("welcome.bestTimeDesc")}</p>
-            </div>
-            <div className="bg-secondary/5 p-4 rounded-lg border border-secondary/20">
-              <h3 className="font-semibold text-secondary mb-2 flex items-center gap-2">
-                <Phone className="h-5 w-5" /> {t("welcome.contactsTitle")}
-              </h3>
-              <p className="text-sm">{t("welcome.contactsDesc")}</p>
-            </div>
-            <div className="bg-accent/5 p-4 rounded-lg border border-accent/20">
-              <h3 className="font-semibold text-accent mb-2 flex items-center gap-2">
-                <MapPin className="h-5 w-5" /> {t("welcome.offlineTitle")}
-              </h3>
-              <p className="text-sm">{t("welcome.offlineDesc")}</p>
-            </div>
-            <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
-              <h3 className="font-semibold text-primary mb-2">{t("welcome.costTitle")}</h3>
-              <p className="text-sm">{t("welcome.costDesc")}</p>
-            </div>
-          </div>
-        </div>
-      </GuideSection>
-
       {/* Floating Itinerary Builder Button */}
       <Button
         onClick={() => setItineraryBuilderOpen(true)}
@@ -409,7 +334,7 @@ const Index = () => {
 
       {/* Praias */}
       <GuideSection id="praias" title={t("section.beaches")} printBreak>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
           {sortedTouristPlaces.map((place) => {
             const eta = getETA(place.id);
             return (
@@ -444,7 +369,7 @@ const Index = () => {
         {/* Farmácias */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.pharmacies")}</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <UtilityCard 
               name="Droga Raia"
               description="Rede nacional com atendimento ágil e produtos de saúde, beleza e perfumaria. Ideal para compras de última hora."
@@ -491,7 +416,7 @@ const Index = () => {
         {/* Supermercados */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Supermercados & Hortifruti</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <UtilityCard 
               name="Supermercado Carone"
               description="Supermercado regional com boa variedade de produtos, açougue próprio e seção de hortifruti. Preços competitivos."
@@ -576,7 +501,7 @@ const Index = () => {
         {/* Lojas de Variedades */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Variedades & Conveniência</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <UtilityCard 
               name="Lojas Americanas"
               description="Loja de departamentos com eletrônicos, utilidades, cosméticos, brinquedos e alimentos. Resolve emergências."
@@ -603,7 +528,7 @@ const Index = () => {
         {/* Padarias */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Padarias & Confeitarias</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <UtilityCard 
               name="Padaria Remmar"
               description="Padaria tradicional de Cabo Frio desde 1987. Pães artesanais, bolos decorados e café da manhã com mesas. Ambiente acolhedor."
@@ -648,7 +573,7 @@ const Index = () => {
         {/* Pet Shops */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Pet Shops</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <UtilityCard 
               name="Pés e Patas"
               description="Rede especializada em pet shop com rações, acessórios, brinquedos e produtos veterinários. Atendimento especializado."
@@ -699,7 +624,7 @@ const Index = () => {
             {t("shopping.intro")}
           </p>
           
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto mb-6">
             <div>
               <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Endereço
@@ -746,7 +671,7 @@ const Index = () => {
         {/* Italiano */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.italian")}</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Leña Casa Italiana"
               description="Casa italiana contemporânea em ambiente charmoso. Foco em massas artesanais, entradas e pratos para compartilhar. Reservas recomendadas."
@@ -785,7 +710,7 @@ const Index = () => {
         {/* Asiático */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.asian")}</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Fixi Kaiseki"
               description="Projeto kaiseki com menu sazonal do mar. Operação intimista, reservas essenciais."
@@ -841,7 +766,7 @@ const Index = () => {
         {/* Brasileiro */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.brazilian")}</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Picanha do Zé"
               description="Ícone local da picanha na pedra, serviço ágil e ambiente descontraído."
@@ -880,7 +805,7 @@ const Index = () => {
         {/* Hamburguerias */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.burgers")}</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Paelo Hamburgueria"
               description="Burgers generosos e bem executados com ingredientes de qualidade."
@@ -920,7 +845,7 @@ const Index = () => {
         {/* Saudável */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.healthy")}</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Bem Fresh"
               description="Saladas, wraps, açaí. Opções vegetarianas e veganas em ambiente casual."
@@ -943,7 +868,7 @@ const Index = () => {
         {/* Cafés */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Cafés & Doces</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Office Café"
               description="Cafés especiais, opções sem lactose e veganas, espaço aconchegante."
@@ -1015,7 +940,7 @@ const Index = () => {
         {/* Crepes */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Crepes</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Los Crepes"
               description="Crepes doces e salgados, clima de praia. Duas unidades."
@@ -1038,7 +963,7 @@ const Index = () => {
         {/* Buffet */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.buffet")}</h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="Nova Onda"
               description="Café da manhã aberto ao público e 'café colonial' no fim da tarde (confirmar valores)."
@@ -1073,7 +998,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Waves className="h-6 w-6" /> {t("arraial.beachesTitle")}
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {arraialPlaces.map((place) => {
               const eta = getETA(place.id);
               return (
@@ -1104,7 +1029,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Utensils className="h-6 w-6" /> {t("arraial.gastroTitle")}
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <RestaurantCard 
               name="FIXI (Arraial do Cabo)"
               description="Cozinha do mar com proposta autoral. Peixes frescos, frutos do mar e ingredientes sazonais em pratos criativos."
@@ -1126,7 +1051,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <MapPin className="h-6 w-6" /> {t("arraial.itinerariesTitle")}
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <Mountain className="h-5 w-5" /> {t("arraial.classicVisual")}
@@ -1166,7 +1091,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Palmtree className="h-6 w-6" /> Praias & Pontos Turísticos
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {buziosPlaces.map((place) => {
               const eta = getETA(place.id);
               return (
@@ -1197,7 +1122,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Utensils className="h-6 w-6" /> {t("buzios.gastroTitle")}
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Porto da Barra
@@ -1226,7 +1151,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <MapPin className="h-6 w-6" /> {t("buzios.itinerariesTitle")}
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <Mountain className="h-5 w-5" /> {t("buzios.classicPostcard")}
@@ -1342,7 +1267,7 @@ const Index = () => {
             <Mountain className="h-6 w-6" />
             Cabo Frio
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {trails
               .filter(trail => trail.cidade === 'Cabo Frio')
               .map(trail => {
@@ -1368,7 +1293,7 @@ const Index = () => {
             <Waves className="h-6 w-6" />
             Arraial do Cabo
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {trails
               .filter(trail => trail.cidade === 'Arraial do Cabo')
               .map(trail => {
@@ -1394,7 +1319,7 @@ const Index = () => {
             <Palmtree className="h-6 w-6" />
             Armação dos Búzios
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {trails
               .filter(trail => trail.cidade === 'Armação dos Búzios')
               .map(trail => {
@@ -1603,7 +1528,7 @@ const Index = () => {
             <Navigation className="h-6 w-6" />
             Extensões — Arraial do Cabo & Búzios
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
             {extensionRoutes.map(route => {
               const eta = getETA(route.id);
               return (
