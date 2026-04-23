@@ -20,6 +20,7 @@ import { photospots } from "@/data/photospots";
 import { PhotoSpotCard } from "@/components/PhotoSpotCard";
 import { PhotoSpotsMap } from "@/components/PhotoSpotsMap";
 import { runningRoutes, extensionRoutes } from "@/data/routes";
+import { getPlaceImage } from "@/data/placeImages";
 import { RouteCard } from "@/components/RouteCard";
 import { WeatherWidget } from "@/components/WeatherWidget";
 import heroImage from "@/assets/hero-cabo-frio.jpg";
