@@ -1,7 +1,5 @@
 import { MapPin, Clock, Mountain, Sun, AlertTriangle, ExternalLink } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { DistanceBadge } from '@/components/DistanceBadge';
 import { Trail } from '@/data/trails';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -15,10 +13,10 @@ interface TrailCardProps {
   originAddress?: string;
 }
 
-const difficultyColors = {
-  'Fácil': 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/30',
-  'Fácil-Moderado': 'bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border-yellow-500/30',
-  'Moderado': 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/30',
+const difficultyColors: Record<string, string> = {
+  'Fácil': 'bg-green-500/10 text-green-700 border-green-500/30',
+  'Fácil-Moderado': 'bg-yellow-500/10 text-yellow-700 border-yellow-500/30',
+  'Moderado': 'bg-orange-500/10 text-orange-700 border-orange-500/30',
 };
 
 export const TrailCard = ({
@@ -29,106 +27,87 @@ export const TrailCard = ({
   isFallback = false,
   originAddress,
 }: TrailCardProps) => {
-  const { t, language } = useLanguage();
-
-  const description = trail.description;
-  const reward = trail.reward;
-  const bestTime = trail.bestTime;
-  const alerts = trail.alerts;
+  const { t } = useLanguage();
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      {trail.imageUrl && (
-        <div className="aspect-[3/2] overflow-hidden bg-muted">
-          <img
-            src={trail.imageUrl}
-            alt={`${trail.name} - ${trail.cidade}`}
-            className="w-full h-full object-cover"
-          />
-          {trail.imageCredit && (
-            <p className="text-xs text-muted-foreground px-3 py-1 bg-background/80 backdrop-blur-sm">
-              {trail.imageCredit}
-            </p>
+    <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
+      <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
+        {/* Thumbnail */}
+        <div className="relative flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-muted to-accent/10">
+          {trail.imageUrl ? (
+            <img
+              src={trail.imageUrl}
+              alt={`${trail.name} - ${trail.cidade}`}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center opacity-40">
+              <Mountain className="w-10 h-10 text-primary" />
+            </div>
           )}
         </div>
-      )}
-      
-      <CardContent className="p-4 space-y-3">
-        <div>
-          <h3 className="font-semibold text-lg text-foreground mb-1">
-            {trail.name}
-          </h3>
-          <p className="text-sm text-muted-foreground">
+
+        {/* Content */}
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h3 className="font-display text-base sm:text-lg font-semibold text-primary leading-tight truncate">
+              {trail.name}
+            </h3>
+            {(walkingMinutes !== null || drivingMinutes !== null) && (
+              <div className="flex-shrink-0">
+                <DistanceBadge
+                  walkingMinutes={walkingMinutes}
+                  drivingMinutes={drivingMinutes}
+                  currentMode={currentMode}
+                  isFallback={isFallback}
+                  originAddress={originAddress}
+                />
+              </div>
+            )}
+          </div>
+
+          <p className="text-xs text-muted-foreground mb-1.5 truncate">
             {trail.cidade}{trail.bairro ? ` • ${trail.bairro}` : ''}
           </p>
-        </div>
 
-        <p className="text-sm text-foreground/80 leading-relaxed">
-          {description}
-        </p>
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-snug mb-2">
+            {trail.description}
+          </p>
 
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="outline" className="gap-1.5">
-            <Clock className="h-3.5 w-3.5" />
-            {trail.timeTotal}
-          </Badge>
-          <Badge variant="outline" className={difficultyColors[trail.difficulty]}>
-            <Mountain className="h-3.5 w-3.5" />
-            {trail.difficulty}
-          </Badge>
-          <Badge variant="outline" className="gap-1.5">
-            <Sun className="h-3.5 w-3.5" />
-            {trail.exposure}
-          </Badge>
-        </div>
-
-        <div className="space-y-2 text-sm">
-          <div>
-            <span className="font-medium text-foreground">🎁 {t("common.reward")}: </span>
-            <span className="text-muted-foreground">{reward}</span>
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            <Badge variant="outline" className="gap-1 text-[10px] py-0 px-1.5 h-5 rounded-full">
+              <Clock className="h-2.5 w-2.5" />
+              {trail.timeTotal}
+            </Badge>
+            <Badge variant="outline" className={`${difficultyColors[trail.difficulty]} text-[10px] py-0 px-1.5 h-5 rounded-full gap-1`}>
+              <Mountain className="h-2.5 w-2.5" />
+              {trail.difficulty}
+            </Badge>
+            <Badge variant="outline" className="gap-1 text-[10px] py-0 px-1.5 h-5 rounded-full">
+              <Sun className="h-2.5 w-2.5" />
+              {trail.exposure}
+            </Badge>
           </div>
-          <div>
-            <span className="font-medium text-foreground">⏰ {t("common.bestTime")}: </span>
-            <span className="text-muted-foreground">{bestTime}</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-500 mt-0.5 shrink-0" />
-            <span className="text-muted-foreground">{alerts}</span>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-2 pt-2">
-          {(walkingMinutes !== null || drivingMinutes !== null) && (
-            <DistanceBadge
-              walkingMinutes={walkingMinutes}
-              drivingMinutes={drivingMinutes}
-              currentMode={currentMode}
-              isFallback={isFallback}
-              originAddress={originAddress}
-            />
-          )}
-        </div>
+          <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-2">
+            <AlertTriangle className="h-3 w-3 text-secondary mt-0.5 shrink-0" />
+            <span className="line-clamp-2">{trail.alerts}</span>
+          </p>
 
-        <div className="pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            asChild
-          >
+          <div className="mt-auto pt-1.5">
             <a
               href={trail.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="gap-2"
+              className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full hover:bg-secondary/90 transition-colors"
             >
-              <MapPin className="h-4 w-4" />
-              {t("common.howToGet")}
-              <ExternalLink className="h-3 w-3" />
+              <MapPin className="w-3 h-3" /> {t("common.howToGet")}
+              <ExternalLink className="w-2.5 h-2.5" />
             </a>
-          </Button>
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
 };

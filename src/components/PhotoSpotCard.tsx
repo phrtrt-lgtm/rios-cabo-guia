@@ -1,6 +1,4 @@
 import { Camera, Clock, Lightbulb, MapPin } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DistanceBadge } from './DistanceBadge';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -44,55 +42,56 @@ export const PhotoSpotCard = ({
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <h3 className="font-semibold text-lg mb-1">{name}</h3>
-            <p className="text-sm text-muted-foreground">
-              {city} • {bairro}
-            </p>
-          </div>
-          <DistanceBadge
-            walkingMinutes={walkingMinutes}
-            drivingMinutes={drivingMinutes}
-            currentMode={currentMode}
-            isFallback={isFallback}
-            originAddress={originAddress}
-          />
+    <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
+      <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
+        {/* Icon */}
+        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-primary/15 to-accent/15 flex items-center justify-center">
+          <Camera className="w-7 h-7 sm:w-9 sm:h-9 text-primary" />
         </div>
 
-        <Badge variant="secondary" className="mb-4">
-          <Clock className="h-3 w-3 mr-1" />
-          {windowLabels[bestWindow] || bestWindow}
-        </Badge>
-
-        <div className="space-y-3 mb-4">
-          <div className="flex gap-2 text-sm">
-            <Camera className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-            <div>
-              <span className="font-medium">{t("common.angle")}:</span> {angle}
-            </div>
+        {/* Content */}
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h3 className="font-display text-base sm:text-lg font-semibold text-primary leading-tight truncate">
+              {name}
+            </h3>
+            <DistanceBadge
+              walkingMinutes={walkingMinutes}
+              drivingMinutes={drivingMinutes}
+              currentMode={currentMode}
+              isFallback={isFallback}
+              originAddress={originAddress}
+            />
           </div>
 
-          <div className="flex gap-2 text-sm">
-            <Lightbulb className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-            <div>
-              <span className="font-medium">{t("common.tip")}:</span> {tip}
-            </div>
+          <p className="text-xs text-muted-foreground mb-1.5 truncate">
+            {city} • {bairro}
+          </p>
+
+          <Badge variant="secondary" className="w-fit text-[10px] py-0 px-1.5 h-5 rounded-full mb-2">
+            <Clock className="h-2.5 w-2.5 mr-1" />
+            {windowLabels[bestWindow] || bestWindow}
+          </Badge>
+
+          <p className="text-xs text-foreground/80 leading-snug line-clamp-2 mb-1">
+            <span className="font-medium">{t("common.angle")}:</span> {angle}
+          </p>
+
+          <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-2">
+            <Lightbulb className="h-3 w-3 text-secondary mt-0.5 shrink-0" />
+            <span className="line-clamp-2">{tip}</span>
+          </p>
+
+          <div className="mt-auto pt-1.5">
+            <button
+              onClick={() => window.open(mapsUrl, '_blank')}
+              className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full hover:bg-secondary/90 transition-colors"
+            >
+              <MapPin className="w-3 h-3" /> {t("common.howToGet")}
+            </button>
           </div>
         </div>
-
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full"
-          onClick={() => window.open(mapsUrl, '_blank')}
-        >
-          <MapPin className="h-4 w-4 mr-2" />
-          {t("common.howToGet")}
-        </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
 };

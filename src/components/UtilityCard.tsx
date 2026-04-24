@@ -1,4 +1,4 @@
-import { MapPin, Clock, Phone, ExternalLink, Info, ShoppingCart, Pill, Beef, Coffee, PawPrint, ShoppingBag } from "lucide-react";
+import { MapPin, Clock, Phone, ExternalLink, Info, ShoppingCart, Pill, Coffee, PawPrint, ShoppingBag } from "lucide-react";
 import { ReactNode } from "react";
 
 interface UtilityCardProps {
@@ -35,102 +35,93 @@ export const UtilityCard = ({
   phone,
   website,
   tips,
-  image,
   type,
-  distanceBadge
+  distanceBadge,
 }: UtilityCardProps) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address + ", Cabo Frio, RJ")}`;
-  const whatsappUrl = phone.replace(/\D/g, '').length >= 10 
+  const whatsappUrl = phone.replace(/\D/g, '').length >= 10
     ? `https://wa.me/55${phone.replace(/\D/g, '')}`
     : null;
 
   const Icon = getIconForType(type);
 
   return (
-    <div className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all">
-      <div className="p-6">
-        <div className="flex gap-4 mb-4">
-          {/* Icon */}
-          <div className="flex-shrink-0">
-            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-secondary/20 to-accent/20 flex items-center justify-center">
-              <Icon className="w-7 h-7 text-secondary" />
-            </div>
-          </div>
-          
-          {/* Header */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1">
-                <h4 className="text-xl font-semibold text-primary mb-1">{name}</h4>
-                <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary-foreground text-xs rounded-full font-medium">
-                  {neighborhood}
-                </span>
-              </div>
-              {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
-            </div>
-          </div>
+    <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
+      <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
+        {/* Icon */}
+        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-secondary/15 to-accent/15 flex items-center justify-center">
+          <Icon className="w-7 h-7 sm:w-9 sm:h-9 text-secondary" />
         </div>
-        
-        <p className="text-sm text-muted-foreground mb-4">{description}</p>
-        
-        <div className="space-y-2 text-sm mb-4">
-          <div className="flex items-start gap-2">
-            <MapPin className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
-            <span className="text-muted-foreground">{address}</span>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h4 className="font-display text-base sm:text-lg font-semibold text-primary leading-tight truncate">
+              {name}
+            </h4>
+            {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-secondary flex-shrink-0" />
-            <span className="text-muted-foreground">{hours}</span>
+
+          <span className="inline-block w-fit px-2 py-0.5 bg-secondary/10 text-secondary-foreground text-[10px] rounded-full font-medium mb-1.5">
+            {neighborhood}
+          </span>
+
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-snug mb-1.5">
+            {description}
+          </p>
+
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+            <MapPin className="w-3 h-3 text-secondary flex-shrink-0" />
+            <span className="truncate">{address}</span>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-secondary flex-shrink-0" />
-            {whatsappUrl ? (
-              <a 
-                href={whatsappUrl}
+
+          <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+            <Clock className="w-3 h-3 text-secondary flex-shrink-0" />
+            <span className="truncate">{hours}</span>
+          </div>
+
+          {phone && (
+            <div className="flex items-center gap-1.5 text-xs mb-1">
+              <Phone className="w-3 h-3 text-secondary flex-shrink-0" />
+              {whatsappUrl ? (
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline truncate">
+                  {phone}
+                </a>
+              ) : (
+                <span className="text-muted-foreground truncate">{phone}</span>
+              )}
+            </div>
+          )}
+
+          {tips && (
+            <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-1.5">
+              <Info className="w-3 h-3 text-accent mt-0.5 flex-shrink-0" />
+              <span className="line-clamp-2">{tips}</span>
+            </p>
+          )}
+
+          <div className="mt-auto flex items-center gap-2 pt-1.5">
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full hover:bg-secondary/90 transition-colors"
+            >
+              <MapPin className="w-3 h-3" /> Maps
+            </a>
+            {website && (
+              <a
+                href={website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline"
+                className="inline-flex items-center gap-1 text-[11px] sm:text-xs text-primary hover:underline"
               >
-                {phone} (WhatsApp)
+                <ExternalLink className="w-3 h-3" /> Site
               </a>
-            ) : (
-              <span className="text-muted-foreground">{phone}</span>
             )}
           </div>
         </div>
-
-        {tips && (
-          <div className="bg-accent/10 p-3 rounded-lg border border-accent/20 mb-4">
-            <div className="flex items-start gap-2">
-              <Info className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-muted-foreground">{tips}</p>
-            </div>
-          </div>
-        )}
-        
-        <div className="flex gap-2 flex-wrap">
-          <a 
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs bg-secondary text-secondary-foreground px-3 py-1.5 rounded-md hover:bg-secondary/90 transition-colors"
-          >
-            <MapPin className="w-3 h-3" /> Ver no Google Maps
-          </a>
-          {website && (
-            <a 
-              href={website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-primary hover:underline px-3 py-1.5"
-            >
-              <ExternalLink className="w-3 h-3" /> Site
-            </a>
-          )}
-        </div>
       </div>
-    </div>
+    </article>
   );
 };
