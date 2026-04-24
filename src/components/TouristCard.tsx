@@ -38,83 +38,70 @@ export const TouristCard = ({
   const hasPhoto = Boolean(imageUrl);
 
   return (
-    <div className="group bg-card rounded-3xl border border-border overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-primary/40 transition-all duration-300">
-      {/* Visual header — real photo when available, otherwise gradient with icon */}
-      <div className="relative h-44 sm:h-48 overflow-hidden bg-gradient-to-br from-primary/10 via-muted to-accent/10">
-        {hasPhoto ? (
-          <>
+    <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
+      <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
+        {/* Thumbnail */}
+        <div className="relative flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 via-muted to-accent/10">
+          {hasPhoto ? (
             <img
               src={imageUrl}
               alt={`${name} — ${location}`}
               loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
-            {/* Subtle bottom gradient so badges remain readable */}
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 to-transparent pointer-events-none" />
-          </>
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center opacity-30">
-            <Icon className="w-20 h-20 text-primary" />
-          </div>
-        )}
-
-        {/* Type pill */}
-        <div className="absolute top-4 left-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/85 backdrop-blur-md border border-border/50 text-xs font-display font-medium text-primary shadow-sm">
-            <Icon className="w-3.5 h-3.5" />
-            <span className="capitalize">{type || 'praia'}</span>
-          </div>
-        </div>
-
-        {/* Photo credit (very small, top-right) */}
-        {hasPhoto && imageCredit && (
-          <div className="absolute top-4 right-4 max-w-[60%] text-right">
-            <span className="inline-block text-[10px] leading-tight text-white/90 bg-black/35 backdrop-blur-sm px-2 py-0.5 rounded-full truncate">
-              {imageCredit}
-            </span>
-          </div>
-        )}
-
-        {/* ETA bottom-right */}
-        {distanceBadge && (
-          <div className="absolute bottom-4 right-4">
-            {distanceBadge}
-          </div>
-        )}
-      </div>
-
-      <div className="p-6">
-        <h4 className="font-display text-2xl font-semibold text-primary mb-3 leading-tight">{name}</h4>
-        
-        <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{description}</p>
-        
-        <div className="flex items-start gap-2 text-sm mb-4">
-          <MapPin className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0" />
-          <span className="text-muted-foreground">{location}</span>
-        </div>
-
-        {tips && (
-          <div className="host-tip mb-4">
-            <div className="flex items-start gap-2">
-              <Star className="w-4 h-4 text-secondary mt-0.5 flex-shrink-0 fill-secondary" />
-              <p className="text-sm text-foreground/80 leading-relaxed">
-                <span className="host-tip-label mr-2">Dica do anfitrião</span>
-                {tips}
-              </p>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center opacity-40">
+              <Icon className="w-10 h-10 text-primary" />
             </div>
+          )}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h4 className="font-display text-base sm:text-lg font-semibold text-primary leading-tight truncate">
+              {name}
+            </h4>
+            {distanceBadge && <div className="flex-shrink-0">{distanceBadge}</div>}
           </div>
-        )}
-        
-        <a 
-          href={mapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-xs font-display font-medium bg-secondary text-secondary-foreground px-4 py-2 rounded-full hover:bg-secondary/90 transition-colors"
-        >
-          <MapPin className="w-3 h-3" /> Ver no Google Maps
-          <ExternalLink className="w-3 h-3" />
-        </a>
+
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1.5">
+            <MapPin className="w-3 h-3 text-secondary flex-shrink-0" />
+            <span className="truncate">{location}</span>
+          </div>
+
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-3 leading-snug mb-2">
+            {description}
+          </p>
+
+          {tips && (
+            <p className="hidden sm:flex items-start gap-1.5 text-xs text-foreground/70 leading-snug mb-2">
+              <Star className="w-3 h-3 text-secondary mt-0.5 flex-shrink-0 fill-secondary" />
+              <span className="line-clamp-2">
+                <span className="font-semibold uppercase tracking-wide text-[10px] text-secondary mr-1">Dica</span>
+                {tips}
+              </span>
+            </p>
+          )}
+
+          <div className="mt-auto flex items-center justify-between gap-2">
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full hover:bg-secondary/90 transition-colors"
+            >
+              <MapPin className="w-3 h-3" /> Maps
+              <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+            {hasPhoto && imageCredit && (
+              <span className="hidden sm:inline-block text-[9px] text-muted-foreground/70 truncate max-w-[50%]">
+                {imageCredit}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    </article>
   );
 };

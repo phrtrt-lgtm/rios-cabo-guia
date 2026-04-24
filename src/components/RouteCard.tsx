@@ -1,6 +1,4 @@
-import { MapPin, Droplet, Clock, TrendingUp, Download } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { MapPin, Droplet, Clock, TrendingUp, Route as RouteIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { DistanceBadge } from './DistanceBadge';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -44,99 +42,80 @@ export const RouteCard = ({
 }: RouteCardProps) => {
   const { t } = useLanguage();
 
-  const paces = [
-    { label: '5\'/km', time: (distance_km * 5).toFixed(0) },
-    { label: '6\'/km', time: (distance_km * 6).toFixed(0) },
-    { label: '7\'/km', time: (distance_km * 7).toFixed(0) },
-  ];
-
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-lg mb-1">{name}</CardTitle>
-            <p className="text-sm text-muted-foreground">{city}</p>
-          </div>
-          <DistanceBadge
-            walkingMinutes={walkingMinutes}
-            drivingMinutes={drivingMinutes}
-            currentMode={currentMode}
-            isFallback={isFallback}
-            originAddress={originAddress}
-          />
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">{description}</p>
-
-        <div className="grid grid-cols-3 gap-2">
-          <div className="text-center p-2 bg-muted/50 rounded">
-            <div className="text-lg font-semibold text-primary">{distance_km}km</div>
-            <div className="text-xs text-muted-foreground">{t("common.distance")}</div>
-          </div>
-          <div className="text-center p-2 bg-muted/50 rounded">
-            <div className="text-lg font-semibold text-primary">{gain_m}m</div>
-            <div className="text-xs text-muted-foreground">{t("common.elevation")}</div>
-          </div>
-          <div className="text-center p-2 bg-muted/50 rounded">
-            <div className="text-lg font-semibold text-primary line-clamp-1">{surface}</div>
-            <div className="text-xs text-muted-foreground">{t("common.surface")}</div>
-          </div>
+    <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
+      <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
+        {/* Icon */}
+        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-primary/15 to-secondary/15 flex items-center justify-center">
+          <RouteIcon className="w-7 h-7 sm:w-9 sm:h-9 text-primary" />
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{t("common.time")}:</span> {recommendedTime}
+        {/* Content */}
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex items-start justify-between gap-2 mb-1">
+            <h3 className="font-display text-base sm:text-lg font-semibold text-primary leading-tight truncate">
+              {name}
+            </h3>
+            <DistanceBadge
+              walkingMinutes={walkingMinutes}
+              drivingMinutes={drivingMinutes}
+              currentMode={currentMode}
+              isFallback={isFallback}
+              originAddress={originAddress}
+            />
           </div>
 
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="font-medium">{t("common.start")}:</span> {startName}
+          <p className="text-xs text-muted-foreground mb-1.5 truncate">{city}</p>
+
+          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-snug mb-2">
+            {description}
+          </p>
+
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-5 rounded-full">
+              {distance_km}km
+            </Badge>
+            <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-5 rounded-full">
+              ↑{gain_m}m
+            </Badge>
+            <Badge variant="outline" className="gap-1 text-[10px] py-0 px-1.5 h-5 rounded-full">
+              <Clock className="h-2.5 w-2.5" />
+              {recommendedTime}
+            </Badge>
+            <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-5 rounded-full line-clamp-1">
+              {surface}
+            </Badge>
           </div>
+
+          <p className="hidden sm:flex items-center gap-1.5 text-[11px] text-muted-foreground leading-snug mb-1">
+            <MapPin className="w-3 h-3 text-secondary shrink-0" />
+            <span className="truncate"><span className="font-medium">{t("common.start")}:</span> {startName}</span>
+          </p>
 
           {hydrationPoints.length > 0 && (
-            <div className="flex items-start gap-2 text-sm">
-              <Droplet className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-              <div>
-                <span className="font-medium">{t("common.hydration")}:</span>{' '}
-                {hydrationPoints.map((p) => p.name).join(', ')}
-              </div>
-            </div>
+            <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-1">
+              <Droplet className="w-3 h-3 text-secondary shrink-0 mt-0.5" />
+              <span className="line-clamp-1">{hydrationPoints.map((p) => p.name).join(', ')}</span>
+            </p>
           )}
 
-          <div className="flex items-start gap-2 text-sm text-amber-600">
-            <TrendingUp className="h-4 w-4 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-medium">{t("common.warnings")}:</span> {warnings}
-            </div>
+          {warnings && (
+            <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-amber-700 leading-snug mb-2">
+              <TrendingUp className="w-3 h-3 shrink-0 mt-0.5" />
+              <span className="line-clamp-2">{warnings}</span>
+            </p>
+          )}
+
+          <div className="mt-auto pt-1.5">
+            <button
+              onClick={() => window.open(startMapsUrl, '_blank')}
+              className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-medium bg-secondary text-secondary-foreground px-2.5 py-1 rounded-full hover:bg-secondary/90 transition-colors"
+            >
+              <MapPin className="w-3 h-3" /> {t("common.howToGet")}
+            </button>
           </div>
         </div>
-
-        <div className="pt-2 border-t">
-          <p className="text-xs text-muted-foreground mb-2">{t("common.estimatedPace")}:</p>
-          <div className="flex gap-2">
-            {paces.map((pace) => (
-              <Badge key={pace.label} variant="outline" className="flex-1 justify-center">
-                {pace.label}: {pace.time}min
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex justify-center pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => window.open(startMapsUrl, '_blank')}
-          >
-            <MapPin className="h-4 w-4 mr-2" />
-            {t("common.howToGet")}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
 };
