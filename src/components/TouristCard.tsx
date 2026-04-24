@@ -75,7 +75,7 @@ export const TouristCard = ({
           </p>
 
           {tips && (
-            <p className="hidden sm:flex items-start gap-1.5 text-xs text-foreground/70 leading-snug mb-2">
+            <p className="flex items-start gap-1.5 text-xs text-foreground/70 leading-snug mb-2">
               <Star className="w-3 h-3 text-secondary mt-0.5 flex-shrink-0 fill-secondary" />
               <span className="line-clamp-2">
                 <span className="font-semibold uppercase tracking-wide text-[10px] text-secondary mr-1">Dica</span>
