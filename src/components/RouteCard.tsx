@@ -100,7 +100,7 @@ export const RouteCard = ({
           )}
 
           {warnings && (
-            <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-secondary leading-snug mb-2">
+            <p className="flex items-start gap-1.5 text-[11px] text-secondary leading-snug mb-2">
               <TrendingUp className="w-3 h-3 shrink-0 mt-0.5" />
               <span className="line-clamp-2">{warnings}</span>
             </p>

@@ -94,7 +94,7 @@ export const UtilityCard = ({
           )}
 
           {tips && (
-            <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-1.5">
+            <p className="flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-1.5">
               <Info className="w-3 h-3 text-accent mt-0.5 flex-shrink-0" />
               <span className="line-clamp-2">{tips}</span>
             </p>

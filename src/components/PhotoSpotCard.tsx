@@ -77,7 +77,7 @@ export const PhotoSpotCard = ({
             <span className="font-medium">{t("common.angle")}:</span> {angle}
           </p>
 
-          <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-2">
+          <p className="flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-2">
             <Lightbulb className="h-3 w-3 text-secondary mt-0.5 shrink-0" />
             <span className="line-clamp-2">{tip}</span>
           </p>
