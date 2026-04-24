@@ -91,7 +91,7 @@ export const TrailCard = ({
           </div>
 
           <p className="hidden sm:flex items-start gap-1.5 text-[11px] text-muted-foreground leading-snug mb-2">
-            <AlertTriangle className="h-3 w-3 text-amber-600 mt-0.5 shrink-0" />
+            <AlertTriangle className="h-3 w-3 text-secondary mt-0.5 shrink-0" />
             <span className="line-clamp-2">{trail.alerts}</span>
           </p>
 
