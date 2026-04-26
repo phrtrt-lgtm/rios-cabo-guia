@@ -1,5 +1,6 @@
 import { MapPin, Clock, Phone, ExternalLink, Info, ShoppingCart, Pill, Coffee, PawPrint, ShoppingBag } from "lucide-react";
 import { ReactNode } from "react";
+import { resolveUtilityImage } from "@/data/categoryImages";
 
 interface UtilityCardProps {
   name: string;
@@ -48,6 +49,11 @@ export const UtilityCard = ({
     : null;
 
   const Icon = getIconForType(type);
+
+  // Auto-resolve image from registry if not provided explicitly
+  const resolved = !imageUrl ? resolveUtilityImage(name, type) : undefined;
+  const finalImageUrl = imageUrl ?? resolved?.src;
+  const finalImageCredit = imageCredit ?? resolved?.credit;
 
   return (
     <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
