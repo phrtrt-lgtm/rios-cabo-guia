@@ -1,5 +1,6 @@
 import { MapPin, Clock, DollarSign, ExternalLink, Utensils } from "lucide-react";
 import { ReactNode } from "react";
+import { resolveRestaurantImage } from "@/data/categoryImages";
 
 interface RestaurantCardProps {
   name: string;
@@ -9,6 +10,8 @@ interface RestaurantCardProps {
   priceRange: string;
   link?: string;
   category: string;
+  imageUrl?: string;
+  imageCredit?: string;
   distanceBadge?: ReactNode;
 }
 
@@ -20,17 +23,46 @@ export const RestaurantCard = ({
   priceRange,
   link,
   category,
+  imageUrl,
+  imageCredit,
   distanceBadge,
 }: RestaurantCardProps) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address + ", Cabo Frio, RJ")}`;
 
+  // Auto-resolve image from registry if not provided explicitly
+  const resolved = !imageUrl ? resolveRestaurantImage(name, category) : undefined;
+  const finalImageUrl = imageUrl ?? resolved?.src;
+  const finalImageCredit = imageCredit ?? resolved?.credit;
+
   return (
     <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
       <div className="flex gap-3 sm:gap-4 p-3 sm:p-4">
-        {/* Icon */}
-        <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-primary/15 to-secondary/15 flex items-center justify-center">
-          <Utensils className="w-7 h-7 sm:w-9 sm:h-9 text-primary" />
-        </div>
+        {/* Thumbnail (photo or icon fallback) */}
+        {finalImageUrl ? (
+          <div className="relative flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden bg-muted">
+            <img
+              src={finalImageUrl}
+              alt={name}
+              loading="lazy"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+            <div className="absolute top-1 left-1 bg-background/80 backdrop-blur-sm rounded-full p-0.5">
+              <Utensils className="w-3 h-3 text-primary" />
+            </div>
+            {finalImageCredit && (
+              <span
+                className="absolute bottom-0 left-0 right-0 px-1 py-0.5 text-[8px] leading-tight bg-black/50 text-white truncate"
+                title={finalImageCredit}
+              >
+                {finalImageCredit.replace(/^Foto:\s*/, '').split('·')[0].trim()}
+              </span>
+            )}
+          </div>
+        ) : (
+          <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-primary/15 to-secondary/15 flex items-center justify-center">
+            <Utensils className="w-7 h-7 sm:w-9 sm:h-9 text-primary" />
+          </div>
+        )}
 
         {/* Content */}
         <div className="flex-1 min-w-0 flex flex-col">
