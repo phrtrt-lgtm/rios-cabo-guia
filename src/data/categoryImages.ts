@@ -132,8 +132,11 @@ const categoryFallback: Record<string, CategoryImage> = {
   sobremesas: make(dessert, 'Mayra (Maych) on Flickr', 'CC BY-SA 2.0'),
   sorveteria: make(dessert, 'Mayra (Maych) on Flickr', 'CC BY-SA 2.0'),
   creperia: make(crepe, 'Rudy Herman', 'CC BY 2.0'),
+  crepes: make(crepe, 'Rudy Herman', 'CC BY 2.0'),
   arabe: make(arabic, 'PattayaPatrol', 'CC BY-SA 4.0'),
   pizza: make(italian, 'Pixel.la Free Stock Photos', 'CC0'),
+  brasileiro: make(steakhouse, 'Leonardo "Leguas" Carvalho', 'CC BY-SA 2.5'),
+  'cafe-colonial': make(cafe, 'Frettie', 'CC BY 3.0'),
 };
 
 /** Resolve image for a restaurant by its display name, with optional category fallback. */
