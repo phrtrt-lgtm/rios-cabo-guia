@@ -14,10 +14,11 @@ export default {
     },
     extend: {
       fontFamily: {
-        'montserrat': ['Montserrat', 'sans-serif'],
-        'sora': ['Sora', 'sans-serif'],
-        'sans': ['DM Sans', 'sans-serif'],
-        'display': ['Sora', 'sans-serif'],
+        'montserrat': ['Inter', 'sans-serif'],
+        'sora': ['Fraunces', 'serif'],
+        'sans': ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        'display': ['Fraunces', 'Georgia', 'Times New Roman', 'serif'],
+        'serif': ['Fraunces', 'Georgia', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
