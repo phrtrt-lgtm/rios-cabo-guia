@@ -573,3 +573,251 @@ All colors MUST be HSL.
   }
 }
 
+/* ================= RIOS DESIGN SYSTEM ================= */
+
+/* ---- Cover ---- */
+.rios-cover {
+  background: var(--blue-deep);
+  color: white;
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 32px 56px;
+  position: relative;
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .rios-cover { padding: 48px 56px 72px; min-height: 88vh; }
+}
+.rios-cover-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.rios-cover-circle-tr {
+  width: 480px; height: 480px;
+  border: 1px solid rgba(200, 100, 42, 0.22);
+  top: -180px; right: -180px;
+}
+.rios-cover-circle-bl {
+  width: 320px; height: 320px;
+  border: 1px solid rgba(93, 163, 201, 0.28);
+  bottom: -140px; left: -120px;
+}
+.rios-tagline {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue-light);
+  font-weight: 600;
+  margin: 0;
+}
+.rios-wordmark {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(48px, 12vw, 88px);
+  letter-spacing: 0.16em;
+  color: white;
+  line-height: 1;
+  margin: 6px 0 0;
+}
+.rios-cover-divider {
+  width: 56px; height: 2px;
+  background: var(--terra);
+  margin: 28px 0 22px;
+  border: none;
+}
+.rios-cover-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(24px, 5.5vw, 34px);
+  color: white;
+  line-height: 1.2;
+  margin: 0 0 14px;
+  max-width: 620px;
+}
+.rios-cover-welcome {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(15px, 3.5vw, 18px);
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.5;
+  max-width: 560px;
+  margin: 0;
+}
+.rios-cover-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  background: var(--terra);
+  color: white;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.rios-cover-cta:hover { background: var(--terra-dark); transform: translateY(-1px); }
+
+/* ---- Section ---- */
+.rios-section {
+  padding-top: 64px;
+  padding-bottom: 8px;
+  background: transparent;
+}
+.rios-section-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+@media (min-width: 768px) {
+  .rios-section { padding-top: 88px; }
+  .rios-section-inner { padding: 0 48px; }
+}
+.rios-section-head {
+  position: relative;
+  margin-bottom: 36px;
+}
+.rios-section-num {
+  font-family: var(--serif);
+  font-size: clamp(48px, 10vw, 72px);
+  font-weight: 600;
+  color: var(--terra);
+  opacity: 0.18;
+  line-height: 1;
+  display: block;
+}
+.rios-section-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--terra);
+  font-weight: 600;
+  margin-top: 8px;
+  display: block;
+}
+.rios-section-title {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(22px, 5vw, 30px);
+  color: var(--blue-deep);
+  margin: 6px 0 0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.rios-section-divider {
+  border: none;
+  border-top: 1px solid var(--terra);
+  opacity: 0.35;
+  width: calc(100% - 48px);
+  max-width: 880px;
+  margin: 72px auto 0;
+}
+@media (max-width: 640px) {
+  .rios-section-divider { margin-top: 48px; width: calc(100% - 32px); }
+}
+
+/* ---- Card border-left (aplicado global aos article de card) ---- */
+article.bg-card {
+  border-left: 3px solid hsl(var(--secondary));
+  box-shadow: 0 2px 8px rgba(26, 58, 82, 0.04);
+}
+article.bg-card:hover {
+  box-shadow: 0 6px 18px rgba(26, 58, 82, 0.09);
+}
+
+/* ---- Nav sticky ---- */
+.rios-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: hsl(var(--background) / 0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid hsl(var(--secondary) / 0.25);
+}
+
+/* ---- Footer / contact card ---- */
+.rios-footer-wrap {
+  padding: 48px 24px 40px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.contact-card {
+  background: var(--blue-deep);
+  color: white;
+  border-radius: 18px;
+  padding: 36px 28px;
+  text-align: center;
+}
+.contact-card h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  margin: 10px 0 6px;
+  color: white;
+}
+.contact-card .sub {
+  font-size: 13px;
+  color: var(--blue-light);
+  margin-bottom: 22px;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+}
+@media (max-width: 640px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+.contact-item {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.contact-item:hover { background: rgba(255,255,255,0.1); }
+.contact-item .icon {
+  width: 20px; height: 20px;
+  margin-top: 2px;
+  color: var(--terra-light);
+  flex-shrink: 0;
+}
+.contact-item .label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue-light);
+  font-weight: 600;
+}
+.contact-item .value {
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 2px;
+  word-break: break-word;
+}
+.rios-footer-copy {
+  margin: 22px 0 0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Ajustar body para respirar */
+body { background: var(--bg); }
+
