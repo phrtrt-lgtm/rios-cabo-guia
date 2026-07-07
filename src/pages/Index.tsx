@@ -254,7 +254,7 @@ const Index = () => {
       {/* Navigation Menu */}
       <nav className="rios-nav">
         <div className="container mx-auto px-4 py-3">
-          <div className="flex flex-nowrap gap-1 justify-start md:justify-center overflow-x-auto scrollbar-none">
+          <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center">
             <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.beaches")}
             </Button>
