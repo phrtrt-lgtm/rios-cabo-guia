@@ -9,6 +9,8 @@ import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { TouristChatbot } from "@/components/TouristChatbot";
 import { HeaderEvents } from "@/components/HeaderEvents";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { RiosCover } from "@/components/RiosCover";
+import { RiosFooter } from "@/components/RiosFooter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
@@ -246,50 +248,38 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-background border-b border-border/60 pt-5 pb-4">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between gap-3 mb-3">
-            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-10 md:h-12 object-contain" />
-            <div className="flex items-center gap-2">
-              <WeatherWidget />
-              <HeaderEvents />
-              <LanguageSelector />
-            </div>
-          </div>
-          <p className="kicker !text-secondary text-center">{t("header.subtitle")}</p>
-        </div>
-      </header>
+      {/* Cover */}
+      <RiosCover onExplore={() => scrollToSection('praias')} />
 
       {/* Navigation Menu */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-border/60">
+      <nav className="rios-nav">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-nowrap gap-1 justify-start md:justify-center overflow-x-auto scrollbar-none">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.beaches")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.utilities")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.gastronomy")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.arraial")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.buzios")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.trails")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.photospots")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.routes")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.about")}
             </Button>
           </div>
