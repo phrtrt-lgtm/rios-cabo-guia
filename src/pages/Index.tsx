@@ -1584,13 +1584,7 @@ const Index = () => {
       <TouristChatbot />
 
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground py-8 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm opacity-80">
-            {t("footer.copyright")}
-          </p>
-        </div>
-      </footer>
+      <RiosFooter />
     </div>
   );
 };
