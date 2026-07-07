@@ -9,6 +9,8 @@ import { ItineraryBuilder } from "@/components/ItineraryBuilder";
 import { TouristChatbot } from "@/components/TouristChatbot";
 import { HeaderEvents } from "@/components/HeaderEvents";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { RiosCover } from "@/components/RiosCover";
+import { RiosFooter } from "@/components/RiosFooter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
@@ -246,50 +248,38 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-background border-b border-border/60 pt-5 pb-4">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between gap-3 mb-3">
-            <img src={riosLogoHeader} alt="Rios - Cabo Frio" className="h-10 md:h-12 object-contain" />
-            <div className="flex items-center gap-2">
-              <WeatherWidget />
-              <HeaderEvents />
-              <LanguageSelector />
-            </div>
-          </div>
-          <p className="kicker !text-secondary text-center">{t("header.subtitle")}</p>
-        </div>
-      </header>
+      {/* Cover */}
+      <RiosCover onExplore={() => scrollToSection('praias')} />
 
       {/* Navigation Menu */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-xl border-b border-border/60">
+      <nav className="rios-nav">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-nowrap gap-1 justify-start md:justify-center overflow-x-auto scrollbar-none">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.beaches")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.utilities")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.gastronomy")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.arraial")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.buzios")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.trails")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.photospots")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.routes")}
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="rounded-full font-display text-sm shrink-0">
+            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
               {t("nav.about")}
             </Button>
           </div>
@@ -334,7 +324,7 @@ const Index = () => {
       />
 
       {/* Praias */}
-      <GuideSection id="praias" title={t("section.beaches")} printBreak>
+      <GuideSection id="praias" number="01" label="Litoral" title={t("section.beaches")} printBreak>
         <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
           {sortedTouristPlaces.map((place) => {
             const eta = getETA(place.id);
@@ -365,7 +355,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Utilidades */}
-      <GuideSection id="utilidades" title={t("section.utilities")} className="bg-muted/30" printBreak>
+      <GuideSection id="utilidades" number="02" label="Do dia a dia" title={t("section.utilities")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
           {t("utilities.intro")}
         </p>
@@ -622,7 +612,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Shopping Park Lagos */}
-      <GuideSection id="shopping" title={t("section.shopping")} printBreak>
+      <GuideSection id="shopping" number="03" label="Resolve tudo num lugar só" title={t("section.shopping")} printBreak>
         <div className="bg-card p-8 rounded-lg border border-border">
           <p className="text-lg text-muted-foreground mb-6">
             {t("shopping.intro")}
@@ -667,7 +657,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Gastronomia */}
-      <GuideSection id="gastronomia" title={t("section.gastronomy")} className="bg-muted/30" printBreak>
+      <GuideSection id="gastronomia" number="04" label="Onde a gente come" title={t("section.gastronomy")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
           {t("gastronomy.intro")}
         </p>
@@ -989,7 +979,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Arraial do Cabo */}
-      <GuideSection id="arraial" title={t("section.arraial")} className="bg-muted/30" printBreak>
+      <GuideSection id="arraial" number="05" label="Vale o passeio" title={t("section.arraial")} className="bg-muted/30" printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
           {t("arraial.subtitle")}
         </p>
@@ -1085,7 +1075,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Búzios */}
-      <GuideSection id="buzios" title={t("section.buzios")} printBreak>
+      <GuideSection id="buzios" number="06" label="Charme e agito" title={t("section.buzios")} printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
           {t("buzios.subtitle")}
         </p>
@@ -1197,7 +1187,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Trilhas */}
-      <GuideSection id="trilhas" title={t("section.trails")} printBreak>
+      <GuideSection id="trilhas" number="07" label="Aventura a pé" title={t("section.trails")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
           {t("trails.intro")}
         </p>
@@ -1373,7 +1363,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Foto-spots */}
-      <GuideSection id="fotospots" title={t("section.photospots")} printBreak>
+      <GuideSection id="fotospots" number="08" label="Melhores ângulos" title={t("section.photospots")} printBreak>
         <div className="flex flex-col gap-6 mb-8">
           <p className="text-lg text-muted-foreground">
             {t("photospots.intro")}
@@ -1499,7 +1489,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Rotas para correr/pedalar */}
-      <GuideSection id="rotas" title={t("section.routes")} printBreak>
+      <GuideSection id="rotas" number="09" label="Corrida e bike" title={t("section.routes")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
           {t("routes.intro")}
         </p>
@@ -1574,7 +1564,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Sobre Nós */}
-      <GuideSection id="sobre" title={t("section.about")} printBreak>
+      <GuideSection id="sobre" number="10" label="A gente por trás do guia" title={t("section.about")} printBreak>
         <div className="bg-card p-8 rounded-lg border border-border text-center max-w-3xl mx-auto">
           <img src={riosLogoFooter} alt="Rios Logo" className="mx-auto mb-6 h-16 object-contain" />
           <p className="text-lg text-muted-foreground mb-6">
@@ -1594,13 +1584,7 @@ const Index = () => {
       <TouristChatbot />
 
       {/* Footer */}
-      <footer className="bg-primary text-primary-foreground py-8 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm opacity-80">
-            {t("footer.copyright")}
-          </p>
-        </div>
-      </footer>
+      <RiosFooter />
     </div>
   );
 };
