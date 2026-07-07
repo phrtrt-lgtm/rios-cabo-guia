@@ -324,7 +324,7 @@ const Index = () => {
       />
 
       {/* Praias */}
-      <GuideSection id="praias" title={t("section.beaches")} printBreak>
+      <GuideSection id="praias" number="01" label="Litoral" title={t("section.beaches")} printBreak>
         <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
           {sortedTouristPlaces.map((place) => {
             const eta = getETA(place.id);
@@ -355,7 +355,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Utilidades */}
-      <GuideSection id="utilidades" title={t("section.utilities")} className="bg-muted/30" printBreak>
+      <GuideSection id="utilidades" number="02" label="Do dia a dia" title={t("section.utilities")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
           {t("utilities.intro")}
         </p>
@@ -612,7 +612,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Shopping Park Lagos */}
-      <GuideSection id="shopping" title={t("section.shopping")} printBreak>
+      <GuideSection id="shopping" number="03" label="Resolve tudo num lugar só" title={t("section.shopping")} printBreak>
         <div className="bg-card p-8 rounded-lg border border-border">
           <p className="text-lg text-muted-foreground mb-6">
             {t("shopping.intro")}
@@ -657,7 +657,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Gastronomia */}
-      <GuideSection id="gastronomia" title={t("section.gastronomy")} className="bg-muted/30" printBreak>
+      <GuideSection id="gastronomia" number="04" label="Onde a gente come" title={t("section.gastronomy")} className="bg-muted/30" printBreak>
         <p className="text-muted-foreground mb-8">
           {t("gastronomy.intro")}
         </p>
@@ -979,7 +979,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Arraial do Cabo */}
-      <GuideSection id="arraial" title={t("section.arraial")} className="bg-muted/30" printBreak>
+      <GuideSection id="arraial" number="05" label="Vale o passeio" title={t("section.arraial")} className="bg-muted/30" printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
           {t("arraial.subtitle")}
         </p>
@@ -1075,7 +1075,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Búzios */}
-      <GuideSection id="buzios" title={t("section.buzios")} printBreak>
+      <GuideSection id="buzios" number="06" label="Charme e agito" title={t("section.buzios")} printBreak>
         <p className="text-lg text-primary mb-4 font-semibold">
           {t("buzios.subtitle")}
         </p>
@@ -1187,7 +1187,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Trilhas */}
-      <GuideSection id="trilhas" title={t("section.trails")} printBreak>
+      <GuideSection id="trilhas" number="07" label="Aventura a pé" title={t("section.trails")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
           {t("trails.intro")}
         </p>
@@ -1363,7 +1363,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Foto-spots */}
-      <GuideSection id="fotospots" title={t("section.photospots")} printBreak>
+      <GuideSection id="fotospots" number="08" label="Melhores ângulos" title={t("section.photospots")} printBreak>
         <div className="flex flex-col gap-6 mb-8">
           <p className="text-lg text-muted-foreground">
             {t("photospots.intro")}
@@ -1489,7 +1489,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Rotas para correr/pedalar */}
-      <GuideSection id="rotas" title={t("section.routes")} printBreak>
+      <GuideSection id="rotas" number="09" label="Corrida e bike" title={t("section.routes")} printBreak>
         <p className="text-lg text-muted-foreground mb-8">
           {t("routes.intro")}
         </p>
@@ -1564,7 +1564,7 @@ const Index = () => {
       </GuideSection>
 
       {/* Sobre Nós */}
-      <GuideSection id="sobre" title={t("section.about")} printBreak>
+      <GuideSection id="sobre" number="10" label="A gente por trás do guia" title={t("section.about")} printBreak>
         <div className="bg-card p-8 rounded-lg border border-border text-center max-w-3xl mx-auto">
           <img src={riosLogoFooter} alt="Rios Logo" className="mx-auto mb-6 h-16 object-contain" />
           <p className="text-lg text-muted-foreground mb-6">
