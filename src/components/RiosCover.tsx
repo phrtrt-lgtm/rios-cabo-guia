@@ -25,7 +25,7 @@ export const RiosCover = ({ onExplore }: RiosCoverProps) => {
       </div>
 
       {/* wordmark + content */}
-      <div className="relative z-10 mt-auto">
+      <div className="relative z-10 mt-6 md:mt-8">
         <p className="rios-tagline">Hospedagens · Cabo Frio</p>
         <h1 className="rios-wordmark">RIOS</h1>
         <hr className="rios-cover-divider" />
