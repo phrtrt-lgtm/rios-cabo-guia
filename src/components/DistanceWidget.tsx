@@ -220,8 +220,8 @@ export const DistanceWidget = ({
         <div className="container mx-auto px-4 py-4 max-w-5xl">
           <div className="flex flex-col gap-3">
             {/* Input e botões principais */}
-            <div className="flex flex-wrap gap-2 items-center">
-              <div className="flex-1 min-w-[200px]">
+            <div className="flex flex-col md:flex-row gap-2 items-start md:items-center">
+              <div className="w-full md:flex-1">
                 <Input
                   ref={inputRef}
                   placeholder="Digite um endereço em Cabo Frio..."
@@ -232,26 +232,28 @@ export const DistanceWidget = ({
                   className="w-full rounded-full px-5 h-11"
                 />
               </div>
-              <Button
-                onClick={handleSetOrigin}
-                disabled={isLoading}
-                variant="default"
-                size="sm"
-                className="rounded-full h-11 px-5 font-display"
-              >
-                <MapPin className="h-4 w-4 mr-2" />
-                Definir base
-              </Button>
-              <Button
-                onClick={handleUseMyLocation}
-                disabled={isLoading}
-                variant="outline"
-                size="sm"
-                className="rounded-full h-11 px-5 font-display"
-              >
-                <Navigation className="h-4 w-4 mr-2" />
-                Usar minha localização
-              </Button>
+              <div className="flex flex-row gap-2 w-full md:w-auto">
+                <Button
+                  onClick={handleSetOrigin}
+                  disabled={isLoading}
+                  variant="default"
+                  size="sm"
+                  className="flex-1 md:flex-none rounded-full h-11 px-5 font-display"
+                >
+                  <MapPin className="h-4 w-4 mr-2" />
+                  Definir base
+                </Button>
+                <Button
+                  onClick={handleUseMyLocation}
+                  disabled={isLoading}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 md:flex-none rounded-full h-11 px-5 font-display"
+                >
+                  <Navigation className="h-4 w-4 mr-2" />
+                  Usar minha localização
+                </Button>
+              </div>
             </div>
 
             {/* Origin card — gradient ocean com radius grande */}
