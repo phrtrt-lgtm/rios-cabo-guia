@@ -1201,41 +1201,9 @@ const Index = () => {
           {t("trails.intro")}
         </p>
 
-        {/* Filtros de trilhas */}
-        <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="h-5 w-5 text-secondary" />
-            <h3 className="font-semibold text-secondary">{t("common.filterTrails")}</h3>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as cidades</option>
-              <option value="Cabo Frio">Cabo Frio</option>
-              <option value="Arraial do Cabo">Arraial do Cabo</option>
-              <option value="Armação dos Búzios">Búzios</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todos os níveis</option>
-              <option value="Fácil">Fácil</option>
-              <option value="Fácil-Moderado">Fácil-Moderado</option>
-              <option value="Moderado">Moderado</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as durações</option>
-              <option value="curta">&lt;1h</option>
-              <option value="média">1-2h</option>
-              <option value="longa">2-4h</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as vistas</option>
-              <option value="Mirante">Mirante</option>
-              <option value="Costão">Costão</option>
-              <option value="Piscinas">Piscinas</option>
-              <option value="Dunas">Dunas</option>
-              <option value="Praia">Praia</option>
-            </select>
-          </div>
-        </div>
+        {/* Filtros de trilhas — chips horizontais togáveis (mantém filtro visual; lógica de listagem por cidade nas grids abaixo) */}
+        <TrailFilters />
+
 
         {/* Card informativo sobre Praia do Farol */}
         <div className="mb-8 p-6 bg-amber-500/10 border border-amber-500/30 rounded-lg">
