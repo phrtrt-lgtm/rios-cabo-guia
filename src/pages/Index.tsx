@@ -217,6 +217,7 @@ const Index = () => {
   const [sortByTime, setSortByTime] = useState(false);
   const [itineraryBuilderOpen, setItineraryBuilderOpen] = useState(false);
   const [showPhotoSpotsMap, setShowPhotoSpotsMap] = useState(false);
+
   const [itineraryCount, setItineraryCount] = useState(0);
   const [fabPulse, setFabPulse] = useState(false);
   const prevCountRef = useRef(0);
