@@ -12,6 +12,8 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { RiosCover } from "@/components/RiosCover";
 import { RiosFooter } from "@/components/RiosFooter";
 import { StickyCategoryNav } from "@/components/StickyCategoryNav";
+import { useIllustrations } from "@/hooks/useIllustrations";
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
