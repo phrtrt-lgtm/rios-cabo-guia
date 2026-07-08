@@ -46,10 +46,14 @@ export const RestaurantCard = ({
 }: RestaurantCardProps) => {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + " " + address + ", Cabo Frio, RJ")}`;
 
-  // Auto-resolve image from registry if not provided explicitly
-  const resolved = !imageUrl ? resolveRestaurantImage(name, category) : undefined;
-  const finalImageUrl = imageUrl ?? resolved?.src;
+  // Prefer AI-generated cuisine illustration when available, then explicit
+  // imageUrl, then the stock-photo registry fallback.
+  const { getIllustration } = useIllustrations();
+  const illustration = getIllustration(cuisineSlug(category));
+  const resolved = !imageUrl && !illustration ? resolveRestaurantImage(name, category) : undefined;
+  const finalImageUrl = illustration ?? imageUrl ?? resolved?.src;
   const finalImageCredit = imageCredit ?? resolved?.credit;
+
 
   return (
     <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
