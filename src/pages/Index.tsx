@@ -268,40 +268,20 @@ const Index = () => {
       {/* Cover */}
       <RiosCover onExplore={() => scrollToSection('praias')} />
 
-      {/* Navigation Menu */}
-      <nav className="rios-nav">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.beaches")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.utilities")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.gastronomy")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.arraial")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.buzios")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.trails")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.photospots")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.routes")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.about")}
-            </Button>
-          </div>
-        </div>
-      </nav>
+      {/* Sticky category navigation with scrollspy */}
+      <StickyCategoryNav
+        items={[
+          { id: 'praias', label: t('nav.beaches') },
+          { id: 'utilidades', label: t('nav.utilities') },
+          { id: 'gastronomia', label: t('nav.gastronomy') },
+          { id: 'arraial', label: t('nav.arraial') },
+          { id: 'buzios', label: t('nav.buzios') },
+          { id: 'trilhas', label: t('nav.trails') },
+          { id: 'fotospots', label: t('nav.photospots') },
+          { id: 'rotas', label: t('nav.routes') },
+          { id: 'sobre', label: t('nav.about') },
+        ]}
+      />
 
       {/* Distance Widget */}
       <div className="no-print">
@@ -314,15 +294,25 @@ const Index = () => {
         />
       </div>
 
-      {/* Floating Itinerary Builder Button */}
-      <Button
+      {/* Floating Itinerary Builder FAB (compact circular) */}
+      <button
         onClick={() => setItineraryBuilderOpen(true)}
-        className="fixed bottom-8 right-8 rounded-full shadow-lg h-14 px-6 gap-2 z-50 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-display no-print"
-        size="lg"
+        aria-label={t("common.buildItinerary")}
+        className={cn(
+          "fixed right-5 bottom-5 md:right-8 md:bottom-8 z-50 no-print",
+          "h-14 w-14 rounded-full bg-secondary text-secondary-foreground",
+          "shadow-lg hover:bg-secondary/90 transition-colors",
+          "inline-flex items-center justify-center",
+          fabPulse && "rios-pulse-once"
+        )}
       >
-        <Plus className="h-5 w-5" />
-        {t("common.buildItinerary")}
-      </Button>
+        <Route className="h-6 w-6" />
+        {itineraryCount > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1.5 rounded-full bg-primary text-primary-foreground text-[11px] font-semibold inline-flex items-center justify-center border-2 border-background">
+            {itineraryCount}
+          </span>
+        )}
+      </button>
 
       {/* Itinerary Builder Modal */}
       <ItineraryBuilder
@@ -338,7 +328,9 @@ const Index = () => {
           return acc;
         }, {} as { [key: string]: { walking: number; driving: number; isFallback?: boolean } })}
         currentMode={currentMode}
+        onItemCountChange={setItineraryCount}
       />
+
 
       {/* Praias */}
       <GuideSection id="praias" number="01" label="Litoral" title={t("section.beaches")} printBreak>
