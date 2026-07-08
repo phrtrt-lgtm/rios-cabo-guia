@@ -122,8 +122,11 @@ export const UtilityCard = ({
                   {phone}
                 </a>
               ) : (
-                <span className="text-muted-foreground truncate">{phone}</span>
+                <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-primary hover:underline truncate">
+                  {phone}
+                </a>
               )}
+
             </div>
           )}
 
