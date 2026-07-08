@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { GuideSection } from "@/components/GuideSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { UtilityCard } from "@/components/UtilityCard";
@@ -11,9 +11,11 @@ import { HeaderEvents } from "@/components/HeaderEvents";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { RiosCover } from "@/components/RiosCover";
 import { RiosFooter } from "@/components/RiosFooter";
+import { StickyCategoryNav } from "@/components/StickyCategoryNav";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { distanceService, ETAResult } from "@/services/distance.service";
 import { allPlaces, touristPlaces, utilityPlaces, arraialPlaces, buziosPlaces } from "@/data/places";
 import { trails } from "@/data/trails";
@@ -30,6 +32,7 @@ import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
 import riosLogoHeader from "@/assets/rios-logo-header.png";
 import riosLogoFooter from "@/assets/rios-logo-footer.png";
+
 
 // Beach images
 import praiaDoForteImg from "@/assets/beaches/praia-do-forte.jpg";
