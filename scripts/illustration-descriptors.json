@@ -1,0 +1,175 @@
+[
+  {
+    "slug": "praia-do-forte",
+    "kind": "place",
+    "descriptor": "long famous urban beach with white sand, calm turquoise water, kiosks along the boardwalk and a distant 17th century stone fort on the rocks, Cabo Frio Brazil"
+  },
+  {
+    "slug": "ilha-do-japones",
+    "kind": "place",
+    "descriptor": "shallow crystal-clear tropical lagoon with a sandbank islet, small anchored boats and low green vegetation, Cabo Frio Brazil"
+  },
+  {
+    "slug": "pero-conchas",
+    "kind": "place",
+    "descriptor": "wide open ocean beach with soft dunes, gentle surf and low coastal shrubs, Peró Cabo Frio Brazil"
+  },
+  {
+    "slug": "reserva-do-pero",
+    "kind": "place",
+    "descriptor": "wild preserved beach with tall sand dunes and native coastal vegetation, no buildings, Cabo Frio Brazil"
+  },
+  {
+    "slug": "forte-sao-mateus",
+    "kind": "place",
+    "descriptor": "small 17th century stone fortress on coastal rocks overlooking the sea, Cabo Frio Brazil"
+  },
+  {
+    "slug": "morro-da-guia",
+    "kind": "place",
+    "descriptor": "small white lighthouse on a green coastal hill with panoramic 360 view of ocean and town, Cabo Frio Brazil"
+  },
+  {
+    "slug": "bairro-passagem",
+    "kind": "place",
+    "descriptor": "historic waterfront neighborhood with colorful colonial houses, a calm canal, small fishing boats and cobblestone street, Cabo Frio Brazil"
+  },
+  {
+    "slug": "prainhas-pontal-atalaia",
+    "kind": "place",
+    "descriptor": "small hidden beaches with clear turquoise water framed by rocky cliffs, seen from an elevated viewpoint, Arraial do Cabo Brazil"
+  },
+  {
+    "slug": "praia-do-forno",
+    "kind": "place",
+    "descriptor": "calm cove beach with transparent water surrounded by green hills, small boats near the shore, Arraial do Cabo Brazil"
+  },
+  {
+    "slug": "praia-do-farol",
+    "kind": "place",
+    "descriptor": "remote paradise island beach with fine white sand, turquoise water and a distant lighthouse on green cliffs, Ilha do Farol Arraial do Cabo Brazil"
+  },
+  {
+    "slug": "praia-grande-arraial",
+    "kind": "place",
+    "descriptor": "very long open ocean beach with light sand and beach kiosks, small dunes, Arraial do Cabo Brazil"
+  },
+  {
+    "slug": "prainha-arraial",
+    "kind": "place",
+    "descriptor": "small urban beach in a calm cove with kiosks and low-rise coastal town in the background, Arraial do Cabo Brazil"
+  },
+  {
+    "slug": "praia-dos-anjos",
+    "kind": "place",
+    "descriptor": "harbor beach with anchored fishing boats and tour boats, marina and low green hills, Arraial do Cabo Brazil"
+  },
+  {
+    "slug": "gruta-azul-arraial",
+    "kind": "place",
+    "descriptor": "submerged sea cave with intense turquoise blue water and rocky walls, small boat in the entrance, Arraial do Cabo Brazil"
+  },
+  {
+    "slug": "praia-geribá",
+    "kind": "place",
+    "descriptor": "wide surf beach with rolling waves, sand and low green hills, beach clubs in the background, Búzios Brazil"
+  },
+  {
+    "slug": "praia-ferradurinha",
+    "kind": "place",
+    "descriptor": "tiny picture-perfect cove with calm turquoise water, small boats and green cliffs, Búzios Brazil"
+  },
+  {
+    "slug": "praia-ferradura",
+    "kind": "place",
+    "descriptor": "horseshoe-shaped calm bay with clear water, sand beach and low green hills, Búzios Brazil"
+  },
+  {
+    "slug": "praia-joao-fernandes",
+    "kind": "place",
+    "descriptor": "clear-water beach with green hills, boats near shore and kiosks on the sand, Búzios Brazil"
+  },
+  {
+    "slug": "praia-azeda",
+    "kind": "place",
+    "descriptor": "small hidden cove with crystal-clear turquoise water and green cliffs, few boats, Búzios Brazil"
+  },
+  {
+    "slug": "praia-tartaruga",
+    "kind": "place",
+    "descriptor": "calm cove beach at sunset with warm colors, kiosks and small boats, Búzios Brazil"
+  },
+  {
+    "slug": "praia-brava",
+    "kind": "place",
+    "descriptor": "wild open ocean beach with strong waves and rugged cliffs, sparse vegetation, Búzios Brazil"
+  },
+  {
+    "slug": "orla-bardot",
+    "kind": "place",
+    "descriptor": "charming waterfront promenade with cobblestone path, colonial buildings and small boats moored in the bay, Búzios Brazil"
+  },
+  {
+    "slug": "porto-da-barra",
+    "kind": "place",
+    "descriptor": "seaside restaurant complex on wooden pier over calm water at sunset, warm lights, Búzios Manguinhos Brazil"
+  },
+  {
+    "slug": "rua-das-pedras",
+    "kind": "place",
+    "descriptor": "narrow cobblestone pedestrian street with colonial storefronts, warm evening lights, restaurants and boutiques, Búzios Brazil"
+  },
+  { "slug": "droga-raia",          "kind": "utility",   "descriptor": "modern neighborhood pharmacy storefront with clean signage and glass door, brazilian coastal town" },
+  { "slug": "drogaria-pacheco",    "kind": "utility",   "descriptor": "traditional pharmacy storefront on a downtown street, awning and glass windows, brazilian coastal town" },
+  { "slug": "supermercado-carone", "kind": "utility",   "descriptor": "regional supermarket exterior with parking lot and produce crates at the entrance, brazilian coastal town" },
+  { "slug": "supermercado-extra",  "kind": "utility",   "descriptor": "large hypermarket exterior with wide entrance and shopping carts, brazilian coastal town" },
+  { "slug": "supermercado-princesa","kind": "utility",  "descriptor": "small family neighborhood market storefront with fruit boxes outside, brazilian coastal town" },
+  { "slug": "hortifruti-green",    "kind": "utility",   "descriptor": "colorful fruit and vegetable shop storefront with wooden crates of produce, brazilian coastal town" },
+  { "slug": "lojas-americanas",    "kind": "utility",   "descriptor": "department store facade inside a small shopping center, brazilian coastal town" },
+  { "slug": "padaria-remmar",      "kind": "utility",   "descriptor": "cozy traditional brazilian bakery storefront with breads in the window and small tables outside" },
+  { "slug": "padaria-dupao",       "kind": "utility",   "descriptor": "modern brazilian bakery storefront with pastry display and outdoor seating" },
+  { "slug": "pes-e-patas",         "kind": "utility",   "descriptor": "friendly neighborhood pet shop storefront with dog silhouette sign and glass windows" },
+  { "slug": "racoes-e-cia",        "kind": "utility",   "descriptor": "practical pet supply store exterior with sacks of pet food stacked near entrance" },
+
+  { "slug": "cuisine-italian",     "kind": "cuisine",   "descriptor": "rustic italian trattoria interior with wood-fired oven, hanging herbs and warm lighting" },
+  { "slug": "cuisine-mediterranean","kind": "cuisine",  "descriptor": "bright mediterranean restaurant table with olive oil, lemon, seafood and white linen, seaside window" },
+  { "slug": "cuisine-japanese",    "kind": "cuisine",   "descriptor": "minimalist japanese sushi counter with wooden bar, ceramic plates and warm pendant lights" },
+  { "slug": "cuisine-asian",       "kind": "cuisine",   "descriptor": "asian fusion restaurant table with steaming bowls, chopsticks and green tea, warm interior" },
+  { "slug": "cuisine-seafood",     "kind": "cuisine",   "descriptor": "beachfront brazilian seafood restaurant with wooden deck, moqueca pot and ocean view" },
+  { "slug": "cuisine-brazilian",   "kind": "cuisine",   "descriptor": "cozy brazilian bistro with rustic wooden tables, cachaça bottles and warm lighting" },
+  { "slug": "cuisine-pizza",       "kind": "cuisine",   "descriptor": "artisan pizzeria with wood-fired oven, flour on wooden counter and hanging string lights" },
+  { "slug": "cuisine-burger",      "kind": "cuisine",   "descriptor": "modern casual burger joint with brick wall, wooden counter and warm pendant lights" },
+  { "slug": "cuisine-cafe",        "kind": "cuisine",   "descriptor": "small specialty coffee shop with wooden counter, espresso machine and pastries under a glass dome" },
+  { "slug": "cuisine-vegan",       "kind": "cuisine",   "descriptor": "bright plant-based restaurant with wooden tables, ceramic bowls of colorful vegetables and hanging plants" },
+
+  { "slug": "trail-generic",       "kind": "trail",     "descriptor": "coastal hiking trail over dunes and rocky cliffs with wide ocean view, low native vegetation, brazilian coastline" },
+  { "slug": "morro-vigia-cabo-frio","kind": "trail",    "descriptor": "hiking trail climbing a rocky coastal hill between two beaches with panoramic ocean view, Peró Conchas Cabo Frio Brazil" },
+  { "slug": "dunas-pero-cabo-frio","kind": "trail",     "descriptor": "vast white sand dunes near the ocean under blue sky, footprints along a gentle path, Peró Cabo Frio Brazil" },
+  { "slug": "lencois-pero-cabo-frio","kind": "trail",   "descriptor": "wide white sand plains and small lagoons among dunes, low vegetation, Peró Cabo Frio Brazil" },
+  { "slug": "morro-guia-cabo-frio","kind": "trail",     "descriptor": "short forest path up a coastal hill leading to a small white lighthouse with ocean view, Cabo Frio Brazil" },
+  { "slug": "praia-forno-arraial", "kind": "trail",     "descriptor": "narrow rocky coastal trail descending to a calm turquoise cove beach, Arraial do Cabo Brazil" },
+  { "slug": "praia-brava-arraial", "kind": "trail",     "descriptor": "coastal trail over rugged cliffs leading to a wild surf beach, Pontal do Atalaia Arraial do Cabo Brazil" },
+  { "slug": "circuito-atalaia-arraial","kind": "trail", "descriptor": "cliff-top loop trail passing several ocean viewpoints, Pontal do Atalaia Arraial do Cabo Brazil" },
+  { "slug": "prainhas-atalaia-arraial","kind": "trail", "descriptor": "stone stairway descending from clifftop to hidden turquoise cove beaches, Arraial do Cabo Brazil" },
+  { "slug": "serra-emerencias-buzios","kind": "trail",  "descriptor": "hills covered in dry native vegetation with distant ocean and coastal town view, Búzios Brazil" },
+  { "slug": "tucuns-jose-goncalves-buzios","kind":"trail","descriptor": "coastal costeira trail along rocky shore between two beaches, Búzios Brazil" },
+  { "slug": "ponta-lagoinha-buzios","kind": "trail",    "descriptor": "rocky point extending into the sea with small natural pools and blue horizon, Búzios Brazil" },
+  { "slug": "pai-vitorio-buzios",  "kind": "trail",     "descriptor": "quiet coastal trail leading to a small hidden beach with clear water, Búzios Brazil" },
+
+  { "slug": "photospot-generic",   "kind": "photospot", "descriptor": "scenic coastal viewpoint at golden hour with wide ocean panorama, brazilian coastline" },
+  { "slug": "canal-itajuru",       "kind": "photospot", "descriptor": "long wooden pier extending over a calm canal at sunset, small boats and colorful houses on the far shore, Cabo Frio Brazil" },
+  { "slug": "morro-vigia-foto",    "kind": "photospot", "descriptor": "elevated coastal viewpoint at sunrise overlooking two beaches and green hills, Cabo Frio Brazil" },
+  { "slug": "orla-praia-forte",    "kind": "photospot", "descriptor": "curved beach promenade with palm trees at golden hour, Cabo Frio Brazil" },
+  { "slug": "praia-grande-deck",   "kind": "photospot", "descriptor": "wooden sunset deck facing the ocean with warm orange sky, Arraial do Cabo Brazil" },
+  { "slug": "mirantes-pontal",     "kind": "photospot", "descriptor": "series of clifftop viewpoints overlooking turquoise ocean and rocky islands, Arraial do Cabo Brazil" },
+  { "slug": "porto-barra",         "kind": "photospot", "descriptor": "waterfront wooden pier restaurants at sunset with warm lights reflected on calm bay, Búzios Brazil" },
+  { "slug": "azeda-mirante",       "kind": "photospot", "descriptor": "high viewpoint over a small turquoise cove beach with anchored boats, Búzios Brazil" },
+  { "slug": "escadaria-prainhas",  "kind": "photospot", "descriptor": "long stone stairway descending a green hillside toward hidden turquoise beaches, Arraial do Cabo Brazil" },
+
+  { "slug": "route-generic",       "kind": "route",     "descriptor": "runner-eye view of a coastal running route with promenade, palm trees and ocean beside" },
+  { "slug": "cf-5k",  "kind": "route", "descriptor": "5 kilometer beachfront running route along a curved white sand beach and canal, brazilian coastal town" },
+  { "slug": "cf-8k",  "kind": "route", "descriptor": "8 kilometer running route from beach promenade to a large lagoon surrounded by palms, brazilian coastal town" },
+  { "slug": "cf-12k", "kind": "route", "descriptor": "12 kilometer running route linking three consecutive beaches over gentle coastal hills, Peró Conchas Ogiva Brazil" },
+  { "slug": "arraial-6k",  "kind": "route", "descriptor": "6 kilometer beachfront running route along a long open sand beach, Arraial do Cabo Brazil" },
+  { "slug": "buzios-7k",   "kind": "route", "descriptor": "7 kilometer running route through cobbled waterfront promenade linking small coves, Búzios Brazil" }
+]

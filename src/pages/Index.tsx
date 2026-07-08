@@ -12,6 +12,8 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { RiosCover } from "@/components/RiosCover";
 import { RiosFooter } from "@/components/RiosFooter";
 import { StickyCategoryNav } from "@/components/StickyCategoryNav";
+import { useIllustrations } from "@/hooks/useIllustrations";
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
@@ -210,6 +212,24 @@ const TrailFilters = () => {
 
 const Index = () => {
   const { t } = useLanguage();
+  const { getIllustration } = useIllustrations();
+
+  // Map a restaurant category label to a cuisine slug for illustrations.
+  const cuisineSlug = (category: string): string => {
+    const c = category.toLowerCase();
+    if (c.includes('italian')) return 'cuisine-italian';
+    if (c.includes('mediterr')) return 'cuisine-mediterranean';
+    if (c.includes('japon') || c.includes('japan') || c.includes('sushi')) return 'cuisine-japanese';
+    if (c.includes('asi') || c.includes('orient') || c.includes('chin') || c.includes('thai')) return 'cuisine-asian';
+    if (c.includes('mar') || c.includes('peix') || c.includes('seafood') || c.includes('fruto')) return 'cuisine-seafood';
+    if (c.includes('brasil') || c.includes('brazil') || c.includes('regional')) return 'cuisine-brazilian';
+    if (c.includes('pizz')) return 'cuisine-pizza';
+    if (c.includes('burger') || c.includes('hamb')) return 'cuisine-burger';
+    if (c.includes('caf') || c.includes('coffee') || c.includes('bistr')) return 'cuisine-cafe';
+    if (c.includes('vegan') || c.includes('veget')) return 'cuisine-vegan';
+    return 'cuisine-brazilian';
+  };
+
   const [origin, setOrigin] = useState<{ lat: number; lng: number; address: string } | null>(null);
   const [etas, setEtas] = useState<ETAResult[]>([]);
   const [currentMode, setCurrentMode] = useState<'walking' | 'driving'>('driving');
@@ -217,6 +237,7 @@ const Index = () => {
   const [sortByTime, setSortByTime] = useState(false);
   const [itineraryBuilderOpen, setItineraryBuilderOpen] = useState(false);
   const [showPhotoSpotsMap, setShowPhotoSpotsMap] = useState(false);
+
   const [itineraryCount, setItineraryCount] = useState(0);
   const [fabPulse, setFabPulse] = useState(false);
   const prevCountRef = useRef(0);
@@ -397,7 +418,7 @@ const Index = () => {
                 location={place.bairro || 'Cabo Frio'}
                 tips={getPlaceTips(place.id)}
                 type={place.category as any}
-                imageUrl={photo?.src}
+                imageUrl={getIllustration(place.id) ?? photo?.src}
                 imageCredit={photo?.credit}
                 distanceBadge={eta && origin ? (
                   <DistanceBadge 
@@ -1064,7 +1085,7 @@ const Index = () => {
                   location={place.bairro || 'Arraial do Cabo'}
                   tips={getPlaceTips(place.id)}
                   type={place.category as any}
-                  imageUrl={photo?.src}
+                  imageUrl={getIllustration(place.id) ?? photo?.src}
                   imageCredit={photo?.credit}
                   distanceBadge={eta && origin ? (
                     <DistanceBadge 
@@ -1160,7 +1181,7 @@ const Index = () => {
                   location={place.bairro || 'Búzios'}
                   tips={getPlaceTips(place.id)}
                   type={place.category as any}
-                  imageUrl={photo?.src}
+                  imageUrl={getIllustration(place.id) ?? photo?.src}
                   imageCredit={photo?.credit}
                   distanceBadge={eta && origin ? (
                     <DistanceBadge 
