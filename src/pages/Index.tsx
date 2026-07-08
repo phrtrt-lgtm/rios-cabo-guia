@@ -418,7 +418,7 @@ const Index = () => {
                 location={place.bairro || 'Cabo Frio'}
                 tips={getPlaceTips(place.id)}
                 type={place.category as any}
-                imageUrl={photo?.src}
+                imageUrl={getIllustration(place.id) ?? photo?.src}
                 imageCredit={photo?.credit}
                 distanceBadge={eta && origin ? (
                   <DistanceBadge 
@@ -1085,7 +1085,7 @@ const Index = () => {
                   location={place.bairro || 'Arraial do Cabo'}
                   tips={getPlaceTips(place.id)}
                   type={place.category as any}
-                  imageUrl={photo?.src}
+                  imageUrl={getIllustration(place.id) ?? photo?.src}
                   imageCredit={photo?.credit}
                   distanceBadge={eta && origin ? (
                     <DistanceBadge 
@@ -1181,7 +1181,7 @@ const Index = () => {
                   location={place.bairro || 'Búzios'}
                   tips={getPlaceTips(place.id)}
                   type={place.category as any}
-                  imageUrl={photo?.src}
+                  imageUrl={getIllustration(place.id) ?? photo?.src}
                   imageCredit={photo?.credit}
                   distanceBadge={eta && origin ? (
                     <DistanceBadge 
