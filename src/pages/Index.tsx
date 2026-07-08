@@ -166,6 +166,20 @@ const Index = () => {
   const [sortByTime, setSortByTime] = useState(false);
   const [itineraryBuilderOpen, setItineraryBuilderOpen] = useState(false);
   const [showPhotoSpotsMap, setShowPhotoSpotsMap] = useState(false);
+  const [itineraryCount, setItineraryCount] = useState(0);
+  const [fabPulse, setFabPulse] = useState(false);
+  const prevCountRef = useRef(0);
+
+  useEffect(() => {
+    if (itineraryCount > prevCountRef.current) {
+      setFabPulse(true);
+      const t = setTimeout(() => setFabPulse(false), 700);
+      prevCountRef.current = itineraryCount;
+      return () => clearTimeout(t);
+    }
+    prevCountRef.current = itineraryCount;
+  }, [itineraryCount]);
+
 
   const getPlaceDescription = (placeId: string) => placeInfo[placeId]?.description || '';
   const getPlaceTips = (placeId: string) => placeInfo[placeId]?.tips;
