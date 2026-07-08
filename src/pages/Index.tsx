@@ -618,7 +618,7 @@ const Index = () => {
             {t("shopping.intro")}
           </p>
           
-          <div className="rios-card-grid mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
               <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Endereço
