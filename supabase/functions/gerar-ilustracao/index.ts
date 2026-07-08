@@ -25,10 +25,12 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  // Admin gate
-  const provided = req.headers.get('x-admin-token');
-  const expected = Deno.env.get('ADMIN_TOKEN');
-  if (!expected || !provided || provided !== expected) {
+  // Admin gate — aceita ADMIN_TOKEN ou BATCH_TOKEN
+  const provided = req.headers.get('x-admin-token') ?? req.headers.get('x-batch-token');
+  const admin = Deno.env.get('ADMIN_TOKEN');
+  const batch = Deno.env.get('BATCH_TOKEN');
+  const authorized = !!provided && (provided === admin || provided === batch);
+  if (!authorized) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
