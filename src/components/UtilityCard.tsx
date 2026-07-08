@@ -1,6 +1,23 @@
 import { MapPin, Clock, Phone, ExternalLink, Info, ShoppingCart, Pill, Coffee, PawPrint, ShoppingBag } from "lucide-react";
 import { ReactNode } from "react";
 import { resolveUtilityImage } from "@/data/categoryImages";
+import { useIllustrations } from "@/hooks/useIllustrations";
+
+// Best-effort slug from the utility name (matches scripts/illustration-descriptors.json)
+const UTILITY_SLUG_MAP: Record<string, string> = {
+  'Droga Raia': 'droga-raia',
+  'Drogaria Pacheco': 'drogaria-pacheco',
+  'Supermercado Carone': 'supermercado-carone',
+  'Supermercado Extra': 'supermercado-extra',
+  'Supermercado Princesa': 'supermercado-princesa',
+  'Hortifruti Green Fruit': 'hortifruti-green',
+  'Lojas Americanas': 'lojas-americanas',
+  'Padaria Remmar': 'padaria-remmar',
+  'Padaria Dupão': 'padaria-dupao',
+  'Pés e Patas': 'pes-e-patas',
+  'Rações & Cia': 'racoes-e-cia',
+};
+
 
 interface UtilityCardProps {
   name: string;
@@ -50,11 +67,13 @@ export const UtilityCard = ({
 
   const Icon = getIconForType(type);
 
-  // NOTE: utility cards use standardised icon-in-circle placeholders in the
-  // compact layout — auto-resolved photos are intentionally NOT rendered.
-  // Illustrations will replace the icon in a follow-up step.
-  const finalImageUrl = imageUrl;
+  // Prefer AI-generated illustration when available; else fall back to any
+  // explicit imageUrl. Auto-resolved stock photos are intentionally NOT used.
+  const { getIllustration } = useIllustrations();
+  const illustration = getIllustration(UTILITY_SLUG_MAP[name]);
+  const finalImageUrl = illustration ?? imageUrl;
   const finalImageCredit = imageCredit;
+
 
 
   return (
