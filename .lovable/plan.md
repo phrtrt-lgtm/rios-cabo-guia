@@ -1,90 +1,44 @@
-## Objetivo
 
-Refatorar visualmente o guia turístico RIOS aplicando o sistema de design descrito no prompt — mantendo toda funcionalidade atual (rotas, chatbot, itinerário, distâncias, i18n, dados) e trocando só a camada de apresentação.
+# Reorganização visual — Guia RIOS (Parte A)
 
-## O que vai mudar
+Vou reestruturar densidade e navegação do guia mantendo 100% dos dados, cores, tipografia e seções numeradas.
 
-**Tokens & tipografia (global)**
-- Novo bloco `:root` em `src/index.css` com as CSS vars RIOS: `--terra`, `--terra-light`, `--terra-dark`, `--blue-deep`, `--blue-mid`, `--blue-light`, `--bg` (#FBFAF7), `--fg`, `--muted`, `--border`.
-- Mapeio essas vars nos tokens shadcn existentes (`--primary` = blue-deep, `--secondary` = terra, `--accent` = blue-light, `--background` = bg quente) — mantém compatibilidade com todos os componentes shadcn já usados.
-- Instalo Fraunces + Inter via `@fontsource` (bun add), registro em `main.tsx`, atualizo `tailwind.config.ts`: `display: Fraunces`, `sans: Inter`.
-- Removo referências antigas a Montserrat/Sora/DM Sans do tailwind config (mantém alias para não quebrar imports).
+## 1. Navegação sticky com scrollspy
+- Substituir as pills quebradas em várias linhas por **uma linha única com scroll horizontal + scroll-snap**, `sticky top-0 z-40` com fundo `--bg` e sombra sutil ao rolar.
+- Adicionar hook `useScrollSpy` que observa as `<section id>` via IntersectionObserver e ativa a pill correspondente (fundo terra, texto branco).
+- Clique na pill = `scrollIntoView({ behavior: 'smooth', block: 'start' })` respeitando `scroll-mt` da nav sticky.
 
-**Capa full-viewport (novo componente `RiosCover.tsx`)**
-- Substitui o header + kicker atuais no topo da Index.
-- Fundo `--blue-deep`, wordmark "RIOS" em Fraunces 700, tagline "Hospedagens · Cabo Frio", divisor terra, título "Guia Cabo Frio", subtítulo itálico de boas-vindas.
-- Círculos decorativos com borders terra/azul-light (::before/::after).
-- WeatherWidget + LanguageSelector + HeaderEvents ficam num row discreto no topo direito da capa (versão clara).
-- Botão CTA "Explorar o guia" que faz scroll para seção 01.
+## 2. Cards compactos + carrossel + bottom sheet
+- Novo componente `CompactCard` (~200px de largura, imagem 4:3 topo, nome Fraunces, bairro em label, botão Maps mini). Substitui a exibição inicial de `TouristCard`, `RestaurantCard`, `UtilityCard`, `PhotoSpotCard`, `RouteCard`, `TrailCard`.
+- Novo componente `PlaceSheet` (usa `@/components/ui/sheet` do shadcn no lado inferior no mobile) com: imagem grande, descrição completa, bloco DICA em destaque (`bg-terra/8`), botões "Como chegar" e "Adicionar ao roteiro".
+- Novo `CardCarousel`: wrapper `overflow-x-auto snap-x snap-mandatory` que renderiza os CompactCards em fila. Abaixo, botão discreto "Ver todos (N)" que alterna estado local para renderizar em `grid-cols-2` (mobile) / `grid-cols-3-4` (desktop).
+- Aplicado por seção em Praias, Utilidades (cada subgrupo), Gastronomia, Arraial, Búzios, Trilhas, Photo Spots, Rotas.
 
-**Nav sticky reestilizada**
-- Após scroll da capa, nav sticky em `--bg` com borda terra opacity 0.4.
-- Links em Inter 600 uppercase 10px letter-spacing 0.18em, cor `--muted` inativo, `--terra` ativo/hover.
+## 3. FAB do roteiro
+- Trocar o botão retangular grande por um **FAB circular 56px** no canto inferior direito com ícone `Plus`/`Map` + badge contador de itens do roteiro.
+- Adicionar `padding-bottom: 96px` nas seções (via classe utilitária) para nada ficar por baixo.
+- Ao adicionar item, disparar animação `animate-pulse-once` (definida no `tailwind.config.ts`) e incrementar o badge. Contador vem do state existente do `ItineraryBuilder` (elevar para `Index` ou expor via contexto leve `ItineraryContext`).
 
-**Seções numeradas (refator `GuideSection.tsx`)**
-- Substitui o header atual pela estrutura: número decorativo grande (Fraunces 64px opacity 0.15 terra) + label uppercase terra + título Fraunces 28px blue-deep.
-- Divisor terra 1px opacity 0.4 entre seções.
-- Aceita nova prop `number` ("01", "02", ...) e `label` ("Comece por aqui", "Praias", etc).
-- Container max-width 880px, padding 80px 48px 0 (24px no mobile).
+## 4. Padronização dos cards de utilidades
+- `CompactCard` para utilidades usa placeholder ilustrado neutro: círculo terra 12% com ícone da categoria (Pill, ShoppingCart, Coffee, PawPrint, ShoppingBag) em `--terra`, fundo `--bg`. Fotos irregulares deixam de aparecer no card compacto (continuam disponíveis no sheet).
+- Telefone renderizado como `<a href="tel:...">` clicável no sheet.
 
-**Numeração das seções da Index**
-```
-01 · Praias — Litoral de Cabo Frio
-02 · Utilidades — Farmácias, mercados e mais
-03 · Gastronomia — Onde a gente come
-04 · Arraial do Cabo — Vale o passeio
-05 · Búzios — Charme e agito
-06 · Trilhas — Aventura a pé
-07 · FotoSpots — Melhores ângulos
-08 · Rotas — Corrida e bike
-09 · Sobre — A gente por trás do guia
-```
+## 5. Filtros de trilhas como chips
+- Em `TrailFilters` (dentro da seção Trilhas), trocar os 4 `<Select>` por chips togáveis em linha horizontal com `overflow-x-auto snap-x`. Cada filtro (cidade, nível, duração, vista) vira grupo de chips com estado ativo em terra. Lógica de filtragem atual preservada.
 
-**Cards reestilizados (visual, sem mudar API)**
-- `TouristCard`, `RestaurantCard`, `UtilityCard`, `TrailCard`, `RouteCard`, `PhotoSpotCard`: substituo bg branco puro por white sobre `--bg`, border `--border`, border-left 3px `--terra` (padrão entry-block), radius 14px, título card em Fraunces 600 blue-deep, corpo Inter, labels uppercase terra/muted.
-- Dicas continuam destacadas (preservando o pedido anterior de manter dicas visíveis no mobile).
-- Shadow trocada para `rgba(26, 58, 82, 0.08)` — sem pretos duros.
-
-**Rodapé (`RiosFooter.tsx` novo)**
-- Contact-card blue-deep com: wordmark RIOS, "Fale com a gente", grid 2 col com WhatsApp / Instagram / Airbnb / e-mail.
-- Substitui rodapé simples atual.
-
-**Botão flutuante "Criar roteiro"**
-- Mantém posição, muda para `--terra` sólido, hover `--terra-dark`, radius 12px (btn-primary do sistema).
-
-## O que NÃO vai mudar
-
-- Nenhuma lógica de dados, i18n, distância, itinerário, chatbot, edge functions, Supabase.
-- Estrutura de arquivos de dados (`places.ts`, `trails.ts`, etc).
-- ItineraryBuilder, ItineraryPrintView, DistanceWidget, TouristChatbot: mantêm implementação atual.
-- Estilos de impressão (`@media print`) preservados.
+## 6. Microdetalhes
+- Manter números `01`, `02` grandes em Fraunces (já é assim em `GuideSection`).
+- Adicionar `loading="lazy"` e `decoding="async"` em todas as `<img>` dos novos componentes.
+- Garantir `min-height: 44px` e `min-width: 44px` em todos os botões e pills (via classe utilitária `.tap-target`).
+- Envolver animações com `@media (prefers-reduced-motion: reduce) { animation: none; transition: none; }`.
 
 ## Arquivos afetados
+- **Novos**: `src/components/CompactCard.tsx`, `src/components/CardCarousel.tsx`, `src/components/PlaceSheet.tsx`, `src/components/StickyCategoryNav.tsx`, `src/hooks/useScrollSpy.ts`, `src/contexts/ItineraryContext.tsx`.
+- **Editados**: `src/pages/Index.tsx` (troca todas as grids por CardCarousel + monta os sheets), `src/components/ItineraryBuilder.tsx` (consome o contexto), `src/components/TrailCard.tsx` (variante compacta) + filtros da seção Trilhas, `src/index.css` (utilitários `.rios-carousel`, `.tap-target`, `.pulse-once`, reduced-motion), `tailwind.config.ts` (keyframe pulse-once).
 
-**Novos**
-- `src/components/RiosCover.tsx`
-- `src/components/RiosFooter.tsx`
+## Fora de escopo (Parte A)
+- Ilustrações finais de utilidades (fica com placeholder ícone-em-círculo).
+- Reescrita de dados/lugares.
+- PDF/print e chatbot ficam intactos.
 
-**Editados**
-- `src/index.css` — tokens, remove estilos utilitários antigos (`hero-keyword`, `kicker` mantido reestilizado).
-- `tailwind.config.ts` — fontFamily Fraunces/Inter.
-- `src/main.tsx` — imports @fontsource.
-- `src/pages/Index.tsx` — substitui header/nav/footer, adiciona numeração às seções, remove RiosIntro daqui se necessário.
-- `src/components/GuideSection.tsx` — nova estrutura de cabeçalho numerado.
-- `src/components/TouristCard.tsx`, `RestaurantCard.tsx`, `UtilityCard.tsx`, `TrailCard.tsx`, `RouteCard.tsx`, `PhotoSpotCard.tsx` — restyle visual usando tokens.
-- `src/components/RiosIntro.tsx` — encaixado como bloco dentro da nova capa OU adaptado como seção 00.
-- `index.html` — atualiza `<title>` e `<meta description>` (já é "Guia Turístico RIOS", vou garantir description específica).
-
-## Riscos & mitigação
-
-- **Shadcn quebrar**: mantendo o mapeamento HSL dos tokens shadcn existentes, todos os botões/dialogs/tooltips continuam funcionando com a nova paleta.
-- **Fontes bloqueadas**: usando `@fontsource` local (não CDN) — funciona offline.
-- **Dark mode**: o sistema RIOS é único (claro/quente). Vou remover a variante dark do tailwind config comportamento (mantém classes mas neutraliza) — não é usado pelo app.
-- **Regressão nas dicas mobile**: mantido explicitamente — cards continuam mostrando o bloco `Dica` sempre.
-
-## Validação final
-
-- `tsgo` sem erros.
-- Screenshot Playwright mobile (390×823) e desktop (1280×1800) da home rolando pelas seções.
-
-Depois de aprovar, vou executar tudo em paralelo (fontes + tokens + componentes) e validar com screenshot.
+Confirma que sigo com essa direção?
