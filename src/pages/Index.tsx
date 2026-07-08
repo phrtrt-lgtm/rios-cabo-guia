@@ -210,6 +210,24 @@ const TrailFilters = () => {
 
 const Index = () => {
   const { t } = useLanguage();
+  const { getIllustration } = useIllustrations();
+
+  // Map a restaurant category label to a cuisine slug for illustrations.
+  const cuisineSlug = (category: string): string => {
+    const c = category.toLowerCase();
+    if (c.includes('italian')) return 'cuisine-italian';
+    if (c.includes('mediterr')) return 'cuisine-mediterranean';
+    if (c.includes('japon') || c.includes('japan') || c.includes('sushi')) return 'cuisine-japanese';
+    if (c.includes('asi') || c.includes('orient') || c.includes('chin') || c.includes('thai')) return 'cuisine-asian';
+    if (c.includes('mar') || c.includes('peix') || c.includes('seafood') || c.includes('fruto')) return 'cuisine-seafood';
+    if (c.includes('brasil') || c.includes('brazil') || c.includes('regional')) return 'cuisine-brazilian';
+    if (c.includes('pizz')) return 'cuisine-pizza';
+    if (c.includes('burger') || c.includes('hamb')) return 'cuisine-burger';
+    if (c.includes('caf') || c.includes('coffee') || c.includes('bistr')) return 'cuisine-cafe';
+    if (c.includes('vegan') || c.includes('veget')) return 'cuisine-vegan';
+    return 'cuisine-brazilian';
+  };
+
   const [origin, setOrigin] = useState<{ lat: number; lng: number; address: string } | null>(null);
   const [etas, setEtas] = useState<ETAResult[]>([]);
   const [currentMode, setCurrentMode] = useState<'walking' | 'driving'>('driving');
