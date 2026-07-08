@@ -82,23 +82,23 @@ Deno.serve(async (req) => {
     }
   }
 
-  const lovableKey = Deno.env.get('LOVABLE_API_KEY');
-  if (!lovableKey) {
-    return new Response(JSON.stringify({ error: 'LOVABLE_API_KEY not configured' }), {
+  const openaiKey = Deno.env.get('OPENAI_API_KEY');
+  if (!openaiKey) {
+    return new Response(JSON.stringify({ error: 'OPENAI_API_KEY not configured' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
-  // 1. Generate image via Lovable AI Gateway (openai/gpt-image-2, non-streaming)
-  const genRes = await fetch('https://ai.gateway.lovable.dev/v1/images/generations', {
+  // 1. Generate image directly via OpenAI API (gpt-image-2)
+  const genRes = await fetch('https://api.openai.com/v1/images/generations', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${lovableKey}`,
+      Authorization: `Bearer ${openaiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'openai/gpt-image-2',
+      model: 'gpt-image-2',
       prompt: STYLE_PROMPT(descriptor),
       size: '1024x1024',
       n: 1,
