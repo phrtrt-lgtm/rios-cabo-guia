@@ -905,10 +905,14 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   border-color: var(--terra);
 }
 
+/* FAB pulse-once animation */
+@keyframes rios-pulse-once {
+  0%   { transform: scale(1);   box-shadow: 0 0 0 0 rgba(200,100,42,0.55); }
   50%  { transform: scale(1.12); box-shadow: 0 0 0 14px rgba(200,100,42,0); }
   100% { transform: scale(1);   box-shadow: 0 0 0 0 rgba(200,100,42,0); }
 }
 .rios-pulse-once { animation: rios-pulse-once 600ms ease-out; }
+
 
 /* Accessibility — respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
