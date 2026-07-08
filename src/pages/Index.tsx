@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { GuideSection } from "@/components/GuideSection";
 import { RestaurantCard } from "@/components/RestaurantCard";
 import { UtilityCard } from "@/components/UtilityCard";
@@ -11,9 +11,11 @@ import { HeaderEvents } from "@/components/HeaderEvents";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { RiosCover } from "@/components/RiosCover";
 import { RiosFooter } from "@/components/RiosFooter";
+import { StickyCategoryNav } from "@/components/StickyCategoryNav";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, ExternalLink, Menu, Home, Utensils, ShoppingBag, Info, Waves, Landmark, Mountain, Palmtree, Navigation, Plus, Filter, Download, Camera, Route, Map as MapIcon, FileDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { distanceService, ETAResult } from "@/services/distance.service";
 import { allPlaces, touristPlaces, utilityPlaces, arraialPlaces, buziosPlaces } from "@/data/places";
 import { trails } from "@/data/trails";
@@ -30,6 +32,7 @@ import mapImage from "@/assets/map-illustration.jpg";
 import riosLogo from "@/assets/rios-logo-full.png";
 import riosLogoHeader from "@/assets/rios-logo-header.png";
 import riosLogoFooter from "@/assets/rios-logo-footer.png";
+
 
 // Beach images
 import praiaDoForteImg from "@/assets/beaches/praia-do-forte.jpg";
@@ -154,6 +157,57 @@ const placeInfo: Record<string, { description: string; tips?: string }> = {
   },
 };
 
+// Trail filter chips — replaces the four <select> dropdowns with tap-friendly
+// toggle chips. Toggling is purely visual for now (matches the pre-existing
+// non-functional selects); filtered listing per-city remains section-scoped.
+const TRAIL_FILTER_GROUPS: { key: string; label: string; options: string[] }[] = [
+  { key: 'cidade', label: 'Cidade', options: ['Cabo Frio', 'Arraial do Cabo', 'Búzios'] },
+  { key: 'nivel', label: 'Nível', options: ['Fácil', 'Fácil-Moderado', 'Moderado'] },
+  { key: 'duracao', label: 'Duração', options: ['<1h', '1-2h', '2-4h'] },
+  { key: 'vista', label: 'Vista', options: ['Mirante', 'Costão', 'Piscinas', 'Dunas', 'Praia'] },
+];
+
+const TrailFilters = () => {
+  const [active, setActive] = useState<Record<string, Set<string>>>({});
+  const toggle = (group: string, opt: string) => {
+    setActive((prev) => {
+      const set = new Set(prev[group] ?? []);
+      if (set.has(opt)) set.delete(opt);
+      else set.add(opt);
+      return { ...prev, [group]: set };
+    });
+  };
+  return (
+    <div className="mb-8 space-y-3">
+      <div className="flex items-center gap-2">
+        <Filter className="h-4 w-4 text-secondary" />
+        <h3 className="font-semibold text-secondary text-sm">Filtrar trilhas</h3>
+      </div>
+      {TRAIL_FILTER_GROUPS.map((group) => (
+        <div key={group.key}>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground font-semibold mb-1.5">
+            {group.label}
+          </p>
+          <div className="rios-chip-row -mx-1 px-1">
+            {group.options.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                className="rios-chip tap-target"
+                data-active={active[group.key]?.has(opt) ? 'true' : 'false'}
+                onClick={() => toggle(group.key, opt)}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+
 const Index = () => {
   const { t } = useLanguage();
   const [origin, setOrigin] = useState<{ lat: number; lng: number; address: string } | null>(null);
@@ -163,6 +217,20 @@ const Index = () => {
   const [sortByTime, setSortByTime] = useState(false);
   const [itineraryBuilderOpen, setItineraryBuilderOpen] = useState(false);
   const [showPhotoSpotsMap, setShowPhotoSpotsMap] = useState(false);
+  const [itineraryCount, setItineraryCount] = useState(0);
+  const [fabPulse, setFabPulse] = useState(false);
+  const prevCountRef = useRef(0);
+
+  useEffect(() => {
+    if (itineraryCount > prevCountRef.current) {
+      setFabPulse(true);
+      const t = setTimeout(() => setFabPulse(false), 700);
+      prevCountRef.current = itineraryCount;
+      return () => clearTimeout(t);
+    }
+    prevCountRef.current = itineraryCount;
+  }, [itineraryCount]);
+
 
   const getPlaceDescription = (placeId: string) => placeInfo[placeId]?.description || '';
   const getPlaceTips = (placeId: string) => placeInfo[placeId]?.tips;
@@ -251,40 +319,20 @@ const Index = () => {
       {/* Cover */}
       <RiosCover onExplore={() => scrollToSection('praias')} />
 
-      {/* Navigation Menu */}
-      <nav className="rios-nav">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex flex-wrap gap-x-2 gap-y-2 justify-center">
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('praias')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.beaches")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('utilidades')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.utilities")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('gastronomia')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.gastronomy")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('arraial')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.arraial")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('buzios')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.buzios")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('trilhas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.trails")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('fotospots')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.photospots")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('rotas')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.routes")}
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => scrollToSection('sobre')} className="rounded-full font-sans text-[11px] uppercase tracking-[0.18em] font-semibold shrink-0">
-              {t("nav.about")}
-            </Button>
-          </div>
-        </div>
-      </nav>
+      {/* Sticky category navigation with scrollspy */}
+      <StickyCategoryNav
+        items={[
+          { id: 'praias', label: t('nav.beaches') },
+          { id: 'utilidades', label: t('nav.utilities') },
+          { id: 'gastronomia', label: t('nav.gastronomy') },
+          { id: 'arraial', label: t('nav.arraial') },
+          { id: 'buzios', label: t('nav.buzios') },
+          { id: 'trilhas', label: t('nav.trails') },
+          { id: 'fotospots', label: t('nav.photospots') },
+          { id: 'rotas', label: t('nav.routes') },
+          { id: 'sobre', label: t('nav.about') },
+        ]}
+      />
 
       {/* Distance Widget */}
       <div className="no-print">
@@ -297,15 +345,25 @@ const Index = () => {
         />
       </div>
 
-      {/* Floating Itinerary Builder Button */}
-      <Button
+      {/* Floating Itinerary Builder FAB (compact circular) */}
+      <button
         onClick={() => setItineraryBuilderOpen(true)}
-        className="fixed bottom-8 right-8 rounded-full shadow-lg h-14 px-6 gap-2 z-50 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-display no-print"
-        size="lg"
+        aria-label={t("common.buildItinerary")}
+        className={cn(
+          "fixed right-5 bottom-5 md:right-8 md:bottom-8 z-50 no-print",
+          "h-14 w-14 rounded-full bg-secondary text-secondary-foreground",
+          "shadow-lg hover:bg-secondary/90 transition-colors",
+          "inline-flex items-center justify-center",
+          fabPulse && "rios-pulse-once"
+        )}
       >
-        <Plus className="h-5 w-5" />
-        {t("common.buildItinerary")}
-      </Button>
+        <Route className="h-6 w-6" />
+        {itineraryCount > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1.5 rounded-full bg-primary text-primary-foreground text-[11px] font-semibold inline-flex items-center justify-center border-2 border-background">
+            {itineraryCount}
+          </span>
+        )}
+      </button>
 
       {/* Itinerary Builder Modal */}
       <ItineraryBuilder
@@ -321,11 +379,13 @@ const Index = () => {
           return acc;
         }, {} as { [key: string]: { walking: number; driving: number; isFallback?: boolean } })}
         currentMode={currentMode}
+        onItemCountChange={setItineraryCount}
       />
+
 
       {/* Praias */}
       <GuideSection id="praias" number="01" label="Litoral" title={t("section.beaches")} printBreak>
-        <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+        <div className="rios-card-grid">
           {sortedTouristPlaces.map((place) => {
             const eta = getETA(place.id);
             const photo = getPlaceImage(place.id);
@@ -363,7 +423,7 @@ const Index = () => {
         {/* Farmácias */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.pharmacies")}</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <UtilityCard 
               name="Droga Raia"
               description="Rede nacional com atendimento ágil e produtos de saúde, beleza e perfumaria. Ideal para compras de última hora."
@@ -410,7 +470,7 @@ const Index = () => {
         {/* Supermercados */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Supermercados & Hortifruti</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <UtilityCard 
               name="Supermercado Carone"
               description="Supermercado regional com boa variedade de produtos, açougue próprio e seção de hortifruti. Preços competitivos."
@@ -495,7 +555,7 @@ const Index = () => {
         {/* Lojas de Variedades */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Variedades & Conveniência</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <UtilityCard 
               name="Lojas Americanas"
               description="Loja de departamentos com eletrônicos, utilidades, cosméticos, brinquedos e alimentos. Resolve emergências."
@@ -522,7 +582,7 @@ const Index = () => {
         {/* Padarias */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Padarias & Confeitarias</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <UtilityCard 
               name="Padaria Remmar"
               description="Padaria tradicional de Cabo Frio desde 1987. Pães artesanais, bolos decorados e café da manhã com mesas. Ambiente acolhedor."
@@ -567,7 +627,7 @@ const Index = () => {
         {/* Pet Shops */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Pet Shops</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <UtilityCard 
               name="Pés e Patas"
               description="Rede especializada em pet shop com rações, acessórios, brinquedos e produtos veterinários. Atendimento especializado."
@@ -618,7 +678,7 @@ const Index = () => {
             {t("shopping.intro")}
           </p>
           
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
               <h4 className="font-semibold text-primary mb-2 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Endereço
@@ -665,7 +725,7 @@ const Index = () => {
         {/* Italiano */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.italian")}</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Leña Casa Italiana"
               description="Casa italiana contemporânea em ambiente charmoso. Foco em massas artesanais, entradas e pratos para compartilhar. Reservas recomendadas."
@@ -704,7 +764,7 @@ const Index = () => {
         {/* Asiático */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.asian")}</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Fixi Kaiseki"
               description="Projeto kaiseki com menu sazonal do mar. Operação intimista, reservas essenciais."
@@ -760,7 +820,7 @@ const Index = () => {
         {/* Brasileiro */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.brazilian")}</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Picanha do Zé"
               description="Ícone local da picanha na pedra, serviço ágil e ambiente descontraído."
@@ -799,7 +859,7 @@ const Index = () => {
         {/* Hamburguerias */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.burgers")}</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Paelo Hamburgueria"
               description="Burgers generosos e bem executados com ingredientes de qualidade."
@@ -839,7 +899,7 @@ const Index = () => {
         {/* Saudável */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.healthy")}</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Bem Fresh"
               description="Saladas, wraps, açaí. Opções vegetarianas e veganas em ambiente casual."
@@ -862,7 +922,7 @@ const Index = () => {
         {/* Cafés */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Cafés & Doces</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Office Café"
               description="Cafés especiais, opções sem lactose e veganas, espaço aconchegante."
@@ -934,7 +994,7 @@ const Index = () => {
         {/* Crepes */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">Crepes</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Los Crepes"
               description="Crepes doces e salgados, clima de praia. Duas unidades."
@@ -957,7 +1017,7 @@ const Index = () => {
         {/* Buffet */}
         <div className="mb-12">
           <h3 className="text-2xl font-semibold text-secondary mb-6">{t("category.buffet")}</h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="Nova Onda"
               description="Café da manhã aberto ao público e 'café colonial' no fim da tarde (confirmar valores)."
@@ -992,7 +1052,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Waves className="h-6 w-6" /> {t("arraial.beachesTitle")}
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             {arraialPlaces.map((place) => {
               const eta = getETA(place.id);
               const photo = getPlaceImage(place.id);
@@ -1026,7 +1086,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Utensils className="h-6 w-6" /> {t("arraial.gastroTitle")}
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <RestaurantCard 
               name="FIXI (Arraial do Cabo)"
               description="Cozinha do mar com proposta autoral. Peixes frescos, frutos do mar e ingredientes sazonais em pratos criativos."
@@ -1048,7 +1108,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <MapPin className="h-6 w-6" /> {t("arraial.itinerariesTitle")}
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <Mountain className="h-5 w-5" /> {t("arraial.classicVisual")}
@@ -1088,7 +1148,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Palmtree className="h-6 w-6" /> Praias & Pontos Turísticos
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             {buziosPlaces.map((place) => {
               const eta = getETA(place.id);
               const photo = getPlaceImage(place.id);
@@ -1122,7 +1182,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <Utensils className="h-6 w-6" /> {t("buzios.gastroTitle")}
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5" /> Porto da Barra
@@ -1151,7 +1211,7 @@ const Index = () => {
           <h3 className="text-2xl font-semibold text-secondary mb-6 flex items-center gap-2">
             <MapPin className="h-6 w-6" /> {t("buzios.itinerariesTitle")}
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             <div className="bg-card p-6 rounded-lg border border-border">
               <h4 className="font-semibold text-primary mb-3 flex items-center gap-2">
                 <Mountain className="h-5 w-5" /> {t("buzios.classicPostcard")}
@@ -1192,41 +1252,9 @@ const Index = () => {
           {t("trails.intro")}
         </p>
 
-        {/* Filtros de trilhas */}
-        <div className="mb-8 p-4 bg-secondary/5 rounded-lg border border-secondary/20">
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="h-5 w-5 text-secondary" />
-            <h3 className="font-semibold text-secondary">{t("common.filterTrails")}</h3>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as cidades</option>
-              <option value="Cabo Frio">Cabo Frio</option>
-              <option value="Arraial do Cabo">Arraial do Cabo</option>
-              <option value="Armação dos Búzios">Búzios</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todos os níveis</option>
-              <option value="Fácil">Fácil</option>
-              <option value="Fácil-Moderado">Fácil-Moderado</option>
-              <option value="Moderado">Moderado</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as durações</option>
-              <option value="curta">&lt;1h</option>
-              <option value="média">1-2h</option>
-              <option value="longa">2-4h</option>
-            </select>
-            <select className="px-3 py-2 rounded-md border border-input bg-background text-sm">
-              <option value="">Todas as vistas</option>
-              <option value="Mirante">Mirante</option>
-              <option value="Costão">Costão</option>
-              <option value="Piscinas">Piscinas</option>
-              <option value="Dunas">Dunas</option>
-              <option value="Praia">Praia</option>
-            </select>
-          </div>
-        </div>
+        {/* Filtros de trilhas — chips horizontais togáveis (mantém filtro visual; lógica de listagem por cidade nas grids abaixo) */}
+        <TrailFilters />
+
 
         {/* Card informativo sobre Praia do Farol */}
         <div className="mb-8 p-6 bg-amber-500/10 border border-amber-500/30 rounded-lg">
@@ -1267,7 +1295,7 @@ const Index = () => {
             <Mountain className="h-6 w-6" />
             Cabo Frio
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             {trails
               .filter(trail => trail.cidade === 'Cabo Frio')
               .map(trail => {
@@ -1295,7 +1323,7 @@ const Index = () => {
             <Waves className="h-6 w-6" />
             Arraial do Cabo
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             {trails
               .filter(trail => trail.cidade === 'Arraial do Cabo')
               .map(trail => {
@@ -1323,7 +1351,7 @@ const Index = () => {
             <Palmtree className="h-6 w-6" />
             Armação dos Búzios
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             {trails
               .filter(trail => trail.cidade === 'Armação dos Búzios')
               .map(trail => {
@@ -1534,7 +1562,7 @@ const Index = () => {
             <Navigation className="h-6 w-6" />
             Extensões — Arraial do Cabo & Búzios
           </h3>
-          <div className="grid grid-cols-1 gap-3 max-w-4xl mx-auto">
+          <div className="rios-card-grid">
             {extensionRoutes.map(route => {
               const eta = getETA(route.id);
               return (

@@ -821,3 +821,107 @@ article.bg-card:hover {
 /* Ajustar body para respirar */
 body { background: var(--bg); }
 
+/* ============================================================
+   RIOS density layer — sticky nav, carousels, FAB, tap targets
+   ============================================================ */
+
+/* Hide scrollbar on horizontal scroll containers (nav + carousels) */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* Minimum comfortable touch target (44x44) */
+.tap-target { min-height: 44px; min-width: 44px; }
+
+/* Card carousels — smooth momentum scrolling on iOS */
+.rios-carousel {
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-left: 16px;
+  scroll-padding-right: 16px;
+}
+
+/* Global bottom padding so nothing hides behind the FAB */
+main, .rios-section:last-of-type { scroll-padding-bottom: 96px; }
+body { padding-bottom: env(safe-area-inset-bottom); }
+
+/* Section scroll offset accounts for sticky nav (~56px) + breathing room */
+.rios-section { scroll-margin-top: 72px; }
+
+/* Universal card carousel: replaces vertical grids inside sections.
+   Each direct child becomes a fixed-width, snap-aligned card. */
+.rios-card-grid {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-inline: 16px;
+  padding: 0 16px 8px;
+  margin-inline: -16px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rios-card-grid::-webkit-scrollbar { display: none; }
+.rios-card-grid > * {
+  flex: 0 0 300px;
+  max-width: 88vw;
+  scroll-snap-align: start;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .rios-card-grid > * { flex-basis: 340px; max-width: 340px; }
+}
+
+/* Filter chip row (Trilhas) */
+.rios-chip-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.rios-chip-row::-webkit-scrollbar { display: none; }
+.rios-chip {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+  cursor: pointer;
+}
+.rios-chip:hover { background: hsl(var(--muted)); }
+.rios-chip[data-active="true"] {
+  background: var(--terra);
+  color: white;
+  border-color: var(--terra);
+}
+
+/* FAB pulse-once animation */
+@keyframes rios-pulse-once {
+  0%   { transform: scale(1);   box-shadow: 0 0 0 0 rgba(200,100,42,0.55); }
+  50%  { transform: scale(1.12); box-shadow: 0 0 0 14px rgba(200,100,42,0); }
+  100% { transform: scale(1);   box-shadow: 0 0 0 0 rgba(200,100,42,0); }
+}
+.rios-pulse-once { animation: rios-pulse-once 600ms ease-out; }
+
+
+/* Accessibility — respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+

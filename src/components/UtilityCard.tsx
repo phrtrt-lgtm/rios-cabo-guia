@@ -50,10 +50,12 @@ export const UtilityCard = ({
 
   const Icon = getIconForType(type);
 
-  // Auto-resolve image from registry if not provided explicitly
-  const resolved = !imageUrl ? resolveUtilityImage(name, type) : undefined;
-  const finalImageUrl = imageUrl ?? resolved?.src;
-  const finalImageCredit = imageCredit ?? resolved?.credit;
+  // NOTE: utility cards use standardised icon-in-circle placeholders in the
+  // compact layout — auto-resolved photos are intentionally NOT rendered.
+  // Illustrations will replace the icon in a follow-up step.
+  const finalImageUrl = imageUrl;
+  const finalImageCredit = imageCredit;
+
 
   return (
     <article className="group bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200">
@@ -120,8 +122,11 @@ export const UtilityCard = ({
                   {phone}
                 </a>
               ) : (
-                <span className="text-muted-foreground truncate">{phone}</span>
+                <a href={`tel:${phone.replace(/\s/g, '')}`} className="text-primary hover:underline truncate">
+                  {phone}
+                </a>
               )}
+
             </div>
           )}
 

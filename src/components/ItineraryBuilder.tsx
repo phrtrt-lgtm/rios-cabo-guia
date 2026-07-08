@@ -27,7 +27,9 @@ interface ItineraryBuilderProps {
   currentOrigin?: { lat: number; lng: number; address: string } | null;
   currentEtas?: { [key: string]: { walking: number; driving: number; isFallback?: boolean } };
   currentMode?: 'walking' | 'driving';
+  onItemCountChange?: (count: number) => void;
 }
+
 
 interface ItineraryItem {
   placeId: string;
@@ -69,7 +71,9 @@ export const ItineraryBuilder = ({
   currentOrigin,
   currentEtas = {},
   currentMode = 'driving',
+  onItemCountChange,
 }: ItineraryBuilderProps) => {
+
   const [numDays, setNumDays] = useState(1);
   const [currentDay, setCurrentDay] = useState(1);
   const [currentTab, setCurrentTab] = useState<'itinerary' | 'places'>('itinerary');
@@ -86,6 +90,14 @@ export const ItineraryBuilder = ({
   const [placeTab, setPlaceTab] = useState<'cabo-frio' | 'restaurants' | 'arraial' | 'buzios' | 'trilhas' | 'fotospots' | 'rotas'>('cabo-frio');
   const [isPrinting, setIsPrinting] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+
+  // Report total item count across all days to parent (for FAB badge)
+  useEffect(() => {
+    if (!onItemCountChange) return;
+    const total = itineraries.reduce((sum, day) => sum + day.length, 0);
+    onItemCountChange(total);
+  }, [itineraries, onItemCountChange]);
+
   
   const originInputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
