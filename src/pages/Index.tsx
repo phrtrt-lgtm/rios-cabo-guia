@@ -157,6 +157,57 @@ const placeInfo: Record<string, { description: string; tips?: string }> = {
   },
 };
 
+// Trail filter chips — replaces the four <select> dropdowns with tap-friendly
+// toggle chips. Toggling is purely visual for now (matches the pre-existing
+// non-functional selects); filtered listing per-city remains section-scoped.
+const TRAIL_FILTER_GROUPS: { key: string; label: string; options: string[] }[] = [
+  { key: 'cidade', label: 'Cidade', options: ['Cabo Frio', 'Arraial do Cabo', 'Búzios'] },
+  { key: 'nivel', label: 'Nível', options: ['Fácil', 'Fácil-Moderado', 'Moderado'] },
+  { key: 'duracao', label: 'Duração', options: ['<1h', '1-2h', '2-4h'] },
+  { key: 'vista', label: 'Vista', options: ['Mirante', 'Costão', 'Piscinas', 'Dunas', 'Praia'] },
+];
+
+const TrailFilters = () => {
+  const [active, setActive] = useState<Record<string, Set<string>>>({});
+  const toggle = (group: string, opt: string) => {
+    setActive((prev) => {
+      const set = new Set(prev[group] ?? []);
+      if (set.has(opt)) set.delete(opt);
+      else set.add(opt);
+      return { ...prev, [group]: set };
+    });
+  };
+  return (
+    <div className="mb-8 space-y-3">
+      <div className="flex items-center gap-2">
+        <Filter className="h-4 w-4 text-secondary" />
+        <h3 className="font-semibold text-secondary text-sm">Filtrar trilhas</h3>
+      </div>
+      {TRAIL_FILTER_GROUPS.map((group) => (
+        <div key={group.key}>
+          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground font-semibold mb-1.5">
+            {group.label}
+          </p>
+          <div className="rios-chip-row -mx-1 px-1">
+            {group.options.map((opt) => (
+              <button
+                key={opt}
+                type="button"
+                className="rios-chip tap-target"
+                data-active={active[group.key]?.has(opt) ? 'true' : 'false'}
+                onClick={() => toggle(group.key, opt)}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+
 const Index = () => {
   const { t } = useLanguage();
   const [origin, setOrigin] = useState<{ lat: number; lng: number; address: string } | null>(null);
